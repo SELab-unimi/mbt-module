@@ -1,0 +1,40 @@
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+configurations {
+	ajc
+	aspects
+	ajInpath
+}
+
+dependencies {
+    compile 'info.picocli:picocli:1.0.1'
+    compile 'org.slf4j:slf4j-api:1.7.+'
+    compile group: 'gov.nist.math', name: 'jama', version: '1.0.3'
+    compile group: 'jfree', name: 'jcommon', version: '1.0.16'
+    compile group: 'jfree', name: 'jfreechart', version: '1.0.13'
+    compile group: 'com.googlecode.matrix-toolkits-java', name: 'mtj', version: '1.0.4'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    
+    compile group: 'net.openhft', name: 'affinity', version: '3.0.6'
+    
+    compile 'org.aspectj:aspectjrt:1.8.4'
+    ajc 'org.aspectj:aspectjtools:1.8.4'
+
+    runtime files('libs/colt.jar', 'libs/concurrent.jar', 'libs/qsopt.jar', 'libs/ssj-2.5.jar', 'libs/mdp-lib.jar')
+    runtime fileTree(dir: 'libs', include: '*.jar')
+    runtime 'org.slf4j:slf4j-simple:1.7.25'
+
+    testCompile 'junit:junit:4.12'
+}
+
+// Define the main class for the application
+mainClassName = 'MDPSimulator'
+
