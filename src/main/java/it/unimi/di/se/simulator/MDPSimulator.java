@@ -48,7 +48,11 @@ public class MDPSimulator {
             if(uRand <= cumulativeProb)
                 currentState = c;
         }
-        currentState = lastState;
+        doTransition(lastState);
+    }
+    
+    private void doTransition(IntegerState state) {
+    		currentState = state;
     }
 
     private List<IntegerState> orderedReachableStates(States<IntegerState> reachableSet) {
