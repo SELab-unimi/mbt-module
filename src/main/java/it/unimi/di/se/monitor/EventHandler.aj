@@ -22,14 +22,14 @@ public class EventHandler {
     
     @Before(value="mainMethod()")
     public void initMonitor(){
-    		//log.info("Monitor initialization...");
+    		log.info("Monitor initialization...");
     		monitor = new Monitor();
     		monitor.launch();
 	}
         
     @After(value="mainMethod()")
     public void shutdownMonitor(){
-    		//log.info("Shutting down Monitor...");
+    		log.info("Shutting down Monitor...");
     		monitor.addEvent(Event.StopEvent());
 	}
 	

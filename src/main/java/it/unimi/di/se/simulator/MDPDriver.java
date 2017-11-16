@@ -73,8 +73,7 @@ public class MDPDriver {
             Scanner in = new Scanner(stream);
             //System.setIn(tmp);
             String inputAction = in.next();
-            in.close();
-            
+
             iterator = actions.iterator();
             while(iterator.hasNext())
                 if(iterator.next().actionLabel() == inputAction.charAt(0))
