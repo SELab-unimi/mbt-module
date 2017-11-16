@@ -38,7 +38,7 @@ public class MDPDriver {
                 if(isObservable(mdp.getCurrentState()))
                     mdp.doAction(WAIT_ACTION);
                 else {
-                    char action = waitForAction(mdp.getFeasibleActions());
+                    char action = waitForAction(mdp.getFeasibleActions(), System.in);
                     mdp.doAction(action);
                 }
             }
@@ -52,7 +52,7 @@ public class MDPDriver {
         return actions.size() == 1 && actions.iterator().next().actionLabel() == WAIT_ACTION;
     }
 
-    private char waitForAction(Actions<CharAction> actions) {
+    private char waitForAction(Actions<CharAction> actions, InputStream stream) {
 
         //InputStream tmp = System.in;
         //System.setIn(new ByteArrayInputStream("a".getBytes()));
@@ -70,7 +70,7 @@ public class MDPDriver {
         System.out.println(availableActions.append(" }"));
         while(true) {
             System.out.print("Input: ");
-            Scanner in = new Scanner(System.in);
+            Scanner in = new Scanner(stream);
             //System.setIn(tmp);
             String inputAction = in.next();
             in.close();

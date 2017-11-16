@@ -7,7 +7,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -27,12 +28,9 @@ import it.unimi.di.se.mdp.mdpDsl.Map;
 import it.unimi.di.se.mdp.mdpDsl.State;
 
 
-/*
- * @author matteocamilli, @date 11/10/16 16.10
- */
 public class Monitor {
 	
-	private static final Logger log = Logger.getLogger(Monitor.class.getName());
+	private static final Logger log = LoggerFactory.getLogger(Monitor.class.getName());
 	
 	private MDPModel model = null;
 	State currentState = null;
@@ -171,12 +169,13 @@ public class Monitor {
 
 	private boolean checkEvent(Event event) {
 		long time = event.getTime() - currentTime;
-		log.info("[Monitor] checking event: " + event.getName() + ", time: " + time);
+		//log.info("[Monitor] checking event: " + event.getName() + ", time: " + time);
 		for(Arc a: outgoingArcs.get(currentState))
-			if(a.getSrc().equals(currentState) && arcsMapping.get(a).getSignature().equals(event.getName())){
+			if(a.getName().equals(event.getName())){
 				
 				// Bayesian analysis
-				dirichlet.get(currentState).update(stateIndex.get(a.getDst()));				
+				if(dirichlet.containsKey(currentState))
+					dirichlet.get(currentState).update(stateIndex.get(a.getDst()));				
 				
 				// update state
 				currentState = a.getDst();

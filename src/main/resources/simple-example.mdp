@@ -1,0 +1,31 @@
+model "simple-mdp"
+actions
+	w a b
+states
+	S0 {empty} initial
+	S1 {}
+	S2 {}
+	S3 {full} Dir~(w, <S3, 1.0>)
+	S4 {}
+	S5 {}
+arcs
+	a0 : (S0, a) -> S1, 0.1
+	a1 : (S0, a) -> S5, 0.9
+	a2 : (S0, b) -> S2, 1.0
+	a3 : (S1, a) -> S3, 1.0
+	a4 : (S1, b) -> S4, 1.0
+	a5 : (S5, b) -> S3, 1.0
+	a6 : (S2, w) -> S2, 1.0
+	a7 : (S4, w) -> S4, 1.0
+	a8 : (S3, w) -> S3, 1.0
+mapping 
+	a0 -> observable after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S1\")"
+	a1 -> observable after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S5\")"
+	a2 -> observable after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S2\")"
+	a3 -> observable after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S3\")"
+	a4 -> observable after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S4\")"
+	a5 -> observable after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S3\")"
+	a6 -> observable after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S2\")"
+	a7 -> observable after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S4\")"
+	a8 -> observable after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S3\")"
+	
