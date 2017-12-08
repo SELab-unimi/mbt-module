@@ -7,6 +7,7 @@ public class Event {
 	
 	public static final String NONE = "NONE";
 	private static final String STOP = "STOP";
+	private static final String RESET = "RESET";
 	private static final long DEFAULT = -1L;
 	
 	public Event(String name, long time){
@@ -14,12 +15,20 @@ public class Event {
 		this.time = time;
 	}
 	
-	public static Event StopEvent(){
+	public static Event resetEvent(){
+		return new Event(RESET, DEFAULT);
+	}
+	
+	public static Event stopEvent(){
 		return new Event(STOP, DEFAULT);
 	}
 	
 	public boolean isStop(){
 		return name.equals(STOP) && time == DEFAULT;
+	}
+	
+	public boolean isReset(){
+		return name.equals(RESET) && time == DEFAULT;
 	}
 	
 	public String getName(){

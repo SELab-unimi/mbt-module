@@ -109,7 +109,7 @@ public class Monitor {
 		}
 	}
 	
-	private void setInitialState(){
+	public void setInitialState(){
 		for(State s: model.getStates())
 			if(s.isInitial()){
 				currentState = s;
@@ -138,33 +138,34 @@ public class Monitor {
 		}
 	}
 	
-	private void startMonitor(){
+	private void startMonitor() {
 		setInitialState();
 		log.info("MONITOR STARTED...");
-		while(true){
+		while (true) {
 			try {
 				Event event = queue.take();
-				if(event.isStop()){
+				if (event.isStop()) {
 					log.info("MONITOR STOPPED...");
 					break;
-				}
-				if(!checkEvent(event))
+				} else if (event.isReset()) {
+					setInitialState();
+				} else if (!checkEvent(event)) {
 					try {
 						throw new Exception("Invalid event: " + event);
 					} catch (Exception e) {
 						e.printStackTrace();
 						log.info("Current state: ");
 						log.info(currentState.getName());
-						
-						
+
 						log.info("**** TEST FAILED ****");
-						log.info("TRACE:\n");						
+						log.info("TRACE:\n");
 						System.exit(1);
 					}
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}	
+		}
 	}
 
 	private boolean checkEvent(Event event) {

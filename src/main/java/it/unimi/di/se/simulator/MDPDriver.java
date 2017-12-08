@@ -53,11 +53,7 @@ public class MDPDriver {
     }
 
     private char waitForAction(Actions<CharAction> actions, InputStream stream) {
-
-        //InputStream tmp = System.in;
-        //System.setIn(new ByteArrayInputStream("a".getBytes()));
-
-        StringBuilder availableActions = new StringBuilder("Available actions: { ");
+    		StringBuilder availableActions = new StringBuilder("Available actions: { ");
         Iterator<CharAction> iterator = actions.iterator();
         boolean firstIteration = true;
         while(iterator.hasNext()) {
@@ -71,7 +67,6 @@ public class MDPDriver {
         while(true) {
             System.out.print("Input: ");
             Scanner in = new Scanner(stream);
-            //System.setIn(tmp);
             String inputAction = in.next();
 
             iterator = actions.iterator();
