@@ -1,17 +1,30 @@
 
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "gradle.plugin.aspectj:gradle-aspectj:0.1.6"
+    //classpath "gradle.plugin.aspectj:plugin:0.1.1"
+    //classpath "gradle.plugin.aspectj:gradle-aspectj:0.1.1"
+  }
+}
+
+ext {
+    aspectjVersion = '1.8.5'
+}
+
+apply plugin: "aspectj.gradle"
 apply plugin: 'java'
 apply plugin: 'application'
 
+aspectjVersion = '1.8.12'
 
 repositories {
     jcenter()
     mavenCentral()
-}
-
-configurations {
-	ajc
-	aspects
-	ajInpath
 }
 
 dependencies {
@@ -23,10 +36,10 @@ dependencies {
     compile group: 'com.googlecode.matrix-toolkits-java', name: 'mtj', version: '1.0.4'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     
-    compile group: 'net.openhft', name: 'affinity', version: '3.0.6'
+    compile 'org.aspectj:aspectjrt:1.8.5'
+    compile 'org.aspectj:aspectjweaver:1.8.5'
     
-    compile 'org.aspectj:aspectjrt:1.8.4'
-    ajc 'org.aspectj:aspectjtools:1.8.4'
+    compile group: 'net.openhft', name: 'affinity', version: '3.0.6'
 
     runtime files('libs/colt.jar', 'libs/concurrent.jar', 'libs/qsopt.jar', 'libs/ssj-2.5.jar', 'libs/mdp-lib.jar')
     runtime fileTree(dir: 'libs', include: '*.jar')
@@ -36,5 +49,5 @@ dependencies {
 }
 
 // Define the main class for the application
-mainClassName = 'MDPSimulator'
+mainClassName = 'it.unimi.di.se.simulator.MDPDriver'
 
