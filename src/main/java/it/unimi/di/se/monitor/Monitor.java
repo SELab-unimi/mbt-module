@@ -149,6 +149,8 @@ public class Monitor {
 					break;
 				} else if (event.isReset()) {
 					setInitialState();
+				} else if (event.isReadState()) {
+					CheckPoint.getInstance().join(Thread.currentThread(), currentState.getName());
 				} else if (!checkEvent(event)) {
 					try {
 						throw new Exception("Invalid event: " + event);
@@ -191,6 +193,57 @@ public class Monitor {
 			queue.put(event);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public static class CheckPoint {
+		
+		private Thread waitingThread = null;
+		private static CheckPoint instance = null;
+		private String state = null;
+		
+		private CheckPoint() { }
+		
+		public static CheckPoint getInstance() {
+			if(instance == null) {
+				synchronized (CheckPoint.class) {
+					if(instance == null)
+						instance = new CheckPoint();
+				}
+			}
+			return instance;
+		}
+		
+		public synchronized void join(Thread executingThread, String state) {
+			this.state = state;
+			if(waitingThread != null) {
+				waitingThread = null;
+				notifyAll();
+			}
+			else {
+				waitingThread = executingThread;
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		public synchronized String join(Thread executingThread) {
+			if(waitingThread != null) {
+				waitingThread = null;
+				notifyAll();
+			}
+			else {
+				waitingThread = executingThread;
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			return state;
 		}
 	}
 }
