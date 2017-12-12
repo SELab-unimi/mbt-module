@@ -42,11 +42,10 @@ public class MDPSimulator {
         double cumulativeProb = 0;
         IntegerState lastState = null;
         for(IntegerState c: orderedStates) {
-            lastState = c;
             cumulativeProb += mdp.prob(currentState, c, a);
             logger.info("state = " + c.label() + ", cumulative prob = " + cumulativeProb);
-            if(uRand <= cumulativeProb)
-                currentState = c;
+            if(uRand <= cumulativeProb && lastState == null)
+            		lastState = c;
         }
         doTransition(lastState);
     }
