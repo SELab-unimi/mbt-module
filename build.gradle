@@ -48,6 +48,12 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
+run {
+    if ( project.hasProperty("appArgs") ) {
+		args Eval.me(appArgs)
+	}
+}
+
 // Define the main class for the application
 mainClassName = 'it.unimi.di.se.simulator.MDPDriver'
 
