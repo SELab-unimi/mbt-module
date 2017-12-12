@@ -24,7 +24,7 @@ import it.unimi.di.se.mdp.mdpDsl.Arc;
 import it.unimi.di.se.mdp.mdpDsl.ConcentrationParam;
 import it.unimi.di.se.mdp.mdpDsl.DirichletPrior;
 import it.unimi.di.se.mdp.mdpDsl.MDPModel;
-import it.unimi.di.se.mdp.mdpDsl.Map;
+import it.unimi.di.se.mdp.mdpDsl.ObservableMap;
 import it.unimi.di.se.mdp.mdpDsl.State;
 
 
@@ -37,12 +37,13 @@ public class Monitor {
 	private long currentTime;
 	private LinkedBlockingQueue<Event> queue = null;
 	
-	private HashMap<State, ArrayList<Arc>> outgoingArcs = new HashMap<State, ArrayList<Arc>>();
-	private HashMap<Arc, Map> arcsMapping = new HashMap<Arc, Map>();
+	private HashMap<State, ArrayList<Arc>> outgoingArcs = new HashMap<>();
+	private HashMap<Arc, ObservableMap> arcsMapping = new HashMap<>();
 	
 	// Bayesian analysis fields
-	private HashMap<State, Dirichlet> dirichlet = new HashMap<State, Dirichlet>();
-	private HashMap<State, Integer> stateIndex = new HashMap<State, Integer>();
+	private HashMap<State, Dirichlet> prior = new HashMap<>();
+	private HashMap<State, Dirichlet> posterior = new HashMap<>();
+	private HashMap<State, Integer> stateIndex = new HashMap<>();
 	
 	public Monitor(){
 		Injector injector = new MdpDslStandaloneSetup().createInjectorAndDoEMFRegistration();
@@ -72,11 +73,15 @@ public class Monitor {
 		// init Baesyan analysis
 		for(State s: model.getStates()){
 			if(s.getPrior() != null && s.getPrior().size() > 0){
-				for(DirichletPrior prior: s.getPrior()) {
-					Dirichlet d = new Dirichlet(model.getStates().size(), prior.getAct());
-					for(ConcentrationParam c: prior.getConcentration())
-						d.set(stateIndex.get(c.getDst()), Double.parseDouble(c.getAlpha()));
-					dirichlet.put(s, d);
+				for(DirichletPrior srcModelPrior: s.getPrior()) {
+					Dirichlet dirichlePrior = new Dirichlet(model.getStates().size(), srcModelPrior.getAct());
+					Dirichlet dirichlePosterior = new Dirichlet(model.getStates().size(), srcModelPrior.getAct());
+					for(ConcentrationParam c: srcModelPrior.getConcentration()) {
+						dirichlePrior.set(stateIndex.get(c.getDst()), Double.parseDouble(c.getAlpha()));
+						dirichlePosterior.set(stateIndex.get(c.getDst()), Double.parseDouble(c.getAlpha()));
+					}
+					prior.put(s, dirichlePrior);
+					posterior.put(s, dirichlePosterior);
 				}
 			}
 		}
@@ -95,7 +100,7 @@ public class Monitor {
 	}
 	
 	private void retrieveMapping(){
-		for(Map m: model.getMapping())
+		for(ObservableMap m: model.getObservableActions())
 			arcsMapping.put(m.getArc(), m);
 	}
 	
@@ -153,7 +158,7 @@ public class Monitor {
 					CheckPoint.getInstance().join(Thread.currentThread(), currentState.getName());
 				} else if (!checkEvent(event)) {
 					try {
-						throw new Exception("Invalid event: " + event);
+						throw new Exception("Invalid event: " + event.getName());
 					} catch (Exception e) {
 						e.printStackTrace();
 						log.info("Current state: ");
@@ -171,17 +176,18 @@ public class Monitor {
 	}
 
 	private boolean checkEvent(Event event) {
-		long time = event.getTime() - currentTime;
+		//long time = event.getTime() - currentTime;
 		//log.info("[Monitor] checking event: " + event.getName() + ", time: " + time);
 		for(Arc a: outgoingArcs.get(currentState))
 			if(a.getName().equals(event.getName())){
 				
 				// Bayesian analysis
-				if(dirichlet.containsKey(currentState))
-					dirichlet.get(currentState).update(stateIndex.get(a.getDst()));				
+				if(posterior.containsKey(currentState))
+					posterior.get(currentState).update(stateIndex.get(a.getDst()));				
 				
 				// update state
 				currentState = a.getDst();
+				log.info("Set current state: " + currentState.getName());
 				currentTime = event.getTime();
 				return true;
 			}
@@ -193,6 +199,19 @@ public class Monitor {
 			queue.put(event);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void report() {
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.out.println("\n********* Monitor report *********\n");
+		System.out.println("Uncertain MDP parameters:");
+		for(State s: prior.keySet()) {
+			System.out.print(s.getName() + " = " + prior.get(s).toString() + " --> " + posterior.get(s).toString() + "\n");
 		}
 	}
 	

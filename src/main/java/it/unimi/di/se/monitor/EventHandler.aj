@@ -59,6 +59,7 @@ public class EventHandler {
     @After(value="mainMethod()")
     public void shutdownMonitor(){
     		log.info("Shutting down Monitor...");
+    		monitor.report();
     		monitor.addEvent(Event.stopEvent());
 	}
 	
@@ -80,9 +81,15 @@ public class EventHandler {
 	
 	@Before(value="execution(private void it.unimi.di.se.simulator.MDPSimulator.doTransition(jmarkov.jmdp.IntegerState)) && args(state)")
 	public void doTransitionBeforeAdvice(jmarkov.jmdp.IntegerState state) {
+		
+		long timeStamp = System.currentTimeMillis();
+		monitor.addEvent(Event.readStateEvent());
+		String currentMonitorState = CheckPoint.getInstance().join(Thread.currentThread());		
+		log.info("Transition : " + currentMonitorState + "-->" + state.label());
+		
 				
 		boolean condition = true;
-		if(monitor.currentState.getName().equals("S1")) {
+		if(currentMonitorState.equals("S1")) {
 			if(state.label().equals("S3"))
 				condition &= state != null;
 		}
@@ -93,24 +100,32 @@ public class EventHandler {
 	@AfterReturning(value="execution(private void it.unimi.di.se.simulator.MDPSimulator.doTransition(jmarkov.jmdp.IntegerState)) && args(state)")
 	public void doTransitionAfterAdvice(jmarkov.jmdp.IntegerState state) {
 		
-		if(monitor.currentState.getName().equals("S3") && state.label().equals("S3"))
-			monitor.addEvent(new Event("a8", System.currentTimeMillis()));
-		else if(monitor.currentState.getName().equals("S4") && state.label().equals("S4"))
-			monitor.addEvent(new Event("a7", System.currentTimeMillis()));
-		else if(monitor.currentState.getName().equals("S5") && state.label().equals("S3"))
-			monitor.addEvent(new Event("a5", System.currentTimeMillis()));
-		else if(monitor.currentState.getName().equals("S0") && state.label().equals("S1"))
-			monitor.addEvent(new Event("a0", System.currentTimeMillis()));
-		else if(monitor.currentState.getName().equals("S0") && state.label().equals("S5"))
-			monitor.addEvent(new Event("a1", System.currentTimeMillis()));
-		else if(monitor.currentState.getName().equals("S0") && state.label().equals("S2"))
-			monitor.addEvent(new Event("a2", System.currentTimeMillis()));
-		else if(monitor.currentState.getName().equals("S1") && state.label().equals("S3"))
-			monitor.addEvent(new Event("a3", System.currentTimeMillis()));
-		else if(monitor.currentState.getName().equals("S1") && state.label().equals("S4"))
-			monitor.addEvent(new Event("a4", System.currentTimeMillis()));
-		else if(monitor.currentState.getName().equals("S2") && state.label().equals("S2"))
-			monitor.addEvent(new Event("a6", System.currentTimeMillis()));
+		long timeStamp = System.currentTimeMillis();
+		monitor.addEvent(Event.readStateEvent());
+		String currentMonitorState = CheckPoint.getInstance().join(Thread.currentThread());		
+		log.info("Transition : " + currentMonitorState + "-->" + state.label());
+		
+		
+		if(currentMonitorState.equals("S3") && state.label().equals("S3"))
+			monitor.addEvent(new Event("a8", timeStamp));
+		else if(currentMonitorState.equals("S4") && state.label().equals("S4"))
+			monitor.addEvent(new Event("a7", timeStamp));
+		else if(currentMonitorState.equals("S5") && state.label().equals("S3"))
+			monitor.addEvent(new Event("a5", timeStamp));
+		else if(currentMonitorState.equals("S5") && state.label().equals("S0"))
+			monitor.addEvent(new Event("a9", timeStamp));
+		else if(currentMonitorState.equals("S0") && state.label().equals("S1"))
+			monitor.addEvent(new Event("a0", timeStamp));
+		else if(currentMonitorState.equals("S0") && state.label().equals("S5"))
+			monitor.addEvent(new Event("a1", timeStamp));
+		else if(currentMonitorState.equals("S0") && state.label().equals("S2"))
+			monitor.addEvent(new Event("a2", timeStamp));
+		else if(currentMonitorState.equals("S1") && state.label().equals("S3"))
+			monitor.addEvent(new Event("a3", timeStamp));
+		else if(currentMonitorState.equals("S1") && state.label().equals("S4"))
+			monitor.addEvent(new Event("a4", timeStamp));
+		else if(currentMonitorState.equals("S2") && state.label().equals("S2"))
+			monitor.addEvent(new Event("a6", timeStamp));
 	}
 	
 	@Around(value="execution(private char it.unimi.di.se.simulator.MDPDriver.waitForAction(jmarkov.basic.Actions<jmarkov.jmdp.CharAction>, java.io.InputStream)) && args(actionList, input)")

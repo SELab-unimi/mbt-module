@@ -22,4 +22,14 @@ public class Dirichlet {
 	public void update(int i){
 		alpha[i]++;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder("[ ");
+		for(Double a: alpha)
+			builder.append(a).append(", ");
+		return builder.append(" ]").toString();
+	}
+	
+	
 }
