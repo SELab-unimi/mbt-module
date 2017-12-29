@@ -1,0 +1,15 @@
+digraph sut {
+	rankdir=LR;
+	node [shape = doublecircle]; S2 S4 S3;
+	node [shape = circle];
+	S0 -> S1 [ label = "a: 0.1" ];
+	S0 -> S5 [ label = "a: 0.9" ];
+	S0 -> S2 [ label = "b: 1.0" ];
+	S2 -> S2 [ label = "w: 1.0" ];
+	S1 -> S4 [ label = "b: 1.0" ];
+	S4 -> S4 [ label = "w: 1.0" ];
+	S1 -> S3 [ label = "a: 1.0" ];
+	S3 -> S3 [ label = "w: 1.0" ];
+	S5 -> S3 [ label = "w: 0.8" ];
+	S5 -> S0 [ label = "w: 0.2" ];
+}

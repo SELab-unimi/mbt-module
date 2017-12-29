@@ -32,8 +32,12 @@ public class Dirichlet {
 	
 	public Double[] mode() {
 		Double[] result = new Double[alpha.length];
-		for(int i=0; i<alpha.length; i++)
-			result[i] = (alpha[i] - 1) / (sum() - alpha.length);
+		for(int i=0; i<alpha.length; i++) {
+			if(alpha[i] > 1)
+				result[i] = (alpha[i] - 1) / (sum() - alpha.length);
+			else
+				result[i] = 0.0;
+		}
 		return result;
 	}
 	
