@@ -1,21 +1,21 @@
-model "simple-mdp"
+model "sut-model"
 actions
 	w a b
 states
-	S0 {empty} initial
+	S0 {empty} initial Dir~(a, <S1, 0.5> <S5, 0.5>)
 	S1 {}
 	S2 {}
 	S3 {full}
 	S4 {}
-	S5 {} Dir~(w, <S3, 0.8> <S0, 0.2>)
+	S5 {} Dir~(w, <S3, 0.5> <S0, 0.5>)
 arcs
-	a0 : (S0, a) -> S1, 0.1
-	a1 : (S0, a) -> S5, 0.9
+	a0 : (S0, a) -> S1, 0.5
+	a1 : (S0, a) -> S5, 0.5
 	a2 : (S0, b) -> S2, 1.0
 	a3 : (S1, a) -> S3, 1.0
 	a4 : (S1, b) -> S4, 1.0
-	a5 : (S5, w) -> S3, 0.8
-	a9 : (S5, w) -> S0, 0.2
+	a5 : (S5, w) -> S3, 0.5
+	a9 : (S5, w) -> S0, 0.5
 	a6 : (S2, w) -> S2, 1.0
 	a7 : (S4, w) -> S4, 1.0
 	a8 : (S3, w) -> S3, 1.0

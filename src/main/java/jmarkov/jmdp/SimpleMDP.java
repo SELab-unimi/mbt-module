@@ -10,7 +10,9 @@ import java.util.*;
 
 public class SimpleMDP extends DTMDP<IntegerState, CharAction> {
 
-    public static final String STATE_DELIMITER = ",";
+    private static final int LOW_COST = 0;
+	private static final int HIGH_COST = 5;
+	public static final String STATE_DELIMITER = ",";
     public static final String SPACE_SEPARATOR = " ";
     public static final String INITIAL_STATE = "i";
     public static final String UNCERTAIN_STATE = "u";
@@ -85,8 +87,8 @@ public class SimpleMDP extends DTMDP<IntegerState, CharAction> {
     public double immediateCost(IntegerState s, CharAction a) {
         for(int j: uncertainStates)
             if(mdp[s.getId()][j] != null && mdp[s.getId()][j].action == a.actionLabel() && s.getId() != j)
-                return 0;
-        return 5;
+                return LOW_COST;
+        return HIGH_COST;
     }
 
     @Override

@@ -29,8 +29,8 @@ import org.aspectj.lang.annotation.Pointcut;
 public class EventHandler {
     
     private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
-    static final String MODEL_PATH = "src/main/resources/simple-example.mdp";
-    static private final String JMDP_MODEL_PATH = "src/main/resources/simple-example.jmdp";
+    static final String MODEL_PATH = "src/main/resources/sut-model.mdp";
+    static private final String JMDP_MODEL_PATH = "src/main/resources/sut-model.jmdp";
     
     private Monitor monitor = null;
     private SimpleMDP mdp = null;

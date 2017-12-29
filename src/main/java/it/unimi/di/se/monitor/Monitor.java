@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
@@ -211,7 +212,12 @@ public class Monitor {
 		System.out.println("\n********* Monitor report *********\n");
 		System.out.println("Uncertain MDP parameters:");
 		for(State s: prior.keySet()) {
-			System.out.print(s.getName() + " = " + prior.get(s).toString() + " --> " + posterior.get(s).toString() + "\n");
+			System.out.println(s.getName() + ":=");
+			System.out.println("    Action: " + prior.get(s).action());
+			System.out.println("    Prior: " + Arrays.toString(prior.get(s).params()) + " --> Posterior: " + Arrays.toString(posterior.get(s).params()));
+			System.out.println("    Mode x_i: " + Arrays.toString(posterior.get(s).mode()));
+			System.out.println("    Mean E[x_i]: " + Arrays.toString(posterior.get(s).mean()));
+			System.out.println("    95% HPD interval: " + posterior.get(s).hpdiRCommand(0.95));
 		}
 	}
 	
