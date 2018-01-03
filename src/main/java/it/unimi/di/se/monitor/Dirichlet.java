@@ -60,11 +60,32 @@ public class Dirichlet {
 		return alpha;
 	}
 	
-	public String hpdiRCommand(double credMass) {
+	public String printHpdiRCommand(double credMass) {
 		StringBuilder rCommand = new StringBuilder("hdi(rdirichlet(100000, ");
-		rCommand.append(Arrays.toString(alpha).replace("[", "c(").replace("]", ")"));
-		rCommand.append(" ), credMass=").append(credMass).append(")");
+		rCommand.append(printParams().replace("[", "c(").replace("]", ")"));
+		rCommand.append("), credMass=").append(credMass).append(")");
 		return rCommand.toString();
+	}
+	
+	public String printParams() {
+		return prettyPrintParams(alpha);
+	}
+	
+	public String printMean() {
+		return prettyPrintParams(mean());
+	}
+	
+	public String printMode() {
+		return prettyPrintParams(mode());
+	}
+	
+	private String prettyPrintParams(Double[] params) {
+		StringBuilder builder = new StringBuilder("[");
+		for(Double a: params)
+			if(a > 0) 
+				builder.append(a).append(", ");
+		builder.replace(builder.length()-2, builder.length(), "]");
+		return builder.toString();
 	}
 
 	@Override
@@ -74,6 +95,5 @@ public class Dirichlet {
 			builder.append(a).append(", ");
 		return builder.append(" ]").toString();
 	}
-	
-	
+
 }

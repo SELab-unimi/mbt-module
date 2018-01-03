@@ -214,10 +214,10 @@ public class Monitor {
 		for(State s: prior.keySet()) {
 			System.out.println(s.getName() + ":=");
 			System.out.println("    Action: " + prior.get(s).action());
-			System.out.println("    Prior: " + Arrays.toString(prior.get(s).params()) + " --> Posterior: " + Arrays.toString(posterior.get(s).params()));
-			System.out.println("    Mode x_i: " + Arrays.toString(posterior.get(s).mode()));
-			System.out.println("    Mean E[x_i]: " + Arrays.toString(posterior.get(s).mean()));
-			System.out.println("    95% HPD interval: " + posterior.get(s).hpdiRCommand(0.95));
+			System.out.println("    Prior: " + prior.get(s).printParams() + " --> Posterior: " + posterior.get(s).printParams());
+			System.out.println("    Mode x_i: " + posterior.get(s).printMode());
+			System.out.println("    Mean E[x_i]: " + posterior.get(s).printMean());
+			System.out.println("    95% HPD interval: " + posterior.get(s).printHpdiRCommand(0.95));
 		}
 	}
 	

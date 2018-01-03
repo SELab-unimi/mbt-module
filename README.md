@@ -42,8 +42,8 @@ In particular, we want to infer the probability distributions associated with th
 We start from the following *Dirichlet* prior distributions:
 
 ```
-State: S5, Action: w, Prior: Dir ~ [0.5, 0.0, 0.0, 0.5, 0.0, 0.0]
-State: S0, Action: a, Prior: Dir ~ [0.0, 0.5, 0.0, 0.0, 0.0, 0.5]
+State: S5, Action: w, Prior: Dir ~ [0.5, 0.5]
+State: S0, Action: a, Prior: Dir ~ [0.5, 0.5]
 ```
 
 After monitoring `500` executions of the `sut.jmdp` example, the `Monitor` shows the following report:
@@ -54,16 +54,16 @@ After monitoring `500` executions of the `sut.jmdp` example, the `Monitor` shows
 Uncertain MDP parameters:
 S5:=
     Action: w
-    Prior: [0.5, 0.0, 0.0, 0.5, 0.0, 0.0] --> Posterior: [235.5, 0.0, 0.0, 873.5, 0.0, 0.0]
-    Mode x_i: [0.2126019945602901, 0.0, 0.0, 0.7910244786944697, 0.0, 0.0]
-    Mean E[x_i]: [0.21235347159603246, 0.0, 0.0, 0.7876465284039675, 0.0, 0.0]
-    95% HPD interval: hdi(rdirichlet(100000, c(235.5, 0.0, 0.0, 873.5, 0.0, 0.0) ), credMass=0.95)
+    Prior: [0.5, 0.5] --> Posterior: [235.5, 873.5]
+    Mode x_i: [0.2126019945602901, 0.7910244786944697]
+    Mean E[x_i]: [0.21235347159603246, 0.7876465284039675]
+    95% HPD interval: hdi(rdirichlet(100000, c(235.5, 873.5) ), credMass=0.95)
 S0:=
     Action: a
-    Prior: [0.0, 0.5, 0.0, 0.0, 0.0, 0.5] --> Posterior: [0.0, 127.5, 0.0, 0.0, 0.0, 1108.5]
-    Mode x_i: [0.0, 0.10284552845528455, 0.0, 0.0, 0.0, 0.9004065040650406]
-    Mean E[x_i]: [0.0, 0.10315533980582524, 0.0, 0.0, 0.0, 0.8968446601941747]
-    95% HPD interval: hdi(rdirichlet(100000, c(0.0, 127.5, 0.0, 0.0, 0.0, 1108.5) ), credMass=0.95)
+    Prior: [0.5, 0.5] --> Posterior: [127.5, 1108.5]
+    Mode x_i: [0.10284552845528455, 0.9004065040650406]
+    Mean E[x_i]: [0.10315533980582524, 0.8968446601941747]
+    95% HPD interval: hdi(rdirichlet(100000, c(127.5, 1108.5) ), credMass=0.95)
 ```
 
 The `95% HPD interval` can be computed by executing the corresponding printed line in a [R](https://www.r-project.org/) console.
