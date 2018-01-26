@@ -6,16 +6,22 @@ import it.unimi.di.se.mdp.mdpDsl.Action;
 
 public class Dirichlet {
 	
+	private static final double DELTA = 0.001;
+	
 	private Action action;
 	// hyper parameters
 	private Double[] alpha;
 	private double sum = 0;
+	private Double[] mean;
+	private boolean convergence = false;
 	
 	public Dirichlet(int length, Action action){
 		this.action = action;
 		alpha = new Double[length];
 		for(int i=0; i<length; i++)
 			alpha[i] = 0.0;
+		for(int i=0; i<length; i++)
+			mean[i] = -1.0;
 	}
 	
 	public String action() {
@@ -26,8 +32,18 @@ public class Dirichlet {
 		alpha[i] = hyperParameter;
 	}
 	
-	public void update(int i){
+	public boolean update(int i){
 		alpha[i]++;
+		Double[] updatedMean = mean();
+		for(int k=0; k<mean.length; k++)
+			if(Math.abs(updatedMean[k] - mean[k]) > DELTA)
+				return false;
+		convergence = true;
+		return true;
+	}
+	
+	public boolean convergence() {
+		return convergence;
 	}
 	
 	public Double[] mode() {

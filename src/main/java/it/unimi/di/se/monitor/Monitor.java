@@ -183,8 +183,17 @@ public class Monitor {
 			if(a.getName().equals(event.getName())){
 				
 				// Bayesian analysis
-				if(posterior.containsKey(currentState))
-					posterior.get(currentState).update(stateIndex.get(a.getDst()));				
+				if(posterior.containsKey(currentState)) {
+					if(posterior.get(currentState).update(stateIndex.get(a.getDst()))) {
+						boolean convergence = true;
+						for(State s: posterior.keySet())
+							convergence &= posterior.get(s).convergence();
+						if(convergence) {
+							log.info("[Monitor] convergence reached.");
+							//addEvent(Event.stopEvent());
+						}
+					}
+				}
 				
 				// update state
 				currentState = a.getDst();
