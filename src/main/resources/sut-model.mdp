@@ -2,12 +2,12 @@ model "sut-model"
 actions
 	w a b
 states
-	S0 {empty} initial Dir~(a, <S1, 0.5> <S5, 0.5>)
+	S0 {empty} initial
 	S1 {}
 	S2 {}
 	S3 {full}
 	S4 {}
-	S5 {} Dir~(w, <S3, 0.5> <S0, 0.5>)
+	S5 {} Dir~(w, <S0, 2020.5> <S3, 800.5> )
 arcs
 	a0 : (S0, a) -> S1, 0.5
 	a1 : (S0, a) -> S5, 0.5

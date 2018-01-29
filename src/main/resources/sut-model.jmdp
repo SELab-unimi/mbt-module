@@ -1,4 +1,4 @@
- S0 i u, S1, S2, S3, S4, S5 u,
+ S0 i, S1, S2, S3, S4, S5 u,
 S0 a S1 0.5
 S0 a S5 0.5
 S0 b S2 1.0

@@ -1,27 +1,38 @@
 package it.unimi.di.se.monitor;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import jsat.linear.DenseVector;
 
 import it.unimi.di.se.mdp.mdpDsl.Action;
 
 public class Dirichlet {
 	
-	private static final double DELTA = 0.001;
+	private static final double K = 2;
+	
+	private static final Logger log = LoggerFactory.getLogger(Dirichlet.class.getName());
 	
 	private Action action;
 	// hyper parameters
 	private Double[] alpha;
-	private double sum = 0;
-	private Double[] mean;
-	private boolean convergence = false;
+	private Double[] sample;
+	private double prevPdf = 0;
+	private int sampleSize = 0;
+	private int count = 0;
 	
 	public Dirichlet(int length, Action action){
 		this.action = action;
 		alpha = new Double[length];
 		for(int i=0; i<length; i++)
 			alpha[i] = 0.0;
+		sample = new Double[length];
 		for(int i=0; i<length; i++)
-			mean[i] = -1.0;
+			sample[i] = 0.0;
 	}
 	
 	public String action() {
@@ -32,18 +43,52 @@ public class Dirichlet {
 		alpha[i] = hyperParameter;
 	}
 	
-	public boolean update(int i){
+	public int getSampleSize() {
+		return sampleSize;
+	}
+	
+	public int getCount() {
+		return count;
+	}
+	
+	public void resetCount() {
+		count = 0;
+	}
+	
+	/**
+	 * Return Pr(D|M), i.e., the density function of the inferred model on the observed data
+	 * @return
+	 */
+	public double pdf() {
+		double[] unboxedSample = unbox(sample);
+		double[] unboxedAlpha = unbox(alpha);
+		return new jsat.distributions.multivariate.Dirichlet(new DenseVector(unboxedAlpha))
+				.pdf(new DenseVector(mean(unboxedSample)));
+	}
+	
+	private double[] unbox(Double[] args) {
+		List<Double> support = new ArrayList<Double>();
+		for(Double d: args)
+			if(d > 0)
+				support.add(d);
+		return Stream.of(support.toArray(new Double[0])).mapToDouble(Double::doubleValue).toArray();
+	}
+	
+	public void update(int i){
+		count++;
+		sampleSize++;
 		alpha[i]++;
-		Double[] updatedMean = mean();
-		for(int k=0; k<mean.length; k++)
-			if(Math.abs(updatedMean[k] - mean[k]) > DELTA)
-				return false;
-		convergence = true;
-		return true;
+		sample[i]++;
 	}
 	
 	public boolean convergence() {
-		return convergence;
+		double currentPdf = pdf();
+		double prevVal = prevPdf;
+		prevPdf = currentPdf;
+		log.warn("[Dirichlet] tests = " + sampleSize + ", Bayes Factor = " + (currentPdf/prevVal) + ", E[x_i] = " + printMean());
+		if(prevVal > 0 && currentPdf > 0)		
+			return (currentPdf/prevVal) < K;
+		return false;
 	}
 	
 	public Double[] mode() {
@@ -57,16 +102,29 @@ public class Dirichlet {
 		return result;
 	}
 	
+	public double[] mean(double[] in) {
+		double[] result = new double[in.length];
+		for(int i=0; i<in.length; i++)
+			result[i] = in[i] / sum(in);
+		return result;
+	}
+	
 	public Double[] mean() {
 		Double[] result = new Double[alpha.length];
 		for(int i=0; i<alpha.length; i++)
 			result[i] = alpha[i] / sum();
 		return result;
 	}
+	
+	private double sum(double[] in) {
+		double sum = 0;
+		for(int i=0; i<in.length; i++)
+			sum += in[i];
+		return sum;
+	}
 
 	private double sum() {
-		if(sum != 0)
-			return sum;
+		double sum = 0;
 		for(int i=0; i<alpha.length; i++)
 			sum += alpha[i];
 		return sum;

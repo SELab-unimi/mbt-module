@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
@@ -32,6 +31,7 @@ import it.unimi.di.se.mdp.mdpDsl.State;
 public class Monitor {
 	
 	private static final Logger log = LoggerFactory.getLogger(Monitor.class.getName());
+	private static final int SAMPLE_SIZE = 1000;
 	
 	private MDPModel model = null;
 	State currentState = null;
@@ -152,7 +152,8 @@ public class Monitor {
 				Event event = queue.take();
 				if (event.isStop()) {
 					log.info("MONITOR STOPPED...");
-					break;
+					report();
+					System.exit(0);
 				} else if (event.isReset()) {
 					setInitialState();
 				} else if (event.isReadState()) {
@@ -175,7 +176,7 @@ public class Monitor {
 			}
 		}
 	}
-
+	
 	private boolean checkEvent(Event event) {
 		//long time = event.getTime() - currentTime;
 		//log.info("[Monitor] checking event: " + event.getName() + ", time: " + time);
@@ -184,13 +185,22 @@ public class Monitor {
 				
 				// Bayesian analysis
 				if(posterior.containsKey(currentState)) {
-					if(posterior.get(currentState).update(stateIndex.get(a.getDst()))) {
-						boolean convergence = true;
-						for(State s: posterior.keySet())
+					posterior.get(currentState).update(stateIndex.get(a.getDst()));
+					boolean convergence = true;
+					boolean testConvergence = true;
+					for(State s: posterior.keySet()) {
+						log.info("[Monitor] count = " + posterior.get(s).getCount() + ", sample = " + posterior.get(s).getSampleSize());
+						testConvergence &= posterior.get(s).getCount() > SAMPLE_SIZE;
+					}
+					if(testConvergence) {
+						for(State s: posterior.keySet()) {
+							log.info("[Monitor] PDF = " + posterior.get(s).pdf());
+							posterior.get(s).resetCount();
 							convergence &= posterior.get(s).convergence();
+						}
 						if(convergence) {
 							log.info("[Monitor] convergence reached.");
-							//addEvent(Event.stopEvent());
+							addEvent(Event.stopEvent());
 						}
 					}
 				}
@@ -224,6 +234,8 @@ public class Monitor {
 			System.out.println(s.getName() + ":=");
 			System.out.println("    Action: " + prior.get(s).action());
 			System.out.println("    Prior: " + prior.get(s).printParams() + " --> Posterior: " + posterior.get(s).printParams());
+			System.out.println("    #test: " + posterior.get(s).getSampleSize());
+			System.out.println("    Pr(D|M): " + posterior.get(s).pdf());
 			System.out.println("    Mode x_i: " + posterior.get(s).printMode());
 			System.out.println("    Mean E[x_i]: " + posterior.get(s).printMean());
 			System.out.println("    95% HPD interval: " + posterior.get(s).printHpdiRCommand(0.95));

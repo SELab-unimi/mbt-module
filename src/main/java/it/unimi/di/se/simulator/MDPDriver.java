@@ -63,9 +63,9 @@ public class MDPDriver {
                 availableActions.append(", ");
             availableActions.append(iterator.next().actionLabel());
         }
-        System.out.println(availableActions.append(" }"));
+        //System.out.println(availableActions.append(" }"));
         while(true) {
-            System.out.print("Input: ");
+            //System.out.print("Input: ");
             Scanner in = new Scanner(stream);
             String inputAction = in.next();
 

@@ -59,16 +59,15 @@ public class EventHandler {
     @After(value="mainMethod()")
     public void shutdownMonitor(){
     		log.info("Shutting down Monitor...");
-    		monitor.report();
     		monitor.addEvent(Event.stopEvent());
 	}
 	
-	private String getActionFromPolicy() {			
+	private String getActionFromPolicy() {
 		monitor.addEvent(Event.readStateEvent());
 		String stateName = CheckPoint.getInstance().join(Thread.currentThread());
 		
 		CharAction action = decisionRule.getAction(new IntegerState(Integer.parseInt(stateName.substring(1))));		
-		log.info("Selected action = " + action.actionLabel());	
+		log.info("Selected action = " + action.actionLabel());
 		return String.valueOf(action.actionLabel());
 	}
 	
