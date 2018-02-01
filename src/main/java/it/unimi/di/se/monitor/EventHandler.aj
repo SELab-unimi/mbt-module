@@ -29,8 +29,8 @@ import org.aspectj.lang.annotation.Pointcut;
 public class EventHandler {
     
     private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
-    static final String MODEL_PATH = "src/main/resources/sut-model.mdp";
-    static private final String JMDP_MODEL_PATH = "src/main/resources/sut-model.jmdp";
+    static final String MODEL_PATH = "src/main/resources/tas-model.mdp";
+    static private final String JMDP_MODEL_PATH = "src/main/resources/tas-model.jmdp";
     
     private Monitor monitor = null;
     private SimpleMDP mdp = null;
@@ -62,12 +62,12 @@ public class EventHandler {
     		monitor.addEvent(Event.stopEvent());
 	}
 	
-	private String getActionFromPolicy() {
+	private String getActionFromPolicy() {			
 		monitor.addEvent(Event.readStateEvent());
 		String stateName = CheckPoint.getInstance().join(Thread.currentThread());
 		
 		CharAction action = decisionRule.getAction(new IntegerState(Integer.parseInt(stateName.substring(1))));		
-		log.info("Selected action = " + action.actionLabel());
+		log.info("Selected action = " + action.actionLabel());	
 		return String.valueOf(action.actionLabel());
 	}
 	
@@ -88,7 +88,7 @@ public class EventHandler {
 		
 				
 		boolean condition = true;
-		if(currentMonitorState.equals("S1")) {
+		if(currentMonitorState.equals("S2")) {
 			if(state.label().equals("S3"))
 				condition &= state != null;
 		}
@@ -105,26 +105,38 @@ public class EventHandler {
 		log.info("Transition : " + currentMonitorState + "-->" + state.label());
 		
 		
-		if(currentMonitorState.equals("S3") && state.label().equals("S3"))
-			monitor.addEvent(new Event("a8", timeStamp));
-		else if(currentMonitorState.equals("S4") && state.label().equals("S4"))
-			monitor.addEvent(new Event("a7", timeStamp));
-		else if(currentMonitorState.equals("S5") && state.label().equals("S3"))
+		if(currentMonitorState.equals("S3") && state.label().equals("S0"))
+			monitor.addEvent(new Event("a6", timeStamp));
+		else if(currentMonitorState.equals("S4") && state.label().equals("S2"))
 			monitor.addEvent(new Event("a5", timeStamp));
-		else if(currentMonitorState.equals("S5") && state.label().equals("S0"))
+		else if(currentMonitorState.equals("S5") && state.label().equals("S2"))
+			monitor.addEvent(new Event("a8", timeStamp));
+		else if(currentMonitorState.equals("S5") && state.label().equals("S6"))
 			monitor.addEvent(new Event("a9", timeStamp));
+		else if(currentMonitorState.equals("S6") && state.label().equals("S7"))
+			monitor.addEvent(new Event("a10", timeStamp));
+		else if(currentMonitorState.equals("S6") && state.label().equals("S8"))
+			monitor.addEvent(new Event("a11", timeStamp));
+		else if(currentMonitorState.equals("S6") && state.label().equals("S9"))
+			monitor.addEvent(new Event("a12", timeStamp));
+		else if(currentMonitorState.equals("S7") && state.label().equals("S0"))
+			monitor.addEvent(new Event("a13", timeStamp));
+		else if(currentMonitorState.equals("S8") && state.label().equals("S0"))
+			monitor.addEvent(new Event("a14", timeStamp));
+		else if(currentMonitorState.equals("S9") && state.label().equals("S5"))
+			monitor.addEvent(new Event("a15", timeStamp));
 		else if(currentMonitorState.equals("S0") && state.label().equals("S1"))
 			monitor.addEvent(new Event("a0", timeStamp));
-		else if(currentMonitorState.equals("S0") && state.label().equals("S5"))
-			monitor.addEvent(new Event("a1", timeStamp));
 		else if(currentMonitorState.equals("S0") && state.label().equals("S2"))
 			monitor.addEvent(new Event("a2", timeStamp));
-		else if(currentMonitorState.equals("S1") && state.label().equals("S3"))
+		else if(currentMonitorState.equals("S0") && state.label().equals("S5"))
+			monitor.addEvent(new Event("a7", timeStamp));
+		else if(currentMonitorState.equals("S1") && state.label().equals("S1"))
+			monitor.addEvent(new Event("a1", timeStamp));
+		else if(currentMonitorState.equals("S2") && state.label().equals("S3"))
 			monitor.addEvent(new Event("a3", timeStamp));
-		else if(currentMonitorState.equals("S1") && state.label().equals("S4"))
+		else if(currentMonitorState.equals("S2") && state.label().equals("S4"))
 			monitor.addEvent(new Event("a4", timeStamp));
-		else if(currentMonitorState.equals("S2") && state.label().equals("S2"))
-			monitor.addEvent(new Event("a6", timeStamp));
 	}
 	
 	@Around(value="execution(private char it.unimi.di.se.simulator.MDPDriver.waitForAction(jmarkov.basic.Actions<jmarkov.jmdp.CharAction>, java.io.InputStream)) && args(actionList, input)")

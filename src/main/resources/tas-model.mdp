@@ -1,0 +1,60 @@
+model "tas"
+actions
+	w s b v a c 
+states
+	S0  {} initial
+	S1  {stop}
+	S2  {alarm} Dir~(a, <S3, 900.0> <S4, 100.0>)
+	S3  {full}
+	S4  {}
+	S5  {}
+	S6  {}
+	S7  {fast}
+	S8  {slow}
+	S9  {}
+	S10 {success}
+	
+arcs
+	a0  : (S0, s) -> S1, 1.0
+	a1  : (S1, w) -> S1, 1.0
+	a2  : (S0, b) -> S2, 1.0
+	a3  : (S2, a) -> S3, 0.9
+	a4  : (S2, a) -> S4, 0.1
+	a5  : (S4, w) -> S2, 1.0
+	a6  : (S3, w) -> S10, 1.0
+	a7  : (S0, v) -> S5, 1.0
+	a8  : (S5, b) -> S2, 1.0
+	a9  : (S5, c) -> S6, 1.0
+	a10 : (S6, w) -> S7, 0.5
+	a11 : (S6, w) -> S8, 0.3
+	a12 : (S6, w) -> S9, 0.2
+	a13 : (S7, w) -> S10, 1.0
+	a14 : (S8, w) -> S10, 1.0
+	a15 : (S9, w) -> S5, 1.0
+	a16 : (S10, w) -> S10, 1.0
+	
+observe 
+	a0  -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S1\")"
+	a1  -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S1\")"
+	a2  -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S2\")"
+	a3  -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S3\")", precondition "state != null"
+	a4  -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S4\")"
+	a5  -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S2\")"
+	a6  -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S10\")"
+	a7  -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S5\")"
+	a8  -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S2\")"
+	a9  -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S6\")"
+	a10 -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S7\")"
+	a11 -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S8\")"
+	a12 -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S9\")"
+	a13 -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S10\")"
+	a14 -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S10\")"
+	a15 -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S5\")"
+	a16 -> after "private void it.unimi.di.se.simulator.MDPSimulator.doTransition(..)", args {state:"jmarkov.jmdp.IntegerState"}, argsCondition "state.label().equals(\"S10\")"
+	
+control
+	S0 -> "private char it.unimi.di.se.simulator.MDPDriver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.CharAction>" input:"java.io.InputStream"}
+	S2 -> "private char it.unimi.di.se.simulator.MDPDriver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.CharAction>" input:"java.io.InputStream"}
+	S5 -> "private char it.unimi.di.se.simulator.MDPDriver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.CharAction>" input:"java.io.InputStream"}
+reset
+	"public void it.unimi.di.se.simulator.MDPSimulator.resetSimulation(..)"
