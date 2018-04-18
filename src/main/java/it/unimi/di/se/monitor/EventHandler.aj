@@ -4,12 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import it.unimi.di.se.monitor.Monitor.CheckPoint;
-import jmarkov.basic.DecisionRule;
-import jmarkov.basic.exceptions.SolverException;
 import jmarkov.jmdp.CharAction;
-import jmarkov.jmdp.IntegerState;
 import jmarkov.jmdp.SimpleMDP;
-import jmarkov.jmdp.solvers.ProbabilitySolver;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -33,11 +29,10 @@ public class EventHandler {
     static private final String JMDP_MODEL_PATH = "src/main/resources/tas-model.jmdp";
     
     static final int SAMPLE_SIZE = 2000;
-    static final Monitor.Policy policy = Monitor.Policy.UNCERTAINTY;
     
     private Monitor monitor = null;
     private SimpleMDP mdp = null;
-    private DecisionRule<IntegerState, CharAction> decisionRule = null;
+    private DecisionMaker decisionMaker= null;
     
     @Pointcut("execution(public static void main(..))")
     void mainMethod() {}
@@ -45,18 +40,15 @@ public class EventHandler {
     @Before(value="mainMethod()")
     public void initMonitor() {
     		log.info("MDP Policy computation...");
-		try {
-			mdp = new SimpleMDP(new BufferedReader(new FileReader(JMDP_MODEL_PATH)));
-			mdp.printSolution();
-			decisionRule = mdp.getOptimalPolicy().getDecisionRule();
-			ProbabilitySolver<IntegerState, CharAction> solver = new ProbabilitySolver<>(mdp, decisionRule);
-			solver.solve();
-		} catch (FileNotFoundException|SolverException e) {
-			e.printStackTrace();
-		}
-    		log.info("Monitor initialization...");
-    		monitor = new Monitor();
-    		monitor.launch();
+   		try {
+   			mdp = new SimpleMDP(new BufferedReader(new FileReader(JMDP_MODEL_PATH)));
+   		} catch (FileNotFoundException e) {
+   			e.printStackTrace();
+   		}
+   		decisionMaker = new DecisionMaker(mdp, DecisionMaker.Policy.UNCERTAINTY);
+       	log.info("Monitor initialization...");
+       	monitor = new Monitor();
+       	monitor.launch();
 	}
         
     @After(value="mainMethod()")
@@ -69,7 +61,7 @@ public class EventHandler {
 		monitor.addEvent(Event.readStateEvent());
 		String stateName = CheckPoint.getInstance().join(Thread.currentThread());
 		
-		CharAction action = decisionRule.getAction(new IntegerState(Integer.parseInt(stateName.substring(1))));		
+		CharAction action = decisionMaker.getAction(Integer.parseInt(stateName.substring(1)));
 		log.info("Selected action = " + action.actionLabel());	
 		return String.valueOf(action.actionLabel());
 	}

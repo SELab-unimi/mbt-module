@@ -30,12 +30,6 @@ import it.unimi.di.se.mdp.mdpDsl.State;
 
 public class Monitor {
 	
-	enum Policy {
-		UNCERTAINTY,
-		RANDOM,
-		HISTORY
-	}
-	
 	private static final Logger log = LoggerFactory.getLogger(Monitor.class.getName());
 	
 	private MDPModel model = null;
