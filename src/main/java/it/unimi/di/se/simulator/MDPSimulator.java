@@ -2,7 +2,6 @@ package it.unimi.di.se.simulator;
 
 import jmarkov.basic.Actions;
 import jmarkov.basic.States;
-import jmarkov.basic.StatesSet;
 import jmarkov.jmdp.CharAction;
 import jmarkov.jmdp.IntegerState;
 import jmarkov.jmdp.SimpleMDP;
@@ -18,7 +17,6 @@ public class MDPSimulator {
 
     private SimpleMDP mdp = null;
     private IntegerState currentState = null;
-    private StatesSet<IntegerState> trace = new StatesSet<>();
     private Comparator<IntegerState> stateComparator = new IntegerStateComparator();
 
     public MDPSimulator(Reader input) {
@@ -29,12 +27,16 @@ public class MDPSimulator {
     public IntegerState getCurrentState() {
         return currentState;
     }
+    
+    public void setCurrentState(IntegerState state) {
+    		currentState = state;
+    }
 
     public List<IntegerState> reachableStates(char action) {
         return orderedReachableStates(mdp.reachable(currentState, new CharAction(action)));
     }
 
-    public void doAction(char action) {
+    public IntegerState doAction(IntegerState sourceState, char action) {
         CharAction a = new CharAction(action);
         List<IntegerState> orderedStates = orderedReachableStates(mdp.reachable(currentState, a));
         double uRand = new Random().nextDouble();
@@ -47,11 +49,7 @@ public class MDPSimulator {
             if(uRand <= cumulativeProb && lastState == null)
             		lastState = c;
         }
-        doTransition(lastState);
-    }
-    
-    private void doTransition(IntegerState state) {
-    		currentState = state;
+        return lastState;
     }
 
     private List<IntegerState> orderedReachableStates(States<IntegerState> reachableSet) {

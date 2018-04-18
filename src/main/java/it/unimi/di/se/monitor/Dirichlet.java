@@ -81,11 +81,25 @@ public class Dirichlet {
 		sample[i]++;
 	}
 	
+	public String report() {
+		double currentPdf = pdf();
+		double prevVal = prevPdf;
+		return "[Dirichlet] tests = " + sampleSize +
+				", Bayes Factor = " + (currentPdf/prevVal) + 
+				", E[x_i] = " + printMean() +
+				", x_i = " + printMode() +
+				", HDI = " + printHpdiRCommand(0.95);
+	}
+	
 	public boolean convergence() {
 		double currentPdf = pdf();
 		double prevVal = prevPdf;
 		prevPdf = currentPdf;
-		log.warn("[Dirichlet] tests = " + sampleSize + ", Bayes Factor = " + (currentPdf/prevVal) + ", E[x_i] = " + printMean());
+		log.warn("[Dirichlet] tests = " + sampleSize +
+				", Bayes Factor = " + (currentPdf/prevVal) + 
+				", E[x_i] = " + printMean() +
+				", x_i = " + printMode() +
+				", HDI = " + printHpdiRCommand(0.95));
 		if(prevVal > 0 && currentPdf > 0)		
 			return (currentPdf/prevVal) < K;
 		return false;
@@ -95,11 +109,19 @@ public class Dirichlet {
 		Double[] result = new Double[alpha.length];
 		for(int i=0; i<alpha.length; i++) {
 			if(alpha[i] > 1)
-				result[i] = (alpha[i] - 1) / (sum() - alpha.length);
+				result[i] = (alpha[i] - 1) / (sum() - length());
 			else
 				result[i] = 0.0;
 		}
 		return result;
+	}
+	
+	private int length() {
+		int i=0;
+		for(double a: alpha)
+			if(a>0)
+				i++;
+		return i;
 	}
 	
 	public double[] mean(double[] in) {

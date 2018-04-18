@@ -36,10 +36,10 @@ public class MDPDriver {
             while(!mdp.isCurrentStateAbsorbing()) {
                 logger.info("current state: " + mdp.getCurrentState().label());
                 if(isObservable(mdp.getCurrentState()))
-                    mdp.doAction(WAIT_ACTION);
+                    mdp.setCurrentState(mdp.doAction(mdp.getCurrentState(), WAIT_ACTION));
                 else {
                     char action = waitForAction(mdp.getFeasibleActions(), System.in);
-                    mdp.doAction(action);
+                    mdp.setCurrentState(mdp.doAction(mdp.getCurrentState(), action));
                 }
             }
             logger.info("absorbing state reached: " + mdp.getCurrentState().label());

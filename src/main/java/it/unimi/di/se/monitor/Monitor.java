@@ -30,8 +30,13 @@ import it.unimi.di.se.mdp.mdpDsl.State;
 
 public class Monitor {
 	
+	enum Policy {
+		UNCERTAINTY,
+		RANDOM,
+		HISTORY
+	}
+	
 	private static final Logger log = LoggerFactory.getLogger(Monitor.class.getName());
-	private static final int SAMPLE_SIZE = 1000;
 	
 	private MDPModel model = null;
 	State currentState = null;
@@ -177,6 +182,8 @@ public class Monitor {
 		}
 	}
 	
+	private int showInferenceInfo = 0;
+	
 	private boolean checkEvent(Event event) {
 		//long time = event.getTime() - currentTime;
 		//log.info("[Monitor] checking event: " + event.getName() + ", time: " + time);
@@ -190,7 +197,11 @@ public class Monitor {
 					boolean testConvergence = true;
 					for(State s: posterior.keySet()) {
 						log.info("[Monitor] count = " + posterior.get(s).getCount() + ", sample = " + posterior.get(s).getSampleSize());
-						testConvergence &= posterior.get(s).getCount() > SAMPLE_SIZE;
+						if(showInferenceInfo++ > 10) {
+							log.warn(posterior.get(s).report());
+							showInferenceInfo = 0;
+						}
+						testConvergence &= posterior.get(s).getCount() > EventHandler.SAMPLE_SIZE;
 					}
 					if(testConvergence) {
 						for(State s: posterior.keySet()) {

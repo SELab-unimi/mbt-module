@@ -32,6 +32,9 @@ public class EventHandler {
     static final String MODEL_PATH = "src/main/resources/tas-model.mdp";
     static private final String JMDP_MODEL_PATH = "src/main/resources/tas-model.jmdp";
     
+    static final int SAMPLE_SIZE = 2000;
+    static final Monitor.Policy policy = Monitor.Policy.UNCERTAINTY;
+    
     private Monitor monitor = null;
     private SimpleMDP mdp = null;
     private DecisionRule<IntegerState, CharAction> decisionRule = null;
@@ -78,65 +81,51 @@ public class EventHandler {
 	}
 	
 	
-	@Before(value="execution(private void it.unimi.di.se.simulator.MDPSimulator.doTransition(jmarkov.jmdp.IntegerState)) && args(state)")
-	public void doTransitionBeforeAdvice(jmarkov.jmdp.IntegerState state) {
+	@AfterReturning(value="execution(public jmarkov.jmdp.IntegerState it.unimi.di.se.simulator.MDPSimulator.doAction(jmarkov.jmdp.IntegerState, char)) && args(state, action)", returning="result")
+	public void doActionAfterAdvice(jmarkov.jmdp.IntegerState state, char action, jmarkov.jmdp.IntegerState result) {
 		
 		long timeStamp = System.currentTimeMillis();
 		monitor.addEvent(Event.readStateEvent());
-		String currentMonitorState = CheckPoint.getInstance().join(Thread.currentThread());		
-		log.info("Transition : " + currentMonitorState + "-->" + state.label());
-		
-				
-		boolean condition = true;
-		if(currentMonitorState.equals("S2")) {
-			if(state.label().equals("S3"))
-				condition &= state != null;
-		}
-		if(!condition)
-			log.error("*** PRECONDITION VIOLATION ***");
-	}
-	
-	@AfterReturning(value="execution(private void it.unimi.di.se.simulator.MDPSimulator.doTransition(jmarkov.jmdp.IntegerState)) && args(state)")
-	public void doTransitionAfterAdvice(jmarkov.jmdp.IntegerState state) {
-		
-		long timeStamp = System.currentTimeMillis();
-		monitor.addEvent(Event.readStateEvent());
-		String currentMonitorState = CheckPoint.getInstance().join(Thread.currentThread());		
-		log.info("Transition : " + currentMonitorState + "-->" + state.label());
+		String currentMonitorState = CheckPoint.getInstance().join(Thread.currentThread());
+		log.info("Transition : " + currentMonitorState + "-->" + result.label());
 		
 		
-		if(currentMonitorState.equals("S3") && state.label().equals("S0"))
+		if(currentMonitorState.equals("S3") && state.label().equals("S3") && action=='w' && result.label().equals("S10"))
 			monitor.addEvent(new Event("a6", timeStamp));
-		else if(currentMonitorState.equals("S4") && state.label().equals("S2"))
+		else if(currentMonitorState.equals("S4") && state.label().equals("S4") && action=='w' && result.label().equals("S2"))
 			monitor.addEvent(new Event("a5", timeStamp));
-		else if(currentMonitorState.equals("S5") && state.label().equals("S2"))
+		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='b' && result.label().equals("S2"))
 			monitor.addEvent(new Event("a8", timeStamp));
-		else if(currentMonitorState.equals("S5") && state.label().equals("S6"))
+		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='c' && result.label().equals("S6"))
 			monitor.addEvent(new Event("a9", timeStamp));
-		else if(currentMonitorState.equals("S6") && state.label().equals("S7"))
+		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action=='w' && result.label().equals("S7"))
 			monitor.addEvent(new Event("a10", timeStamp));
-		else if(currentMonitorState.equals("S6") && state.label().equals("S8"))
+		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action=='w' && result.label().equals("S8"))
 			monitor.addEvent(new Event("a11", timeStamp));
-		else if(currentMonitorState.equals("S6") && state.label().equals("S9"))
+		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action=='w' && result.label().equals("S9"))
 			monitor.addEvent(new Event("a12", timeStamp));
-		else if(currentMonitorState.equals("S7") && state.label().equals("S0"))
+		else if(currentMonitorState.equals("S10") && state.label().equals("S10") && action=='w' && result.label().equals("S10"))
+			monitor.addEvent(new Event("a16", timeStamp));
+		else if(currentMonitorState.equals("S7") && state.label().equals("S7") && action=='w' && result.label().equals("S10"))
 			monitor.addEvent(new Event("a13", timeStamp));
-		else if(currentMonitorState.equals("S8") && state.label().equals("S0"))
+		else if(currentMonitorState.equals("S8") && state.label().equals("S8") && action=='w' && result.label().equals("S10"))
 			monitor.addEvent(new Event("a14", timeStamp));
-		else if(currentMonitorState.equals("S9") && state.label().equals("S5"))
+		else if(currentMonitorState.equals("S9") && state.label().equals("S9") && action=='w' && result.label().equals("S5"))
 			monitor.addEvent(new Event("a15", timeStamp));
-		else if(currentMonitorState.equals("S0") && state.label().equals("S1"))
+		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='s' && result.label().equals("S1"))
 			monitor.addEvent(new Event("a0", timeStamp));
-		else if(currentMonitorState.equals("S0") && state.label().equals("S2"))
+		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='b' && result.label().equals("S2"))
 			monitor.addEvent(new Event("a2", timeStamp));
-		else if(currentMonitorState.equals("S0") && state.label().equals("S5"))
+		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='v' && result.label().equals("S5"))
 			monitor.addEvent(new Event("a7", timeStamp));
-		else if(currentMonitorState.equals("S1") && state.label().equals("S1"))
+		else if(currentMonitorState.equals("S1") && state.label().equals("S1") && action=='w' && result.label().equals("S1"))
 			monitor.addEvent(new Event("a1", timeStamp));
-		else if(currentMonitorState.equals("S2") && state.label().equals("S3"))
+		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='a' && result.label().equals("S3"))
 			monitor.addEvent(new Event("a3", timeStamp));
-		else if(currentMonitorState.equals("S2") && state.label().equals("S4"))
+		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='a' && result.label().equals("S4"))
 			monitor.addEvent(new Event("a4", timeStamp));
+		else
+			log.error("*** PRE-/POST- CONDITION VIOLATION ***");
 	}
 	
 	@Around(value="execution(private char it.unimi.di.se.simulator.MDPDriver.waitForAction(jmarkov.basic.Actions<jmarkov.jmdp.CharAction>, java.io.InputStream)) && args(actionList, input)")

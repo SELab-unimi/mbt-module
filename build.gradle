@@ -49,6 +49,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
+applicationDefaultJvmArgs = ["-Dorg.slf4j.simpleLogger.defaultLogLevel=warn"]
+
 run {
     if ( project.hasProperty("appArgs") ) {
 		args Eval.me(appArgs)
