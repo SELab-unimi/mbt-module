@@ -177,10 +177,12 @@ public class Monitor {
 	}
 	
 	private int showInferenceInfo = 0;
+	private int eventCount = 0;
 	
 	private boolean checkEvent(Event event) {
 		//long time = event.getTime() - currentTime;
 		//log.info("[Monitor] checking event: " + event.getName() + ", time: " + time);
+		eventCount++;
 		for(Arc a: outgoingArcs.get(currentState))
 			if(a.getName().equals(event.getName())){
 				
@@ -192,7 +194,7 @@ public class Monitor {
 					for(State s: posterior.keySet()) {
 						log.info("[Monitor] count = " + posterior.get(s).getCount() + ", sample = " + posterior.get(s).getSampleSize());
 						if(showInferenceInfo++ > 10) {
-							log.warn(posterior.get(s).report());
+							log.warn(posterior.get(s).report() + " events = " + eventCount);
 							showInferenceInfo = 0;
 						}
 						testConvergence &= posterior.get(s).getCount() > EventHandler.SAMPLE_SIZE;

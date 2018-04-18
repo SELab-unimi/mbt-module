@@ -1,5 +1,6 @@
 package it.unimi.di.se.monitor;
 
+import jmarkov.basic.Actions;
 import jmarkov.basic.DecisionRule;
 import jmarkov.basic.exceptions.SolverException;
 import jmarkov.jmdp.CharAction;
@@ -37,6 +38,14 @@ public class DecisionMaker {
 	public CharAction getAction(int stateIndex) {
 		if(policy == Policy.UNCERTAINTY) {
 			return decisionRule.getAction(new IntegerState(stateIndex));
+		}
+		if(policy == Policy.RANDOM) {
+			Actions<CharAction> actions = mdp.feasibleActions(new IntegerState(stateIndex));
+			int randomIndex = (int)(Math.random() * actions.size());
+			int i=0;
+			for(CharAction a: actions)
+				if(i++==randomIndex)
+					return a;
 		}
 		return null;
 	}
