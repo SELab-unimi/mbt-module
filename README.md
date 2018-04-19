@@ -15,7 +15,7 @@ gradle build
 After `build`, you can run the application by executing `gradle run`.
 In particular, the project comes along with a simple example that you can try out by running:
 ```
-gradle run -PappArgs="['-i', 'src/main/resources/sut.jmdp', '-l', '500']"
+gradle run -PappArgs="['-i', 'src/main/resources/tas-sut.jmdp', '-l', '1000000']"
 ```
 
 ### Usage intructions
@@ -46,7 +46,7 @@ State: S5, Action: w, Prior: Dir ~ [0.5, 0.5]
 State: S0, Action: a, Prior: Dir ~ [0.5, 0.5]
 ```
 
-After monitoring `500` executions of the `sut.jmdp` example, the `Monitor` shows the following report:
+At the end of the execution the `Monitor` shows a report. For instance:
 
 ```
 ********* Monitor report *********
