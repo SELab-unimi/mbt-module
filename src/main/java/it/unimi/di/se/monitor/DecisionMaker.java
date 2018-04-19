@@ -1,5 +1,13 @@
 package it.unimi.di.se.monitor;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import jmarkov.basic.Actions;
 import jmarkov.basic.DecisionRule;
 import jmarkov.basic.exceptions.SolverException;
@@ -18,7 +26,8 @@ public class DecisionMaker {
 	
 	private SimpleMDP mdp = null;
 	private Policy policy = null;
-	private DecisionRule<IntegerState, CharAction> decisionRule;
+	private DecisionRule<IntegerState, CharAction> decisionRule = null;
+	private Map<StateAction, Integer> count = null;
 	
 	public DecisionMaker(SimpleMDP mdp, Policy policy) {
 		this.mdp = mdp;
@@ -32,6 +41,12 @@ public class DecisionMaker {
 			}
 			ProbabilitySolver<IntegerState, CharAction> solver = new ProbabilitySolver<>(this.mdp, decisionRule);
 			solver.solve();
+		}
+		if(policy == Policy.HISTORY) {
+			count = new HashMap<>();
+			for(IntegerState s: this.mdp.getAllStates())
+				for(CharAction a: this.mdp.feasibleActions(s))
+					count.put(new StateAction(s.getId(), a), 1);
 		}
 	}
 
@@ -47,6 +62,80 @@ public class DecisionMaker {
 				if(i++==randomIndex)
 					return a;
 		}
+		if(policy == Policy.HISTORY) {
+			IntegerState currentState = new IntegerState(stateIndex);
+			Actions<CharAction> actions = mdp.feasibleActions(currentState);
+			List<ActionWeight> weightedActions = new ArrayList<>();
+			int countSum = 0;
+			for(CharAction a: actions) {
+				int c = count.get(new StateAction(stateIndex, a));
+				countSum += c;
+				weightedActions.add(new ActionWeight(a, c));
+			}
+			if(weightedActions.size() == 1) {
+				CharAction a = weightedActions.get(0).action;
+				StateAction k = new StateAction(stateIndex, a);
+				count.put(k, count.get(k) + 1);
+				return a;
+			}
+			double frequencySum = 0.0;
+			for(ActionWeight aw: weightedActions) {
+				aw.weight = 1 - (aw.weight/countSum);
+				frequencySum += aw.weight;
+			}
+			Collections.sort(weightedActions, new ActionWeightComparator());
+			double cumulativeProb = 0.0;
+			double rand = Math.random();
+			for(ActionWeight aw: weightedActions) {
+				cumulativeProb += (aw.weight/frequencySum);
+				if(rand <= cumulativeProb) {
+					StateAction k = new StateAction(stateIndex, aw.action);
+					count.put(k, count.get(k) + 1);
+					return aw.action;
+				}
+			}
+		}
 		return null;
+	}
+	
+	class StateAction {
+		Integer state = 0;
+		CharAction action = null;
+		
+		StateAction(int state, CharAction action) {
+			this.state = state;
+			this.action = action;
+		}
+		
+		public boolean equals(Object o) {
+			StateAction target = (StateAction)o;
+			return this.state == target.state && this.action.actionLabel() == target.action.actionLabel();
+		}
+		
+		@Override
+	    public int hashCode() {
+	        return Objects.hash(state, action.actionLabel());
+	    }
+	}
+	
+	class ActionWeight {
+		CharAction action = null;
+		double weight = 0;
+		
+		ActionWeight(CharAction action, double weight) {
+			this.action = action;
+			this.weight = weight;
+		}
+	}
+	
+	class ActionWeightComparator implements Comparator<ActionWeight> {
+		@Override
+		public int compare(ActionWeight s, ActionWeight t) {
+			if(s.weight > t.weight)
+				return 1;
+			else if(s.weight < t.weight)
+				return -1;
+			return 0;
+		}
 	}
 }
