@@ -26,9 +26,15 @@ import it.unimi.di.se.mdp.mdpDsl.DirichletPrior;
 import it.unimi.di.se.mdp.mdpDsl.MDPModel;
 import it.unimi.di.se.mdp.mdpDsl.ObservableMap;
 import it.unimi.di.se.mdp.mdpDsl.State;
+import jmarkov.jmdp.CharAction;
 
 
 public class Monitor {
+	
+	enum Termination {
+		COVERAGE,
+		CONVERGENCE
+	}
 	
 	private static final Logger log = LoggerFactory.getLogger(Monitor.class.getName());
 	
@@ -44,6 +50,8 @@ public class Monitor {
 	private HashMap<State, Dirichlet> prior = new HashMap<>();
 	private HashMap<State, Dirichlet> posterior = new HashMap<>();
 	private HashMap<State, Integer> stateIndex = new HashMap<>();
+	
+	private Coverage coverageInfo = null;
 	
 	public Monitor(){
 		Injector injector = new MdpDslStandaloneSetup().createInjectorAndDoEMFRegistration();
@@ -65,6 +73,9 @@ public class Monitor {
 		retrieveOutgoingArcs();
 		retrieveMapping();
 		queue = new LinkedBlockingQueue<Event>();
+		
+		// coverage info
+		coverageInfo = new Coverage(model);
 		
 		int i = 0;
 		for(State s: model.getStates())
@@ -186,7 +197,7 @@ public class Monitor {
 		for(Arc a: outgoingArcs.get(currentState))
 			if(a.getName().equals(event.getName())){
 				
-				// Bayesian analysis
+				// Bayesian analysis and termination
 				if(posterior.containsKey(currentState)) {
 					posterior.get(currentState).update(stateIndex.get(a.getDst()));
 					boolean convergence = true;
@@ -205,10 +216,20 @@ public class Monitor {
 							posterior.get(s).resetCount();
 							convergence &= posterior.get(s).convergence();
 						}
-						if(convergence) {
+						if(convergence && EventHandler.TERMINATION_CONDITION == Termination.CONVERGENCE) {
 							log.info("[Monitor] convergence reached.");
 							addEvent(Event.stopEvent());
 						}
+					}
+				}
+				
+				// coverage info and termination
+				coverageInfo.addExecution(stateIndex.get(currentState), new CharAction(a.getAct().getName().charAt(0)));
+				if(eventCount % EventHandler.SAMPLE_SIZE >= EventHandler.SAMPLE_SIZE-1) {
+					log.warn(coverageInfo.toString());
+					if(EventHandler.TERMINATION_CONDITION == Termination.COVERAGE && coverageInfo.getCoverage() >= 1.0) {
+						log.info("[Monitor] convergence reached.");
+						addEvent(Event.stopEvent());
 					}
 				}
 				

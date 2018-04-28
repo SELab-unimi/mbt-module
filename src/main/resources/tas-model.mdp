@@ -1,10 +1,10 @@
 model "tas"
 actions
-	w s b v a c 
+	w s b v a c
 states
 	S0  {} initial
 	S1  {stop}
-	S2  {alarm} Dir~(a, <S3, 344.5> <S4, 155.5>)
+	S2  {alarm} Dir~(a, <S3, 803.0> <S4, 197.0>)
 	S3  {full}
 	S4  {}
 	S5  {}

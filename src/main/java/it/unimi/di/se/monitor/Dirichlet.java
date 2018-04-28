@@ -62,8 +62,15 @@ public class Dirichlet {
 	public double pdf() {
 		double[] unboxedSample = unbox(sample);
 		double[] unboxedAlpha = unbox(alpha);
-		return new jsat.distributions.multivariate.Dirichlet(new DenseVector(unboxedAlpha))
-				.pdf(new DenseVector(mean(unboxedSample)));
+		double result = 0.0;
+		try {
+			result = new jsat.distributions.multivariate.Dirichlet(new DenseVector(unboxedAlpha))
+					.pdf(new DenseVector(mean(unboxedSample)));
+		}
+		catch(ArithmeticException e) {
+			result = 0.0;
+		}
+		return result;
 	}
 	
 	private double[] unbox(Double[] args) {

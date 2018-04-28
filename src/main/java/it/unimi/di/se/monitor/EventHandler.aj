@@ -25,10 +25,11 @@ import org.aspectj.lang.annotation.Pointcut;
 public class EventHandler {
     
     private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
-    static final String MODEL_PATH = "src/main/resources/tas-model.mdp";
-    static private final String JMDP_MODEL_PATH = "src/main/resources/tas-model.jmdp";
+    static final String MODEL_PATH = "src/main/resources/tasv2.mdp";
+    static private final String JMDP_MODEL_PATH = "src/main/resources/tasv2.jmdp";
     
     static final int SAMPLE_SIZE = 2000;
+    static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.CONVERGENCE;
     
     private Monitor monitor = null;
     private SimpleMDP mdp = null;
@@ -90,6 +91,10 @@ public class EventHandler {
 			monitor.addEvent(new Event("a8", timeStamp));
 		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='c' && result.label().equals("S6"))
 			monitor.addEvent(new Event("a9", timeStamp));
+		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='e' && result.label().equals("S10"))
+			monitor.addEvent(new Event("a18", timeStamp));
+		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='r' && result.label().equals("S0"))
+			monitor.addEvent(new Event("a19", timeStamp));
 		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action=='w' && result.label().equals("S7"))
 			monitor.addEvent(new Event("a10", timeStamp));
 		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action=='w' && result.label().equals("S8"))
@@ -110,6 +115,8 @@ public class EventHandler {
 			monitor.addEvent(new Event("a2", timeStamp));
 		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='v' && result.label().equals("S5"))
 			monitor.addEvent(new Event("a7", timeStamp));
+		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='e' && result.label().equals("S10"))
+			monitor.addEvent(new Event("a17", timeStamp));
 		else if(currentMonitorState.equals("S1") && state.label().equals("S1") && action=='w' && result.label().equals("S1"))
 			monitor.addEvent(new Event("a1", timeStamp));
 		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='a' && result.label().equals("S3"))
