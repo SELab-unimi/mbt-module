@@ -227,7 +227,7 @@ public class Monitor {
 				coverageInfo.addExecution(stateIndex.get(currentState), new CharAction(a.getAct().getName().charAt(0)));
 				if(eventCount % EventHandler.SAMPLE_SIZE >= EventHandler.SAMPLE_SIZE-1) {
 					log.warn(coverageInfo.toString());
-					if(EventHandler.TERMINATION_CONDITION == Termination.COVERAGE && coverageInfo.getCoverage() >= 1.0) {
+					if(EventHandler.TERMINATION_CONDITION == Termination.COVERAGE && coverageInfo.getCoverage() >= EventHandler.COVERAGE) {
 						log.info("[Monitor] convergence reached.");
 						addEvent(Event.stopEvent());
 					}
