@@ -15,7 +15,7 @@ gradle build
 After `build`, you can run the application by executing `gradle run`.
 In particular, the project comes along with a simple example that you can try out by running:
 ```
-gradle run -PappArgs="['-i', 'src/main/resources/tas-sut.jmdp', '-l', '1000000']"
+gradle run -PappArgs="['-i', 'src/main/resources/tasv3-sut.jmdp', '-l', '1000000']"
 ```
 
 ### Usage intructions
@@ -27,7 +27,7 @@ The help message can be shown by using the `-h` option:
 Usage: MDPDriver [-hv] -i=<inputMDP> [-l=<limit>]
   -h, --help                  Display this help message
   -i, --input=<inputMDP>      MDP auto-generated description
-  -l, --limit=<limit>         Number of simulations
+  -l, --limit=<limit>         Max number of simulations
   -v, --version               Display the version
 ```
 
