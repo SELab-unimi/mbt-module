@@ -41,6 +41,7 @@ dependencies {
     compile 'org.aspectj:aspectjweaver:1.8.5'
     
     compile group: 'net.openhft', name: 'affinity', version: '3.0.6'
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.13.0'
 
     runtime files('libs/colt.jar', 'libs/concurrent.jar', 'libs/qsopt.jar', 'libs/ssj-2.5.jar', 'libs/mdp-lib.jar')
     runtime fileTree(dir: 'libs', include: '*.jar')

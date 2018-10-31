@@ -28,7 +28,7 @@ public class EventHandler {
     static final String MODEL_PATH = "src/main/resources/webapp.mdp";
     static private final String JMDP_MODEL_PATH = "src/main/resources/webapp.jmdp";
     
-    static final int SAMPLE_SIZE = 2000;
+    static final int SAMPLE_SIZE = 500;
     static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.CONVERGENCE;
     static final double COVERAGE = 1.0;
     
@@ -75,22 +75,20 @@ public class EventHandler {
 	}
 	
 	
-	@AfterReturning(value="execution(public jmarkov.jmdp.IntegerState it.unimi.di.se.simulator.MBTDriver.doAction(jmarkov.jmdp.IntegerState, char)) && args(state, action)", returning="result")
-	public void doActionAfterAdvice(jmarkov.jmdp.IntegerState state, char action, jmarkov.jmdp.IntegerState result) {
+	@AfterReturning(value="execution(public it.unimi.di.se.simulator.WebAppAction it.unimi.di.se.simulator.MBTDriver.doAction(jmarkov.jmdp.IntegerState, char)) && args(state, action)", returning="result")
+	public void doActionAfterAdvice(jmarkov.jmdp.IntegerState state, char action, it.unimi.di.se.simulator.WebAppAction result) {
 		
 		long timeStamp = System.currentTimeMillis();
 		monitor.addEvent(Event.readStateEvent());
 		String currentMonitorState = CheckPoint.getInstance().join(Thread.currentThread());
-		log.info("Transition : " + currentMonitorState + "-->" + result.label());
 		
-		
-		if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='a' && result.label().equals("S1"))
+		if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='a' && result.success())
 			monitor.addEvent(new Event("a0", timeStamp));
-		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='a' && result.label().equals("S2"))
+		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='a' && !result.success())
 			monitor.addEvent(new Event("a1", timeStamp));
-		else if(currentMonitorState.equals("S1") && state.label().equals("S1") && action=='w' && result.label().equals("S1"))
+		else if(currentMonitorState.equals("S1") && state.label().equals("S1") && action=='w' && result == null)
 			monitor.addEvent(new Event("a2", timeStamp));
-		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='w' && result.label().equals("S2"))
+		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='w' && result == null)
 			monitor.addEvent(new Event("a3", timeStamp));
 		else
 			log.error("*** PRE-/POST- CONDITION VIOLATION ***");

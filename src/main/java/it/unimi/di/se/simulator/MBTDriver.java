@@ -73,20 +73,13 @@ public class MBTDriver {
         return actions.size() == 1 && actions.iterator().next().actionLabel() == WAIT_ACTION;
     }
     
-    public IntegerState doAction(IntegerState sourceState, char action) {
-        CharAction a = new CharAction(action);
-        List<IntegerState> orderedStates = orderedReachableStates(mdp.reachable(currentState, a));
-        double uRand = new Random().nextDouble();
-        logger.info("U[0,1] = " + uRand);
-        double cumulativeProb = 0;
-        IntegerState lastState = null;
-        for(IntegerState c: orderedStates) {
-            cumulativeProb += mdp.prob(currentState, c, a);
-            logger.info("state = " + c.label() + ", cumulative prob = " + cumulativeProb);
-            if(uRand <= cumulativeProb && lastState == null)
-            		lastState = c;
+    public WebAppAction doAction(IntegerState sourceState, char action) {
+        WebAppAction webAction = null;
+        if(action == 'a') {
+        		webAction = webAPI.getAction("GET");
+        		webAction.executeAction("http://127.0.0.1:8000/index.html?op=filter&cat=Books&tags=", "5000");
         }
-        return lastState;
+        return webAction;
     }
     
     private List<IntegerState> orderedReachableStates(States<IntegerState> reachableSet) {
@@ -127,6 +120,7 @@ public class MBTDriver {
     }
     
     public void resetSimulation() {
+    		webAPI.resetApp();
         currentState = mdp.getInitialState();
     }
 

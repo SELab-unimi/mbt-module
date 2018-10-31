@@ -1,7 +1,9 @@
 package it.unimi.di.se.simulator;
 
+import org.openqa.selenium.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -10,6 +12,7 @@ public class GetAction implements WebAppAction {
 	
 	private WebDriver driver = null;
 	private long executionTime = 0;
+	private boolean success = false;
 	
 	private static int DEFAULT_TIMEOUT = 10000;
 
@@ -34,16 +37,23 @@ public class GetAction implements WebAppAction {
 			driver.get(args[0]);
 			executionTime = (Long)((JavascriptExecutor)driver).
 					executeScript("return performance.timing.loadEventEnd - performance.timing.navigationStart;");
-			return true;
+			
+			success = !driver.getPageSource().contains("ERROR IN GET ELEMENT");
 		} catch (TimeoutException te){
 			executionTime = timeOut;
-			return false;
+			success = false;
 		}
+		return success;
 	}
 
 	@Override
 	public long executionTime() {
 		return executionTime;
+	}
+
+	@Override
+	public boolean success() {
+		return success;
 	}
 	
 }

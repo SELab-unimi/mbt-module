@@ -24,5 +24,9 @@ public class WebAppAPI {
 	public void shutDown() {
 		driver.quit();
 	}
+	
+	public void resetApp() {
+		actions.get("GET").executeAction("http://127.0.0.1:8000/index.html", "5000");
+	}
 
 }
