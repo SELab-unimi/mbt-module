@@ -39,6 +39,7 @@ public class MBTDriver {
         mdp = new SimpleMDP(input);
         monitor = Monitor.getInstance();
         webAPI = new WebAppAPI();
+        monitor.setWebAppAPI(webAPI);
     }
 
     public void start() {
@@ -177,13 +178,13 @@ public class MBTDriver {
             Long start = System.nanoTime();
 
             logger.trace("MDP initialization...");
-            MBTDriver simulator = new MBTDriver(
+            MBTDriver driver = new MBTDriver(
                     new InputStreamReader(new FileInputStream(command.inputMDP)),
                     command.limit);
             logger.trace("Done.");
 
             logger.trace("Start simulation...");
-            simulator.start();
+            driver.start();
             logger.trace("Done.");
 
             Long diffNanoseconds = System.nanoTime() - start;

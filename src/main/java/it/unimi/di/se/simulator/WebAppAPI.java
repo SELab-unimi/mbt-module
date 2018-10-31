@@ -20,5 +20,9 @@ public class WebAppAPI {
 	public WebAppAction getAction(String actionKey) {
 		return actions.get(actionKey);
 	}
+	
+	public void shutDown() {
+		driver.quit();
+	}
 
 }

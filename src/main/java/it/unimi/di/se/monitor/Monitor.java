@@ -26,6 +26,7 @@ import it.unimi.di.se.mdp.mdpDsl.DirichletPrior;
 import it.unimi.di.se.mdp.mdpDsl.MDPModel;
 import it.unimi.di.se.mdp.mdpDsl.ObservableMap;
 import it.unimi.di.se.mdp.mdpDsl.State;
+import it.unimi.di.se.simulator.WebAppAPI;
 import jmarkov.jmdp.CharAction;
 
 
@@ -43,6 +44,7 @@ public class Monitor {
 	State currentState = null;
 	private long currentTime;
 	private LinkedBlockingQueue<Event> queue = null;
+	private WebAppAPI webAPI = null;
 	
 	private HashMap<State, ArrayList<Arc>> outgoingArcs = new HashMap<>();
 	private HashMap<Arc, ObservableMap> arcsMapping = new HashMap<>();
@@ -62,6 +64,10 @@ public class Monitor {
 	
 	public synchronized State getCurrentState() {
 		return currentState;
+	}
+	
+	public void setWebAppAPI(WebAppAPI webAPI) {
+		this.webAPI = webAPI;
 	}
 	
 	private Monitor(){
@@ -174,6 +180,7 @@ public class Monitor {
 				if (event.isStop()) {
 					log.info("MONITOR STOPPED...");
 					report();
+					webAPI.shutDown();
 					System.exit(0);
 				} else if (event.isReset()) {
 					setInitialState();

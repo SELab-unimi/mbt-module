@@ -25,8 +25,8 @@ import org.aspectj.lang.annotation.Pointcut;
 public class EventHandler {
     
     private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
-    static final String MODEL_PATH = "src/main/resources/tasv3.mdp";
-    static private final String JMDP_MODEL_PATH = "src/main/resources/tasv3.jmdp";
+    static final String MODEL_PATH = "src/main/resources/webapp.mdp";
+    static private final String JMDP_MODEL_PATH = "src/main/resources/webapp.jmdp";
     
     static final int SAMPLE_SIZE = 2000;
     static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.CONVERGENCE;
@@ -84,46 +84,14 @@ public class EventHandler {
 		log.info("Transition : " + currentMonitorState + "-->" + result.label());
 		
 		
-		if(currentMonitorState.equals("S3") && state.label().equals("S3") && action=='w' && result.label().equals("S10"))
-			monitor.addEvent(new Event("a6", timeStamp));
-		else if(currentMonitorState.equals("S4") && state.label().equals("S4") && action=='w' && result.label().equals("S2"))
-			monitor.addEvent(new Event("a5", timeStamp));
-		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='b' && result.label().equals("S2"))
-			monitor.addEvent(new Event("a8", timeStamp));
-		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='c' && result.label().equals("S6"))
-			monitor.addEvent(new Event("a9", timeStamp));
-		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='e' && result.label().equals("S10"))
-			monitor.addEvent(new Event("a18", timeStamp));
-		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='r' && result.label().equals("S0"))
-			monitor.addEvent(new Event("a19", timeStamp));
-		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action=='w' && result.label().equals("S7"))
-			monitor.addEvent(new Event("a10", timeStamp));
-		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action=='w' && result.label().equals("S8"))
-			monitor.addEvent(new Event("a11", timeStamp));
-		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action=='w' && result.label().equals("S9"))
-			monitor.addEvent(new Event("a12", timeStamp));
-		else if(currentMonitorState.equals("S10") && state.label().equals("S10") && action=='w' && result.label().equals("S10"))
-			monitor.addEvent(new Event("a16", timeStamp));
-		else if(currentMonitorState.equals("S7") && state.label().equals("S7") && action=='w' && result.label().equals("S10"))
-			monitor.addEvent(new Event("a13", timeStamp));
-		else if(currentMonitorState.equals("S8") && state.label().equals("S8") && action=='w' && result.label().equals("S10"))
-			monitor.addEvent(new Event("a14", timeStamp));
-		else if(currentMonitorState.equals("S9") && state.label().equals("S9") && action=='w' && result.label().equals("S5"))
-			monitor.addEvent(new Event("a15", timeStamp));
-		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='s' && result.label().equals("S1"))
+		if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='a' && result.label().equals("S1"))
 			monitor.addEvent(new Event("a0", timeStamp));
-		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='b' && result.label().equals("S2"))
-			monitor.addEvent(new Event("a2", timeStamp));
-		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='v' && result.label().equals("S5"))
-			monitor.addEvent(new Event("a7", timeStamp));
-		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='e' && result.label().equals("S10"))
-			monitor.addEvent(new Event("a17", timeStamp));
-		else if(currentMonitorState.equals("S1") && state.label().equals("S1") && action=='w' && result.label().equals("S1"))
+		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='a' && result.label().equals("S2"))
 			monitor.addEvent(new Event("a1", timeStamp));
-		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='a' && result.label().equals("S3"))
+		else if(currentMonitorState.equals("S1") && state.label().equals("S1") && action=='w' && result.label().equals("S1"))
+			monitor.addEvent(new Event("a2", timeStamp));
+		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='w' && result.label().equals("S2"))
 			monitor.addEvent(new Event("a3", timeStamp));
-		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='a' && result.label().equals("S4"))
-			monitor.addEvent(new Event("a4", timeStamp));
 		else
 			log.error("*** PRE-/POST- CONDITION VIOLATION ***");
 		
