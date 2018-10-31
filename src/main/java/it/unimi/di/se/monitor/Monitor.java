@@ -37,6 +37,7 @@ public class Monitor {
 	}
 	
 	private static final Logger log = LoggerFactory.getLogger(Monitor.class.getName());
+	private static Monitor instance = null;
 	
 	private MDPModel model = null;
 	State currentState = null;
@@ -53,7 +54,17 @@ public class Monitor {
 	
 	private Coverage coverageInfo = null;
 	
-	public Monitor(){
+	public static synchronized Monitor getInstance() {
+		if(instance == null)
+			instance = new Monitor();
+		return instance;
+	}
+	
+	public synchronized State getCurrentState() {
+		return currentState;
+	}
+	
+	private Monitor(){
 		Injector injector = new MdpDslStandaloneSetup().createInjectorAndDoEMFRegistration();
 		XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
 		resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
