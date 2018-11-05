@@ -11,6 +11,9 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -31,6 +34,12 @@ public class EventHandler {
     static final int SAMPLE_SIZE = 500;
     static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.CONVERGENCE;
     static final double COVERAGE = 1.0;
+    
+     public static final Map<Character, Map.Entry<String, String[]>> actionMap = new HashMap<>();
+    static {
+    		actionMap.put('a', new AbstractMap.SimpleEntry<>("GET", new String[]{"http://127.0.0.1:8000/index.html?op=filter&cat=Books&tags=","5000"}));
+    		actionMap.put('w', new AbstractMap.SimpleEntry<>("NONE", new String[]{}));
+    	}
     
     private Monitor monitor = null;
     private SimpleMDP mdp = null;
@@ -81,6 +90,7 @@ public class EventHandler {
 		long timeStamp = System.currentTimeMillis();
 		monitor.addEvent(Event.readStateEvent());
 		String currentMonitorState = CheckPoint.getInstance().join(Thread.currentThread());
+		
 		
 		if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='a' && result.success())
 			monitor.addEvent(new Event("a0", timeStamp));

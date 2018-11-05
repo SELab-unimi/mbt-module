@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import it.unimi.di.se.mdp.mdpDsl.State;
+import it.unimi.di.se.monitor.EventHandler;
 import it.unimi.di.se.monitor.Monitor;
 
 import java.io.*;
@@ -74,11 +75,9 @@ public class MBTDriver {
     }
     
     public WebAppAction doAction(IntegerState sourceState, char action) {
-        WebAppAction webAction = null;
-        if(action == 'a') {
-        		webAction = webAPI.getAction("GET");
-        		webAction.executeAction("http://127.0.0.1:8000/index.html?op=filter&cat=Books&tags=", "5000");
-        }
+        Map.Entry<String, String[]> actionEntry = EventHandler.actionMap.get(action);
+        WebAppAction webAction = webAPI.getAction(actionEntry.getKey());
+        webAction.executeAction(actionEntry.getValue());
         return webAction;
     }
     
