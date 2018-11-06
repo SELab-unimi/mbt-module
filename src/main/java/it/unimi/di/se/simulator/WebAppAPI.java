@@ -15,6 +15,7 @@ public class WebAppAPI {
 		System.setProperty("webdriver.gecko.driver", "src/main/resources/geckodriver");
 		driver = new FirefoxDriver();
 		actions.put("GET", new GetAction(driver));
+		actions.put("CLICK", new ClickAction(driver));
 	}
 	
 	public WebAppAction getAction(String actionKey) {

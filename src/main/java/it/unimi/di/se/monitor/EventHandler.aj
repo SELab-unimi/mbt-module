@@ -38,6 +38,7 @@ public class EventHandler {
      public static final Map<Character, Map.Entry<String, String[]>> actionMap = new HashMap<>();
     static {
     		actionMap.put('a', new AbstractMap.SimpleEntry<>("GET", new String[]{"http://127.0.0.1:8000/index.html?op=filter&cat=Books&tags=","5000"}));
+    		actionMap.put('b', new AbstractMap.SimpleEntry<>("CLICK", new String[]{"usr-logged","5","suser"}));
     		actionMap.put('w', new AbstractMap.SimpleEntry<>("NONE", new String[]{}));
     	}
     
@@ -77,8 +78,8 @@ public class EventHandler {
 		return String.valueOf(action.actionLabel());
 	}
 	
-	@Before(value="execution(public void it.unimi.di.se.simulator.MBTDriver.resetSimulation())")
-	public void resetSimulationResetEvent() {
+	@Before(value="execution(public void it.unimi.di.se.simulator.MBTDriver.resetDriver())")
+	public void resetDriverResetEvent() {
 		log.info("Reset initial state...");
 		monitor.addEvent(Event.resetEvent());
 	}
@@ -92,11 +93,13 @@ public class EventHandler {
 		String currentMonitorState = CheckPoint.getInstance().join(Thread.currentThread());
 		
 		
-		if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='a' && result.success())
+		if(currentMonitorState.equals("S3") && state.label().equals("S3") && action=='w' && result == null)
+			monitor.addEvent(new Event("a4", timeStamp));
+		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='a' && result.success())
 			monitor.addEvent(new Event("a0", timeStamp));
 		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='a' && !result.success())
 			monitor.addEvent(new Event("a1", timeStamp));
-		else if(currentMonitorState.equals("S1") && state.label().equals("S1") && action=='w' && result == null)
+		else if(currentMonitorState.equals("S1") && state.label().equals("S1") && action=='b' && result.success())
 			monitor.addEvent(new Event("a2", timeStamp));
 		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='w' && result == null)
 			monitor.addEvent(new Event("a3", timeStamp));

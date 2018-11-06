@@ -47,7 +47,7 @@ public class MBTDriver {
         int times = 0;
         while(!goal(times)) {
             logger.info("new run");
-            resetSimulation();
+            resetDriver();
             while(!mdp.isAbsorbing(currentState)) {
                 logger.info("current state: " + currentState.label());
                 if(isObservable(currentState)) {
@@ -118,7 +118,7 @@ public class MBTDriver {
         return times >= limit;
     }
     
-    public void resetSimulation() {
+    public void resetDriver() {
     		webAPI.resetApp();
         currentState = mdp.getInitialState();
     }
