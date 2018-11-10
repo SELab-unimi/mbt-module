@@ -39,6 +39,9 @@ public class EventHandler {
     static {
     		actionMap.put('a', new AbstractMap.SimpleEntry<>("GET", new String[]{"http://127.0.0.1:8000/index.html?op=filter&cat=Books&tags=","5000"}));
     		actionMap.put('b', new AbstractMap.SimpleEntry<>("CLICK", new String[]{"usr-logged","5","suser"}));
+    		actionMap.put('c', new AbstractMap.SimpleEntry<>("TEXT", new String[]{"user","matteo"}));
+    		actionMap.put('d', new AbstractMap.SimpleEntry<>("TEXT", new String[]{"password","matteo"}));
+    		actionMap.put('e', new AbstractMap.SimpleEntry<>("SUBMIT", new String[]{"password","5","matteo"}));
     		actionMap.put('w', new AbstractMap.SimpleEntry<>("NONE", new String[]{}));
     	}
     
@@ -93,8 +96,16 @@ public class EventHandler {
 		String currentMonitorState = CheckPoint.getInstance().join(Thread.currentThread());
 		
 		
-		if(currentMonitorState.equals("S3") && state.label().equals("S3") && action=='w' && result == null)
+		if(currentMonitorState.equals("S3") && state.label().equals("S3") && action=='c' && result.success())
+			monitor.addEvent(new Event("a3", timeStamp));
+		else if(currentMonitorState.equals("S4") && state.label().equals("S4") && action=='d' && result.success())
 			monitor.addEvent(new Event("a4", timeStamp));
+		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='e' && result.success())
+			monitor.addEvent(new Event("a5", timeStamp));
+		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='e' && !result.success())
+			monitor.addEvent(new Event("a8", timeStamp));
+		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action=='w' && result == null)
+			monitor.addEvent(new Event("a7", timeStamp));
 		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='a' && result.success())
 			monitor.addEvent(new Event("a0", timeStamp));
 		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='a' && !result.success())
@@ -102,7 +113,7 @@ public class EventHandler {
 		else if(currentMonitorState.equals("S1") && state.label().equals("S1") && action=='b' && result.success())
 			monitor.addEvent(new Event("a2", timeStamp));
 		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='w' && result == null)
-			monitor.addEvent(new Event("a3", timeStamp));
+			monitor.addEvent(new Event("a6", timeStamp));
 		else
 			log.error("*** PRE-/POST- CONDITION VIOLATION ***");
 		

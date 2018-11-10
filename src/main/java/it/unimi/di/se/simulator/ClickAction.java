@@ -5,7 +5,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ClickAction extends WebAppAction {
@@ -35,7 +35,13 @@ public class ClickAction extends WebAppAction {
 			WebElement element = driver.findElement(By.className(args[0])); // TODO to be changed to find-by-id
 			element.click();
 			if(args.length > 2)
-				new WebDriverWait(driver, timeOut).until(ExpectedConditions.presenceOfElementLocated(By.id(args[2])));
+				new WebDriverWait(driver, timeOut)
+					.until(new ExpectedCondition<Boolean>() {
+				        @Override
+				        public Boolean apply(WebDriver d) {
+				        		return d.findElement(By.id(args[2])).isDisplayed();
+				        }
+					});
 			success = true;
 		} catch (TimeoutException | NoSuchElementException e){
 			executionTime = timeOut;

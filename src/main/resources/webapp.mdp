@@ -1,31 +1,48 @@
 model "webapp"
 actions
 	a -> GET("http://127.0.0.1:8000/index.html?op=filter&cat=Books&tags=" "5000")
-	b -> CLICK("usr-logged " "5" "suser")
+	b -> CLICK("usr-logged" "5" "suser")
+	c -> TEXT("user" "matteo")
+	d -> TEXT("password" "matteo")
+	e -> SUBMIT("password" "5" "matteo")
 	w -> NONE()
 states
 	S0  {} initial Dir~(a, <S1, 50.0> <S2, 50.0>)
 	S1  {success}
 	S2  {fail}
 	S3	{}
+	S4	{}
+	S5	{}
+	S6	{log}
 	
 arcs
 	a0 : (S0, a) -> S1, 0.5
 	a1 : (S0, a) -> S2, 0.5
 	a2 : (S1, b) -> S3, 1.0
-	a3 : (S2, w) -> S2, 1.0
-	a4 : (S3, w) -> S3, 1.0
+	a3 : (S3, c) -> S4, 1.0
+	a4 : (S4, d) -> S5, 1.0
+	a5 : (S5, e) -> S6, 0.5
+	a8 : (S5, e) -> S2, 0.5
+	a6 : (S2, w) -> S2, 1.0
+	a7 : (S6, w) -> S6, 1.0
 	
 observe 
 	a0  -> "public it.unimi.di.se.simulator.WebAppAction it.unimi.di.se.simulator.MBTDriver.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"char"}, precondition "state.label().equals(\"S0\") && action=='a'", postcondition "result.success()" returnType "it.unimi.di.se.simulator.WebAppAction"
 	a1  -> "public it.unimi.di.se.simulator.WebAppAction it.unimi.di.se.simulator.MBTDriver.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"char"}, precondition "state.label().equals(\"S0\") && action=='a'", postcondition "!result.success()" returnType "it.unimi.di.se.simulator.WebAppAction"
 	a2	-> "public it.unimi.di.se.simulator.WebAppAction it.unimi.di.se.simulator.MBTDriver.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"char"}, precondition "state.label().equals(\"S1\") && action=='b'", postcondition "result.success()" returnType "it.unimi.di.se.simulator.WebAppAction"
-	a3  -> "public it.unimi.di.se.simulator.WebAppAction it.unimi.di.se.simulator.MBTDriver.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"char"}, precondition "state.label().equals(\"S2\") && action=='w'", postcondition "result == null" returnType "it.unimi.di.se.simulator.WebAppAction"
-	a4 -> "public it.unimi.di.se.simulator.WebAppAction it.unimi.di.se.simulator.MBTDriver.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"char"}, precondition "state.label().equals(\"S3\") && action=='w'", postcondition "result == null" returnType "it.unimi.di.se.simulator.WebAppAction"
+	a3	-> "public it.unimi.di.se.simulator.WebAppAction it.unimi.di.se.simulator.MBTDriver.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"char"}, precondition "state.label().equals(\"S3\") && action=='c'", postcondition "result.success()" returnType "it.unimi.di.se.simulator.WebAppAction"
+	a4	-> "public it.unimi.di.se.simulator.WebAppAction it.unimi.di.se.simulator.MBTDriver.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"char"}, precondition "state.label().equals(\"S4\") && action=='d'", postcondition "result.success()" returnType "it.unimi.di.se.simulator.WebAppAction"
+	a5	-> "public it.unimi.di.se.simulator.WebAppAction it.unimi.di.se.simulator.MBTDriver.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"char"}, precondition "state.label().equals(\"S5\") && action=='e'", postcondition "result.success()" returnType "it.unimi.di.se.simulator.WebAppAction"
+	a8	-> "public it.unimi.di.se.simulator.WebAppAction it.unimi.di.se.simulator.MBTDriver.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"char"}, precondition "state.label().equals(\"S5\") && action=='e'", postcondition "!result.success()" returnType "it.unimi.di.se.simulator.WebAppAction"
+	a6  -> "public it.unimi.di.se.simulator.WebAppAction it.unimi.di.se.simulator.MBTDriver.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"char"}, precondition "state.label().equals(\"S2\") && action=='w'", postcondition "result == null" returnType "it.unimi.di.se.simulator.WebAppAction"
+	a7 -> "public it.unimi.di.se.simulator.WebAppAction it.unimi.di.se.simulator.MBTDriver.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"char"}, precondition "state.label().equals(\"S6\") && action=='w'", postcondition "result == null" returnType "it.unimi.di.se.simulator.WebAppAction"
 		
 control
 	S0 -> "private char it.unimi.di.se.simulator.MBTDriver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.CharAction>" input:"java.io.InputStream"}
 	S1 -> "private char it.unimi.di.se.simulator.MBTDriver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.CharAction>" input:"java.io.InputStream"}
+	S3 -> "private char it.unimi.di.se.simulator.MBTDriver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.CharAction>" input:"java.io.InputStream"}
+	S4 -> "private char it.unimi.di.se.simulator.MBTDriver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.CharAction>" input:"java.io.InputStream"}
+	S5 -> "private char it.unimi.di.se.simulator.MBTDriver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.CharAction>" input:"java.io.InputStream"}
 	
 reset
 	"public void it.unimi.di.se.simulator.MBTDriver.resetDriver(..)"

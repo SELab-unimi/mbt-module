@@ -1,6 +1,10 @@
- S0 i u, S1, S2, S3,
+ S0 i u, S1, S2, S3, S4, S5, S6,
 S0 a S1 0.5
 S0 a S2 0.5
 S1 b S3 1.0
+S3 c S4 1.0
+S4 d S5 1.0
+S5 e S6 0.5
+S5 e S2 0.5
 S2 w S2 1.0
-S3 w S3 1.0
+S6 w S6 1.0
