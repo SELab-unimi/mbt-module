@@ -19,8 +19,8 @@ public class ClickAction extends WebAppAction {
 
 	/**
 	 * args[0] id of the clickable element
-	 * args[1] is the timeout in seconds
-	 * args[2] element to be loaded after click
+	 * args[1] timeout in seconds
+	 * args[2] id of the element to be loaded after click
 	 */
 	@Override
 	public boolean executeAction(String... args) {

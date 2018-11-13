@@ -18,8 +18,9 @@ public class SubmitAction extends WebAppAction {
 	}
 
 	/**
-	 * args[0] name of the textField element
+	 * args[0] id of the textField element
 	 * args[1] input string to be put inside the textField
+	 * args[2] id of the element to be loaded after click
 	 */
 	@Override
 	public boolean executeAction(String... args) {

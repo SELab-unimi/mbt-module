@@ -15,7 +15,7 @@ public class TextFieldAction extends WebAppAction {
 	}
 
 	/**
-	 * args[0] name of the textField element
+	 * args[0] id of the textField element
 	 * args[1] input string to be put inside the textField
 	 */
 	@Override
