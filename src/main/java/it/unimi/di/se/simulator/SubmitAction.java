@@ -29,13 +29,15 @@ public class SubmitAction extends WebAppAction {
 		int timeOut = Integer.parseInt(args[1]);
 		
 		try {
-			WebElement element = driver.findElement(By.name(args[0]));
+			WebElement element = driver.findElement(By.id(args[0]));
 			element.submit();
-			new WebDriverWait(driver, timeOut).until(new ExpectedCondition<Boolean>() {
-	            public Boolean apply(WebDriver d) {
-	                return d.getPageSource().contains(args[2]);
-	            }
-	        });
+			if(args.length > 2)
+				new WebDriverWait(driver, timeOut).until(new ExpectedCondition<Boolean>() {
+		            @Override
+					public Boolean apply(WebDriver d) {
+		            		return d.findElement(By.id(args[2])).isDisplayed();
+		            }
+		        });
 			executionTime = (Long)((JavascriptExecutor)driver).
 					executeScript("return performance.timing.loadEventEnd - performance.timing.navigationStart;");
 			success = true;

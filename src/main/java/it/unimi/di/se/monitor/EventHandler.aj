@@ -38,10 +38,10 @@ public class EventHandler {
      public static final Map<Character, Map.Entry<String, String[]>> actionMap = new HashMap<>();
     static {
     		actionMap.put('a', new AbstractMap.SimpleEntry<>("GET", new String[]{"http://127.0.0.1:8000/index.html?op=filter&cat=Books&tags=","5000"}));
-    		actionMap.put('b', new AbstractMap.SimpleEntry<>("CLICK", new String[]{"usr-logged","5","suser"}));
-    		actionMap.put('c', new AbstractMap.SimpleEntry<>("TEXT", new String[]{"user","matteo"}));
-    		actionMap.put('d', new AbstractMap.SimpleEntry<>("TEXT", new String[]{"password","matteo"}));
-    		actionMap.put('e', new AbstractMap.SimpleEntry<>("SUBMIT", new String[]{"password","5","matteo"}));
+    		actionMap.put('b', new AbstractMap.SimpleEntry<>("CLICK", new String[]{"b-login","5","s-user"}));
+    		actionMap.put('c', new AbstractMap.SimpleEntry<>("TEXT", new String[]{"s-user","matteo"}));
+    		actionMap.put('d', new AbstractMap.SimpleEntry<>("TEXT", new String[]{"s-password","matteo"}));
+    		actionMap.put('e', new AbstractMap.SimpleEntry<>("SUBMIT", new String[]{"s-password","5","matteo"}));
     		actionMap.put('w', new AbstractMap.SimpleEntry<>("NONE", new String[]{}));
     	}
     

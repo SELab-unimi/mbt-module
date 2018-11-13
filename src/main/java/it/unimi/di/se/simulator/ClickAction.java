@@ -32,7 +32,7 @@ public class ClickAction extends WebAppAction {
 			timeOut = Integer.parseInt(args[1]);
 		
 		try {
-			WebElement element = driver.findElement(By.className(args[0])); // TODO to be changed to find-by-id
+			WebElement element = driver.findElement(By.id(args[0]));
 			element.click();
 			if(args.length > 2)
 				new WebDriverWait(driver, timeOut)

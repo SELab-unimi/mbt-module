@@ -24,7 +24,7 @@ public class TextFieldAction extends WebAppAction {
 			return false;
 		
 		try {
-			WebElement element = driver.findElement(By.name(args[0]));
+			WebElement element = driver.findElement(By.id(args[0]));
 			element.sendKeys(args[1]);
 			success = true;
 		}
