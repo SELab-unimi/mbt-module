@@ -10,6 +10,7 @@ public class WebAppAPI {
 	
 	private Map<String, WebAppAction> actions = new HashMap<>();
 	WebDriver driver = null;
+	private CompositeAction logout = null;
 	
 	public WebAppAPI() {
 		System.setProperty("webdriver.gecko.driver", "src/main/resources/geckodriver");
@@ -18,6 +19,11 @@ public class WebAppAPI {
 		actions.put("CLICK", new ClickAction(driver));
 		actions.put("TEXT", new TextFieldAction(driver));
 		actions.put("SUBMIT", new SubmitAction(driver));
+		
+		logout = new CompositeAction(driver);
+		logout.addAction(actions.get("CLICK"), "show-usr", "1", "logout");
+		logout.addAction(actions.get("CLICK"), "logout", "1", "open-login");
+		logout.addAction(actions.get("GET"), "http://127.0.0.1:8000/index.html", "5000");
 	}
 	
 	public WebAppAction getAction(String actionKey) {
@@ -30,7 +36,7 @@ public class WebAppAPI {
 	
 	public void resetApp() {
 		driver.manage().deleteAllCookies();
-		actions.get("GET").executeAction("http://127.0.0.1:8000/index.html", "5000");
+		logout.executeAction();
 	}
 
 }

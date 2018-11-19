@@ -24,10 +24,12 @@ public class SubmitAction extends WebAppAction {
 	 */
 	@Override
 	public boolean executeAction(String... args) {
-		if(args.length < 3)
+		if(args.length == 0)
 			return false;
 		
-		int timeOut = Integer.parseInt(args[1]);
+		int timeOut = DEFAULT_TIMEOUT;
+		if(args.length > 1)
+			timeOut = Integer.parseInt(args[1]);
 		
 		try {
 			WebElement element = driver.findElement(By.id(args[0]));
@@ -36,7 +38,8 @@ public class SubmitAction extends WebAppAction {
 				new WebDriverWait(driver, timeOut).until(new ExpectedCondition<Boolean>() {
 		            @Override
 					public Boolean apply(WebDriver d) {
-		            		return d.findElement(By.id(args[2])).isDisplayed();
+		            		// return d.findElement(By.id(args[2])).isDisplayed();
+		            		return d.getPageSource().contains(args[2]);
 		            }
 		        });
 			executionTime = (Long)((JavascriptExecutor)driver).

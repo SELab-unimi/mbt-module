@@ -38,10 +38,10 @@ public class EventHandler {
      public static final Map<Character, Map.Entry<String, String[]>> actionMap = new HashMap<>();
     static {
     		actionMap.put('a', new AbstractMap.SimpleEntry<>("GET", new String[]{"http://127.0.0.1:8000/index.html?op=filter&cat=Books&tags=","5000"}));
-    		actionMap.put('b', new AbstractMap.SimpleEntry<>("CLICK", new String[]{"b-login","5","s-user"}));
-    		actionMap.put('c', new AbstractMap.SimpleEntry<>("TEXT", new String[]{"s-user","matteo"}));
-    		actionMap.put('d', new AbstractMap.SimpleEntry<>("TEXT", new String[]{"s-password","matteo"}));
-    		actionMap.put('e', new AbstractMap.SimpleEntry<>("SUBMIT", new String[]{"s-password","5","matteo"}));
+    		actionMap.put('b', new AbstractMap.SimpleEntry<>("CLICK", new String[]{"open-login","5","s-user"}));
+    		actionMap.put('c', new AbstractMap.SimpleEntry<>("TEXT", new String[]{"s-user","rosario"}));
+    		actionMap.put('d', new AbstractMap.SimpleEntry<>("TEXT", new String[]{"s-password","prova"}));
+    		actionMap.put('e', new AbstractMap.SimpleEntry<>("SUBMIT", new String[]{"s-password","5","Rosario"}));
     		actionMap.put('w', new AbstractMap.SimpleEntry<>("NONE", new String[]{}));
     	}
     
@@ -115,7 +115,7 @@ public class EventHandler {
 		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='w' && result == null)
 			monitor.addEvent(new Event("a6", timeStamp));
 		else
-			log.error("*** PRE-/POST- CONDITION VIOLATION ***");
+			log.error("*** PRE-/POST- CONDITION VIOLATION *** " + currentMonitorState + " " + state.label() + " - " + action);
 		
 		monitor.addEvent(Event.readStateEvent());
 		CheckPoint.getInstance().join(Thread.currentThread());

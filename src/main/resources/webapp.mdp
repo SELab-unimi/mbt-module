@@ -1,10 +1,10 @@
 model "webapp"
 actions
 	a -> GET("http://127.0.0.1:8000/index.html?op=filter&cat=Books&tags=" "5000")
-	b -> CLICK("b-login" "5" "s-user")
-	c -> TEXT("s-user" "matteo")
-	d -> TEXT("s-password" "matteo")
-	e -> SUBMIT("s-password" "5" "matteo")
+	b -> CLICK("open-login" "5" "s-user")
+	c -> TEXT("s-user" "rosario")
+	d -> TEXT("s-password" "prova")
+	e -> SUBMIT("s-password" "5" "Rosario")
 	w -> NONE()
 states
 	S0  {} initial Dir~(a, <S1, 50.0> <S2, 50.0>)
