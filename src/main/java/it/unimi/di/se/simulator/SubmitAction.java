@@ -1,6 +1,7 @@
 package it.unimi.di.se.simulator;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -46,7 +47,7 @@ public class SubmitAction extends WebAppAction {
 					executeScript("return performance.timing.loadEventEnd - performance.timing.navigationStart;");
 			success = true;
 		}
-		catch(TimeoutException e){
+		catch(TimeoutException | JavascriptException e){
 			executionTime = DEFAULT_TIMEOUT;
 			success = false;
 		}

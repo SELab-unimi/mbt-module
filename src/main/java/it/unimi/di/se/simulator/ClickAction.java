@@ -1,6 +1,7 @@
 package it.unimi.di.se.simulator;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -43,7 +44,7 @@ public class ClickAction extends WebAppAction {
 				        }
 					});
 			success = true;
-		} catch (TimeoutException | NoSuchElementException e){
+		} catch (TimeoutException | NoSuchElementException | ElementNotInteractableException e){
 			executionTime = timeOut;
 			success = false;
 		}
