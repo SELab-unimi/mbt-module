@@ -22,13 +22,13 @@ public class LoginAction extends WebAppAction {
 
 	@Override
 	public boolean executeAction(String... args) {
-		success = clickAction.executeAction(Arrays.copyOfRange(args, 0, 2));
+		success = clickAction.executeAction(Arrays.copyOfRange(args, 0, 3));
 		executionTime = clickAction.executionTime();
-		success &= textFieldAction.executeAction(Arrays.copyOfRange(args, 3, 5));
+		success &= textFieldAction.executeAction(Arrays.copyOfRange(args, 3, 6));
 		executionTime += textFieldAction.executionTime();
-		success &= textFieldAction.executeAction(Arrays.copyOfRange(args, 6, 8));
+		success &= textFieldAction.executeAction(Arrays.copyOfRange(args, 6, 9));
 		executionTime += textFieldAction.executionTime();
-		success &= submitAction.executeAction(Arrays.copyOfRange(args, 9, 11));
+		success &= submitAction.executeAction(Arrays.copyOfRange(args, 9, 12));
 		executionTime += submitAction.executionTime();
 		return success;
 	}
