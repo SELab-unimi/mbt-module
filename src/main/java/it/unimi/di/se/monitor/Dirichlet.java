@@ -1,6 +1,7 @@
 package it.unimi.di.se.monitor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -95,7 +96,7 @@ public class Dirichlet {
 				", Bayes Factor = " + (currentPdf/prevVal) + 
 				", E[x_i] = " + printMean() +
 				", x_i = " + printMode() +
-				", HDI = " + printHpdiRCommand(0.95);
+				", HPD region = " + Arrays.deepToString(hpdRegion(0.95));
 	}
 	
 	public boolean convergence() {
@@ -106,8 +107,8 @@ public class Dirichlet {
 				", Bayes Factor = " + (currentPdf/prevVal) + 
 				", E[x_i] = " + printMean() +
 				", x_i = " + printMode() +
-				", HDI = " + printHpdiRCommand(0.95));
-		if(prevVal > 0 && currentPdf > 0)		
+				", HPD region = " + Arrays.deepToString(hpdRegion(0.95)));
+		if(prevVal > 0 && currentPdf > 0)
 			return (currentPdf/prevVal) < K;
 		return false;
 	}
@@ -163,11 +164,12 @@ public class Dirichlet {
 		return alpha;
 	}
 	
-	public String printHpdiRCommand(double credMass) {
-		StringBuilder rCommand = new StringBuilder("hdi(rdirichlet(100000, ");
-		rCommand.append(printParams().replace("[", "c(").replace("]", ")"));
-		rCommand.append("), credMass=").append(credMass).append(")");
-		return rCommand.toString();
+	public double[][] hpdRegion(double credMass) {
+		String rCommand = new StringBuilder("hdi(rdirichlet(100000, ")
+				.append(printParams().replace("[", "c(").replace("]", ")"))
+				.append("), credMass=").append(credMass)
+				.append(")").toString();
+		return transpose(REngineAccessPoint.getEngine().eval(rCommand).asDoubleMatrix());
 	}
 	
 	public String printParams() {
@@ -190,6 +192,14 @@ public class Dirichlet {
 		builder.replace(builder.length()-2, builder.length(), "]");
 		return builder.toString();
 	}
+	
+	private static double[][] transpose(double[][] m){
+        double[][] t = new double[m[0].length][m.length];
+        for (int i = 0; i < m.length; i++)
+            for (int j = 0; j < m[0].length; j++)
+                t[j][i] = m[i][j];
+        return t;
+    }
 
 	@Override
 	public String toString() {

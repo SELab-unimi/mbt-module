@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
@@ -17,8 +18,6 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 
 import com.google.inject.Injector;
 
-import net.openhft.affinity.AffinityLock;
-import net.openhft.affinity.AffinityStrategies;
 import it.unimi.di.se.mdp.MdpDslStandaloneSetup;
 import it.unimi.di.se.mdp.mdpDsl.Arc;
 import it.unimi.di.se.mdp.mdpDsl.ConcentrationParam;
@@ -135,23 +134,13 @@ public class Monitor {
 	}
 	
 	public void launch(){
-		final AffinityLock al = AffinityLock.acquireLock();
-		try {
-			log.info("[AFFINITY] SUT locked: CPU " + al.cpuId());
-	        
-		    Thread t = new Thread(new Runnable() {
-		        @Override
-		        public void run() {
-		        	try (AffinityLock al2 = al.acquireLock(AffinityStrategies.DIFFERENT_SOCKET, AffinityStrategies.DIFFERENT_CORE, AffinityStrategies.ANY)) {
-		        		log.info("[AFFINITY] Monitor locked: CPU " + al2.cpuId());
-		        		Monitor.this.startMonitor();		        
-		            }
-		        }
-		    });
-		    t.start();
-		} finally {
-			al.release();
-		}
+		Thread t = new Thread(new Runnable() {
+	        @Override
+	        public void run() {
+		        	Monitor.this.startMonitor();
+	        }
+	    });
+	    t.start();
 	}
 	
 	private void startMonitor() {
@@ -263,10 +252,10 @@ public class Monitor {
 			System.out.println("    Action: " + prior.get(s).action());
 			System.out.println("    Prior: " + prior.get(s).printParams() + " --> Posterior: " + posterior.get(s).printParams());
 			System.out.println("    #test: " + posterior.get(s).getSampleSize());
-			System.out.println("    Pr(D|M): " + posterior.get(s).pdf());
+			//System.out.println("    Pr(D|M): " + posterior.get(s).pdf());
 			System.out.println("    Mode x_i: " + posterior.get(s).printMode());
 			System.out.println("    Mean E[x_i]: " + posterior.get(s).printMean());
-			System.out.println("    95% HPD interval: " + posterior.get(s).printHpdiRCommand(0.95));
+			System.out.println("    95% HPD region: " + Arrays.deepToString(posterior.get(s).hpdRegion(0.95)));
 		}
 	}
 	
