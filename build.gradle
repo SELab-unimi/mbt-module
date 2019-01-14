@@ -40,7 +40,7 @@ dependencies {
     compile 'org.aspectj:aspectjrt:1.8.5'
     compile 'org.aspectj:aspectjweaver:1.8.5'
     
-    compile group: 'net.openhft', name: 'affinity', version: '3.0.6'
+    compile group: 'com.github.lucarosellini.rJava', name: 'JRIEngine', version: '0.9-7'
 
     runtime files('libs/colt.jar', 'libs/concurrent.jar', 'libs/qsopt.jar', 'libs/ssj-2.5.jar', 'libs/mdp-lib.jar')
     runtime fileTree(dir: 'libs', include: '*.jar')
@@ -49,7 +49,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-applicationDefaultJvmArgs = ["-Dorg.slf4j.simpleLogger.defaultLogLevel=warn"]
+applicationDefaultJvmArgs = ['-Dorg.slf4j.simpleLogger.defaultLogLevel=warn', '-Djava.library.path=/usr/local/lib/R/3.4/site-library/rJava/jri']
 
 run {
     if ( project.hasProperty("appArgs") ) {

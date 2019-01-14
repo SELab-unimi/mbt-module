@@ -28,9 +28,10 @@ public class EventHandler {
     static final String MODEL_PATH = "src/main/resources/tasv3.mdp";
     static private final String JMDP_MODEL_PATH = "src/main/resources/tasv3.jmdp";
     
-    static final int SAMPLE_SIZE = 2000;
-    static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.CONVERGENCE;
+    static final int SAMPLE_SIZE = 1000;
+    static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
     static final double COVERAGE = 1.0;
+    static final double LIMIT = 5000;
     
     private Monitor monitor = null;
     private SimpleMDP mdp = null;

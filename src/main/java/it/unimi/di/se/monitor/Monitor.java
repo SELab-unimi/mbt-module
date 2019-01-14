@@ -32,7 +32,8 @@ public class Monitor {
 	
 	enum Termination {
 		COVERAGE,
-		CONVERGENCE
+		CONVERGENCE,
+		LIMIT
 	}
 	
 	private static final Logger log = LoggerFactory.getLogger(Monitor.class.getName());
@@ -205,7 +206,7 @@ public class Monitor {
 							posterior.get(s).resetCount();
 							convergence &= posterior.get(s).convergence();
 						}
-						if(convergence && EventHandler.TERMINATION_CONDITION == Termination.CONVERGENCE) {
+						if(EventHandler.TERMINATION_CONDITION == Termination.CONVERGENCE && convergence) {
 							log.info("[Monitor] convergence reached.");
 							addEvent(Event.stopEvent());
 						}
@@ -218,6 +219,10 @@ public class Monitor {
 					log.warn(coverageInfo.toString());
 					if(EventHandler.TERMINATION_CONDITION == Termination.COVERAGE && coverageInfo.getCoverage() >= EventHandler.COVERAGE) {
 						log.info("[Monitor] convergence reached.");
+						addEvent(Event.stopEvent());
+					}
+					else if(EventHandler.TERMINATION_CONDITION == Termination.LIMIT && eventCount+1 >= EventHandler.LIMIT) {
+						log.info("[Monitor] #test limit reached.");
 						addEvent(Event.stopEvent());
 					}
 				}

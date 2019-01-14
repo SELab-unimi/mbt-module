@@ -68,5 +68,6 @@ control
 reset
 	"public void it.unimi.di.se.simulator.MDPSimulator.resetSimulation(..)"
 
-sampleSize 2000
-explorationPolicy uncertainty
+sampleSize 1000
+explorationPolicy uncertainty 
+termination limit 5000
