@@ -33,6 +33,11 @@ public class DecisionMaker {
 		this.mdp = mdp;
 		this.policy = policy;
 		if(policy == Policy.UNCERTAINTY) {
+			// TODO mixed strategy --> for each uncertain state compute best policy and then combine
+			for(Integer s: this.mdp.getUncertainStates()) {
+				this.mdp.setHighReward(s);
+				break;
+			}				
 			this.mdp.printSolution();
 			try {
 				decisionRule = this.mdp.getOptimalPolicy().getDecisionRule();
