@@ -41,7 +41,7 @@ public abstract class State implements Comparable<State>, JMarkovElement {
      * @see Object#equals(Object)
      */
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (!(o instanceof State))
             return false;
         State s1 = (State) o;

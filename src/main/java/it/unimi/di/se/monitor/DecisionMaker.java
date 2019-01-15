@@ -6,7 +6,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Map.Entry;
+import java.util.Random;
 
 import jmarkov.basic.Actions;
 import jmarkov.basic.DecisionRule;
@@ -26,26 +27,41 @@ public class DecisionMaker {
 	
 	private SimpleMDP mdp = null;
 	private Policy policy = null;
-	private DecisionRule<IntegerState, CharAction> decisionRule = null;
 	private Map<StateAction, Integer> count = null;
+	private Map<IntegerState, ArrayList<CharAction>> mixedPolicy = new HashMap<>();
+	
+	DecisionRule<IntegerState, CharAction> decisionRule;
 	
 	public DecisionMaker(SimpleMDP mdp, Policy policy) {
 		this.mdp = mdp;
 		this.policy = policy;
 		if(policy == Policy.UNCERTAINTY) {
-			// TODO mixed strategy --> for each uncertain state compute best policy and then combine
+			// mixed strategy --> for each uncertain state compute best policy and then combine
 			for(Integer s: this.mdp.getUncertainStates()) {
+				this.mdp.clearRewards();
 				this.mdp.setHighReward(s);
-				break;
+				
+				this.mdp.resetSolver();
+				this.mdp.printSolution();
+				try {
+					decisionRule = this.mdp.getOptimalPolicy().getDecisionRule();
+				} catch (SolverException e) {
+					e.printStackTrace();
+				}
+				ProbabilitySolver<IntegerState, CharAction> solver = new ProbabilitySolver<>(this.mdp, decisionRule);
+				solver.solve();
+				for(Entry<IntegerState, CharAction> e: decisionRule) {
+					ArrayList<CharAction> actions = mixedPolicy.get(e.getKey());
+					if(actions != null)
+						actions.add(e.getValue());
+					else {
+						actions = new ArrayList<CharAction>();
+						actions.add(e.getValue());
+						mixedPolicy.put(e.getKey(), actions);
+					}					
+				}
 			}				
-			this.mdp.printSolution();
-			try {
-				decisionRule = this.mdp.getOptimalPolicy().getDecisionRule();
-			} catch (SolverException e) {
-				e.printStackTrace();
-			}
-			ProbabilitySolver<IntegerState, CharAction> solver = new ProbabilitySolver<>(this.mdp, decisionRule);
-			solver.solve();
+			
 		}
 		if(policy == Policy.HISTORY) {
 			count = new HashMap<>();
@@ -57,7 +73,9 @@ public class DecisionMaker {
 
 	public CharAction getAction(int stateIndex) {
 		if(policy == Policy.UNCERTAINTY) {
-			return decisionRule.getAction(new IntegerState(stateIndex));
+			// uniform probability based choice
+			List<CharAction> acts = mixedPolicy.get(new IntegerState(stateIndex));
+			return acts.get(new Random().nextInt(acts.size()));
 		}
 		if(policy == Policy.RANDOM) {
 			Actions<CharAction> actions = mdp.feasibleActions(new IntegerState(stateIndex));

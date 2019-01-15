@@ -75,6 +75,15 @@ public abstract class MDP<S extends State, A extends Action> {
     public final boolean isSolved() {
         return getSolver().isSolved();
     }
+    
+    /**
+     * Reset the solver, even if the problem has been solved
+     * 
+     * @return true if solved
+     */
+    public void resetSolver() {
+        solver = null;
+    }
 
     /**
      * @return Returns true if the problem's horizon is finite.

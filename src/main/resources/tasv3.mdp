@@ -4,7 +4,7 @@ actions
 states
 	S0  {} initial
 	S1  {stop}
-	S2  {alarm}
+	S2  {alarm} Dir~(a, <S3, 200.0> <S4, 200.0>)
 	S3  {full}
 	S4  {}
 	S5  {}
