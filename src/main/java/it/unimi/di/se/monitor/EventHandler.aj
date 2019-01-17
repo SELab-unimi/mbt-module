@@ -25,17 +25,16 @@ import org.aspectj.lang.annotation.Pointcut;
 public class EventHandler {
     
     private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
-    static final String MODEL_PATH = "src/main/resources/tasv3.mdp";
-    static private final String JMDP_MODEL_PATH = "src/main/resources/tasv3.jmdp";
+    static final String MODEL_PATH = "src/main/resources/tasv3_2.mdp";
+    static private final String JMDP_MODEL_PATH = "src/main/resources/tasv3_2.jmdp";
     
     static final int SAMPLE_SIZE = 1000;
     static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
     static final double COVERAGE = 1.0;
-    static final double LIMIT = 5000;
+    static final double LIMIT = 1000;
     
     private Monitor monitor = null;
     private SimpleMDP mdp = null;
-    private DecisionMaker decisionMaker= null;
     
     @Pointcut("execution(public static void main(..))")
     void mainMethod() {}
@@ -48,9 +47,8 @@ public class EventHandler {
    		} catch (FileNotFoundException e) {
    			e.printStackTrace();
    		}
-   		decisionMaker = new DecisionMaker(mdp, DecisionMaker.Policy.UNCERTAINTY);
        	log.info("Monitor initialization...");
-       	monitor = new Monitor();
+       	monitor = new Monitor(new DecisionMaker(mdp, DecisionMaker.Policy.UNCERTAINTY_FLAT));
        	monitor.launch();
 	}
         
@@ -64,7 +62,7 @@ public class EventHandler {
 		monitor.addEvent(Event.readStateEvent());
 		String stateName = CheckPoint.getInstance().join(Thread.currentThread());
 		
-		CharAction action = decisionMaker.getAction(Integer.parseInt(stateName.substring(1)));
+		CharAction action = monitor.getDecisionMaker().getAction(Integer.parseInt(stateName.substring(1)));
 		log.info("Selected action = " + action.actionLabel());	
 		return String.valueOf(action.actionLabel());
 	}

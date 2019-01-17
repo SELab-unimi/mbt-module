@@ -51,9 +51,11 @@ public class Monitor {
 	private HashMap<State, Dirichlet> posterior = new HashMap<>();
 	private HashMap<State, Integer> stateIndex = new HashMap<>();
 	
+	private DecisionMaker decisionMaker = null;
+	
 	private Coverage coverageInfo = null;
 	
-	public Monitor(){
+	public Monitor(DecisionMaker decisionMaker){
 		Injector injector = new MdpDslStandaloneSetup().createInjectorAndDoEMFRegistration();
 		XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
 		resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
@@ -67,6 +69,8 @@ public class Monitor {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		this.decisionMaker = decisionMaker;
 		
 		// init MDP model
 		model = (MDPModel) resource.getContents().get(0);
@@ -123,6 +127,10 @@ public class Monitor {
 			list.add(a);
 			outgoingArcs.put(s, list);
 		}
+	}
+	
+	public DecisionMaker getDecisionMaker() {
+		return decisionMaker;
 	}
 	
 	public void setInitialState(){
@@ -187,19 +195,25 @@ public class Monitor {
 		for(Arc a: outgoingArcs.get(currentState))
 			if(a.getName().equals(event.getName())){
 				
+				// update count if currentState is uncertain
+				decisionMaker.updateCount(stateIndex.get(currentState));
+				
 				// Bayesian analysis and termination
 				if(posterior.containsKey(currentState)) {
 					posterior.get(currentState).update(stateIndex.get(a.getDst()));
 					boolean convergence = true;
 					boolean testConvergence = true;
+					
+					if(showInferenceInfo++ > 10) {
+						for(State s: posterior.keySet())
+							log.warn(s.getName() + " - " + posterior.get(s).report() + " events = " + eventCount);
+						showInferenceInfo = 0;
+					}
+					
 					for(State s: posterior.keySet()) {
 						log.info("[Monitor] count = " + posterior.get(s).getCount() + ", sample = " + posterior.get(s).getSampleSize());
-						if(showInferenceInfo++ > 10) {
-							log.warn(posterior.get(s).report() + " events = " + eventCount);
-							showInferenceInfo = 0;
-						}
 						testConvergence &= posterior.get(s).getCount() > EventHandler.SAMPLE_SIZE;
-					}
+					}				
 					if(testConvergence) {
 						for(State s: posterior.keySet()) {
 							log.info("[Monitor] PDF = " + posterior.get(s).pdf());
@@ -215,13 +229,16 @@ public class Monitor {
 				
 				// coverage info and termination
 				coverageInfo.addExecution(stateIndex.get(currentState), new CharAction(a.getAct().getName().charAt(0)));
-				if(eventCount % EventHandler.SAMPLE_SIZE >= EventHandler.SAMPLE_SIZE-1) {
+				int tests = 0;
+				for(Dirichlet d: posterior.values())
+					tests += d.getSampleSize();
+				if(tests % EventHandler.SAMPLE_SIZE >= EventHandler.SAMPLE_SIZE-1) {
 					log.warn(coverageInfo.toString());
 					if(EventHandler.TERMINATION_CONDITION == Termination.COVERAGE && coverageInfo.getCoverage() >= EventHandler.COVERAGE) {
 						log.info("[Monitor] convergence reached.");
 						addEvent(Event.stopEvent());
 					}
-					else if(EventHandler.TERMINATION_CONDITION == Termination.LIMIT && eventCount+1 >= EventHandler.LIMIT) {
+					else if(EventHandler.TERMINATION_CONDITION == Termination.LIMIT && tests >= EventHandler.LIMIT-1) {
 						log.info("[Monitor] #test limit reached.");
 						addEvent(Event.stopEvent());
 					}
