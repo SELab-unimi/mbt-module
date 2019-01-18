@@ -7,7 +7,7 @@ public class StateAction {
 	Integer state = 0;
 	CharAction action = null;
 	
-	StateAction(int state, CharAction action) {
+	public StateAction(int state, CharAction action) {
 		this.state = state;
 		this.action = action;
 	}

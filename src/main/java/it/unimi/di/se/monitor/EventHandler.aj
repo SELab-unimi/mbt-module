@@ -3,6 +3,8 @@ package it.unimi.di.se.monitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.unimi.di.se.decision.DecisionMakerFactory;
+import it.unimi.di.se.decision.Policy;
 import it.unimi.di.se.monitor.Monitor.CheckPoint;
 import jmarkov.jmdp.CharAction;
 import jmarkov.jmdp.SimpleMDP;
@@ -25,13 +27,13 @@ import org.aspectj.lang.annotation.Pointcut;
 public class EventHandler {
     
     private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
-    static final String MODEL_PATH = "src/main/resources/tasv3_2.mdp";
-    static private final String JMDP_MODEL_PATH = "src/main/resources/tasv3_2.jmdp";
+    static final String MODEL_PATH = "src/main/resources/tasv4_trap.mdp";
+    static private final String JMDP_MODEL_PATH = "src/main/resources/tasv4_trap.jmdp";
     
     static final int SAMPLE_SIZE = 1000;
     static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
     static final double COVERAGE = 1.0;
-    static final double LIMIT = 1000;
+    static final double LIMIT = 2000;
     
     private Monitor monitor = null;
     private SimpleMDP mdp = null;
@@ -48,7 +50,7 @@ public class EventHandler {
    			e.printStackTrace();
    		}
        	log.info("Monitor initialization...");
-       	monitor = new Monitor(new DecisionMaker(mdp, DecisionMaker.Policy.UNCERTAINTY_FLAT));
+       	monitor = new Monitor(new DecisionMakerFactory().createPolicy(mdp, Policy.UNCERTAINTY_HISTORY));
        	monitor.launch();
 	}
         
