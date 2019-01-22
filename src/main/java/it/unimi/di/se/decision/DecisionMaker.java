@@ -22,13 +22,14 @@ public abstract class DecisionMaker {
 	protected Map<StateAction, Integer> count = null;
 	protected Map<IntegerState, ArrayList<CharAction>> mixedPolicy = new HashMap<>();
 	protected Map<Integer, DecisionRule<IntegerState, CharAction>> decisionRules = new HashMap<>();
+	protected Map<IntegerState, Double> hpdDistance = new HashMap<>();
 	
 	public DecisionMaker(SimpleMDP mdp) {
 		this.mdp = mdp;
 		// mixed policy --> for each uncertain state compute best policy and then combine
 		for(Integer s: this.mdp.getUncertainStates()) {
 			this.mdp.clearRewards();
-			this.mdp.setHighReward(s);		
+			this.mdp.setHighReward(s);
 			this.mdp.resetSolver();
 			this.mdp.printSolution();
 			DecisionRule<IntegerState, CharAction> decisionRule = null;
@@ -82,8 +83,19 @@ public abstract class DecisionMaker {
 		return null;
 	}
 	
-	public abstract CharAction getAction(int stateIndex);
+	protected int getPolicyObjective(final int stateIndex, final CharAction action) {
+		for(Integer objective: decisionRules.keySet()) {
+			for(Entry<IntegerState, CharAction> e: decisionRules.get(objective)) {
+				if(e.getKey().getId() == stateIndex && e.getValue().equals(action))
+					return objective;
+			}
+		}
+		return -1;
+	}
+	
+	public abstract CharAction getAction(final int stateIndex);
 	public abstract void updateCount(final int stateIndex);
+	public abstract void updateDistance(final int stateIndex, final double distance);
 	
 	class ActionWeight {
 		CharAction action = null;

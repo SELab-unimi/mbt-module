@@ -31,4 +31,9 @@ public class GlobalHistUncertaintyDecisionMaker extends DecisionMaker {
 		}
 	}
 
+	@Override
+	public void updateDistance(int stateIndex, double distance) {
+		// nothing to update here
+	}
+
 }

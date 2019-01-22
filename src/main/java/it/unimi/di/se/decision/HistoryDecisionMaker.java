@@ -26,4 +26,9 @@ public class HistoryDecisionMaker extends DecisionMaker {
 		// nothing to count here
 	}
 
+	@Override
+	public void updateDistance(int stateIndex, double distance) {
+		// nothing to update here
+	}
+
 }

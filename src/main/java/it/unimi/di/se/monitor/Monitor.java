@@ -98,17 +98,18 @@ public class Monitor {
 					}
 					prior.put(s, dirichlePrior);
 					posterior.put(s, dirichlePosterior);
+					decisionMaker.updateDistance(stateIndex.get(s), dirichlePosterior.getDistance());
 				}
 			}
 		}
 	}
 	
-	private Arc retrieveArc(State source, State target){
-		for(Arc a: outgoingArcs.get(source))
-			if(a.getDst().equals(target))
-				return a;
-		return null;
-	}
+//	private Arc retrieveArc(State source, State target){
+//		for(Arc a: outgoingArcs.get(source))
+//			if(a.getDst().equals(target))
+//				return a;
+//		return null;
+//	}
 	
 	private void retrieveOutgoingArcs(){
 		for(Arc a: model.getArcs())
@@ -231,8 +232,10 @@ public class Monitor {
 				// coverage info and termination
 				coverageInfo.addExecution(stateIndex.get(currentState), new CharAction(a.getAct().getName().charAt(0)));
 				int tests = 0;
-				for(Dirichlet d: posterior.values())
-					tests += d.getSampleSize();
+				for(State s: posterior.keySet()) {
+					tests += posterior.get(s).getSampleSize();
+					decisionMaker.updateDistance(stateIndex.get(s), posterior.get(s).getDistance());
+				}
 				if(tests % EventHandler.SAMPLE_SIZE >= EventHandler.SAMPLE_SIZE-1) {
 					log.warn(coverageInfo.toString());
 					if(EventHandler.TERMINATION_CONDITION == Termination.COVERAGE && coverageInfo.getCoverage() >= EventHandler.COVERAGE) {
@@ -279,6 +282,7 @@ public class Monitor {
 			System.out.println("    Mode x_i: " + posterior.get(s).printMode());
 			System.out.println("    Mean E[x_i]: " + posterior.get(s).printMean());
 			System.out.println("    95% HPD region: " + Arrays.deepToString(posterior.get(s).hpdRegion(0.95)));
+			System.out.println("    HPD region size: " + posterior.get(s).getDistance());
 		}
 	}
 	

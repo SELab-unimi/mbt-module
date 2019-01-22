@@ -26,8 +26,12 @@ public class FlatDecisionMaker extends DecisionMaker {
 
 	@Override
 	public void updateCount(int stateIndex) {
-		// TODO Auto-generated method stub
-		
+		// nothing to count here	
+	}
+
+	@Override
+	public void updateDistance(int stateIndex, double distance) {
+		// nothing to update here		
 	}
 	
 }

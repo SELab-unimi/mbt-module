@@ -28,4 +28,9 @@ public class LocalHistUncertaintyDecisionMaker extends DecisionMaker {
 		// nothing to do here
 	}
 
+	@Override
+	public void updateDistance(int stateIndex, double distance) {
+		// nothing to update here
+	}
+
 }

@@ -25,6 +25,7 @@ public class Dirichlet {
 	private double prevPdf = 0;
 	private int sampleSize = 0;
 	private int count = 0;
+	private double distance = 0.0;
 	
 	public Dirichlet(int length, Action action){
 		this.action = action;
@@ -169,7 +170,25 @@ public class Dirichlet {
 				.append(printParams().replace("[", "c(").replace("]", ")"))
 				.append("), credMass=").append(credMass)
 				.append(")").toString();
-		return transpose(REngineAccessPoint.getEngine().eval(rCommand).asDoubleMatrix());
+		double[][] region = transpose(REngineAccessPoint.getEngine().eval(rCommand).asDoubleMatrix());
+		updateDistance(region);
+		return region;
+	}
+	
+	private void updateDistance(double[][] region) {
+		double result = 0.0;
+		for (int i = 0; i < region.length; i++) {
+			double tmpDist = Math.abs(region[i][1] - region[i][0]);
+			if(tmpDist > result)
+				result = tmpDist;
+		}
+		distance = result;
+	}
+	
+	public double getDistance() {
+		if(distance == 0.0)
+			hpdRegion(0.95);
+		return distance;		
 	}
 	
 	public String printParams() {

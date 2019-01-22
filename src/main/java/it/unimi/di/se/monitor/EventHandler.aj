@@ -27,8 +27,8 @@ import org.aspectj.lang.annotation.Pointcut;
 public class EventHandler {
     
     private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
-    static final String MODEL_PATH = "src/main/resources/tasv4_trap.mdp";
-    static private final String JMDP_MODEL_PATH = "src/main/resources/tasv4_trap.jmdp";
+    static final String MODEL_PATH = "src/main/resources/tasv4_unbal.mdp";
+    static private final String JMDP_MODEL_PATH = "src/main/resources/tasv4_unbal.jmdp";
     
     static final int SAMPLE_SIZE = 1000;
     static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
