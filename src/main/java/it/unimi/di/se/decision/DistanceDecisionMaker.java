@@ -1,13 +1,8 @@
 package it.unimi.di.se.decision;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import it.unimi.di.se.decision.DecisionMaker.ActionWeight;
-import it.unimi.di.se.decision.DecisionMaker.ActionWeightComparator;
-import it.unimi.di.se.monitor.StateAction;
-import jmarkov.basic.Actions;
 import jmarkov.jmdp.CharAction;
 import jmarkov.jmdp.IntegerState;
 import jmarkov.jmdp.SimpleMDP;
@@ -24,7 +19,7 @@ public class DistanceDecisionMaker extends DecisionMaker {
 		List<CharAction> actions = mixedPolicy.get(new IntegerState(stateIndex));
 		
 		List<ActionWeight> weightedActions = new ArrayList<>();
-		double distanceSum = 0.0;
+		double distanceSum = 0.0d;
 		for(CharAction a: actions) {
 			double distance = hpdDistance.get(new IntegerState(getPolicyObjective(stateIndex, a)));
 			distanceSum += distance;

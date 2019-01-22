@@ -34,6 +34,7 @@ public class EventHandler {
     static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
     static final double COVERAGE = 1.0;
     static final double LIMIT = 2000;
+    static final String PROFILE_NAME = "prof1";
     
     private Monitor monitor = null;
     private SimpleMDP mdp = null;

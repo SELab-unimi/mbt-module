@@ -23,6 +23,7 @@ public abstract class DecisionMaker {
 	protected Map<IntegerState, ArrayList<CharAction>> mixedPolicy = new HashMap<>();
 	protected Map<Integer, DecisionRule<IntegerState, CharAction>> decisionRules = new HashMap<>();
 	protected Map<IntegerState, Double> hpdDistance = new HashMap<>();
+	protected Map<IntegerState, Double> operationalProfile = new HashMap<>();
 	
 	public DecisionMaker(SimpleMDP mdp) {
 		this.mdp = mdp;
@@ -58,6 +59,10 @@ public abstract class DecisionMaker {
 		for(IntegerState s: this.mdp.getAllStates())
 			for(CharAction a: this.mdp.feasibleActions(s))
 				count.put(new StateAction(s.getId(), a), 1);
+	}
+	
+	public void setOperationalProfile(final int stateIndex, final double profile) {
+		operationalProfile.put(new IntegerState(stateIndex), profile);
 	}
 	
 	protected CharAction weightedRandomChoice(final int stateIndex, Iterable<CharAction> actions) {

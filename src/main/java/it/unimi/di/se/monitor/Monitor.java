@@ -26,6 +26,8 @@ import it.unimi.di.se.mdp.mdpDsl.DirichletPrior;
 import it.unimi.di.se.mdp.mdpDsl.MDPModel;
 import it.unimi.di.se.mdp.mdpDsl.ObservableMap;
 import it.unimi.di.se.mdp.mdpDsl.State;
+import it.unimi.di.se.mdp.mdpDsl.Profile;
+import it.unimi.di.se.mdp.mdpDsl.ProfileMap;
 import jmarkov.jmdp.CharAction;
 
 
@@ -85,6 +87,14 @@ public class Monitor {
 		int i = 0;
 		for(State s: model.getStates())
 			stateIndex.put(s, i++);
+		
+		// profile info
+		for(Profile p: model.getProfiles()) {
+			if(p.getName().equals(EventHandler.PROFILE_NAME)) {
+				for(ProfileMap map: p.getMap())
+					decisionMaker.setOperationalProfile(stateIndex.get(map.getState()).intValue(), Double.parseDouble(map.getWeight()));
+			}
+		}
 		
 		// init Baesyan analysis
 		for(State s: model.getStates()){
