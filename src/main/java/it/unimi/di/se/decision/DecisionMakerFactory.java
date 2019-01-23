@@ -15,6 +15,8 @@ public class DecisionMakerFactory {
 			return new DistanceDecisionMaker(mdp);
 		else if(policy == Policy.PROFILE)
 			return new OperationalProfileDecisionMaker(mdp);
+		else if(policy == Policy.COMBINED)
+			return new CombinedDecisionMaker(mdp);
 		else if(policy == Policy.RANDOM)
 			return new RandomDecisionMaker(mdp);
 		else if(policy == Policy.HISTORY)

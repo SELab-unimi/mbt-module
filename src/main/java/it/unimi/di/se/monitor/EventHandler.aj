@@ -34,6 +34,8 @@ public class EventHandler {
     static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
     static final double COVERAGE = 1.0;
     static final double LIMIT = 2000;
+    public static final double DIST_WEIGHT = 0.5;
+    public static final double PROF_WEIGHT = 0.5;
     static final String PROFILE_NAME = "prof2";
     
     private Monitor monitor = null;
@@ -51,7 +53,7 @@ public class EventHandler {
    			e.printStackTrace();
    		}
        	log.info("Monitor initialization...");
-       	monitor = new Monitor(new DecisionMakerFactory().createPolicy(mdp, Policy.PROFILE));
+       	monitor = new Monitor(new DecisionMakerFactory().createPolicy(mdp, Policy.COMBINED));
        	monitor.launch();
 	}
         
