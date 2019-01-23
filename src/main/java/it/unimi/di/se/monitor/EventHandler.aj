@@ -27,14 +27,14 @@ import org.aspectj.lang.annotation.Pointcut;
 public class EventHandler {
     
     private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
-    static final String MODEL_PATH = "src/main/resources/tasv4_unbal.mdp";
-    static private final String JMDP_MODEL_PATH = "src/main/resources/tasv4_unbal.jmdp";
+    static final String MODEL_PATH = "src/main/resources/tasv4_notrap.mdp";
+    static private final String JMDP_MODEL_PATH = "src/main/resources/tasv4_notrap.jmdp";
     
     static final int SAMPLE_SIZE = 1000;
     static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
     static final double COVERAGE = 1.0;
     static final double LIMIT = 2000;
-    static final String PROFILE_NAME = "prof1";
+    static final String PROFILE_NAME = "prof2";
     
     private Monitor monitor = null;
     private SimpleMDP mdp = null;
@@ -51,7 +51,7 @@ public class EventHandler {
    			e.printStackTrace();
    		}
        	log.info("Monitor initialization...");
-       	monitor = new Monitor(new DecisionMakerFactory().createPolicy(mdp, Policy.UNCERTAINTY_HISTORY));
+       	monitor = new Monitor(new DecisionMakerFactory().createPolicy(mdp, Policy.PROFILE));
        	monitor.launch();
 	}
         

@@ -13,6 +13,8 @@ public class DecisionMakerFactory {
 			return new GlobalHistUncertaintyDecisionMaker(mdp);
 		else if(policy == Policy.DISTANCE)
 			return new DistanceDecisionMaker(mdp);
+		else if(policy == Policy.PROFILE)
+			return new OperationalProfileDecisionMaker(mdp);
 		else if(policy == Policy.RANDOM)
 			return new RandomDecisionMaker(mdp);
 		else if(policy == Policy.HISTORY)
