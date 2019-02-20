@@ -27,7 +27,7 @@ import org.aspectj.lang.annotation.Pointcut;
 public class EventHandler {
 
     private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
-    static final String MODEL_PATH = "src/main/resources/tas_nonuniform-unbalanced.mdp";
+    static final String MODEL_PATH = "src/main/resources/tas_nonuniform-balanced.mdp";
     static private final String JMDP_MODEL_PATH = "src/main/resources/tas_nonuniform.jmdp";
 
     static final int SAMPLE_SIZE = 1000;
@@ -53,7 +53,7 @@ public class EventHandler {
    			e.printStackTrace();
    		}
        	log.info("Monitor initialization...");
-       	monitor = new Monitor(new DecisionMakerFactory().createPolicy(mdp, Policy.DISTANCE));
+       	monitor = new Monitor(new DecisionMakerFactory().createPolicy(mdp, Policy.UNCERTAINTY_HISTORY));
        	monitor.launch();
 	}
 

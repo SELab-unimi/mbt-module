@@ -32,7 +32,7 @@ public class Driver {
         int times = 0;
         while(!goal(times)) {
             logger.info("new run");
-            mdp.resetSimulation();
+            mdp.resetExecution();
             while(!mdp.isCurrentStateAbsorbing()) {
                 logger.info("current state: " + mdp.getCurrentState().label());
                 if(isObservable(mdp.getCurrentState()))

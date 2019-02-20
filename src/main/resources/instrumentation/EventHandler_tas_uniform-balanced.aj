@@ -27,8 +27,8 @@ import org.aspectj.lang.annotation.Pointcut;
 public class EventHandler {
 
     private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
-    static final String MODEL_PATH = "src/main/resources/tas_nonuniform-unbalanced.mdp";
-    static private final String JMDP_MODEL_PATH = "src/main/resources/tas_nonuniform.jmdp";
+    static final String MODEL_PATH = "src/main/resources/tas_uniform-balanced.mdp";
+    static private final String JMDP_MODEL_PATH = "src/main/resources/tas_uniform.jmdp";
 
     static final int SAMPLE_SIZE = 1000;
     static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
@@ -53,7 +53,7 @@ public class EventHandler {
    			e.printStackTrace();
    		}
        	log.info("Monitor initialization...");
-       	monitor = new Monitor(new DecisionMakerFactory().createPolicy(mdp, Policy.DISTANCE));
+       	monitor = new Monitor(new DecisionMakerFactory().createPolicy(mdp, Policy.UNCERTAINTY_FLAT));
        	monitor.launch();
 	}
 
@@ -92,8 +92,6 @@ public class EventHandler {
 			monitor.addEvent(new Event("a6", timeStamp));
 		else if(currentMonitorState.equals("S4") && state.label().equals("S4") && action=='w' && result.label().equals("S2"))
 			monitor.addEvent(new Event("a5", timeStamp));
-		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='b' && result.label().equals("S2"))
-			monitor.addEvent(new Event("a8", timeStamp));
 		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='c' && result.label().equals("S6"))
 			monitor.addEvent(new Event("a9", timeStamp));
 		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='e' && result.label().equals("S10"))

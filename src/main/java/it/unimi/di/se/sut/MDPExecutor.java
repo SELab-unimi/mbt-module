@@ -21,7 +21,7 @@ public class MDPExecutor {
 
     public MDPExecutor(Reader input) {
         mdp = new SimpleMDP(input);
-        resetSimulation();
+        resetExecution();
     }
 
     public IntegerState getCurrentState() {
@@ -69,7 +69,7 @@ public class MDPExecutor {
         return mdp.feasibleActions(currentState);
     }
 
-    public void resetSimulation() {
+    public void resetExecution() {
         currentState = mdp.getInitialState();
     }
 }
