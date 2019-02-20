@@ -14,7 +14,7 @@ ext {
     aspectjVersion = '1.8.5'
 }
 
-apply plugin: "aspectj.gradle"
+apply plugin: 'aspectj.gradle'
 apply plugin: 'java'
 apply plugin: 'application'
 
@@ -35,14 +35,14 @@ dependencies {
     compile group: 'jfree', name: 'jfreechart', version: '1.0.13'
     compile group: 'com.googlecode.matrix-toolkits-java', name: 'mtj', version: '1.0.4'
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    
+
     compile 'org.aspectj:aspectjrt:1.8.5'
     compile 'org.aspectj:aspectjweaver:1.8.5'
-    
+
     compile group: 'com.github.lucarosellini.rJava', name: 'JRIEngine', version: '0.9-7'
 
-    runtime files('libs/colt.jar', 'libs/concurrent.jar', 'libs/qsopt.jar', 'libs/ssj-2.5.jar', 'libs/mdp-lib.jar')
-    runtime fileTree(dir: 'libs', include: '*.jar')
+  //  runtime files('libs/colt.jar', 'libs/concurrent.jar', 'libs/qsopt.jar', 'libs/ssj-2.5.jar', 'libs/mdp-lib.jar')
+  //  runtime fileTree(dir: 'libs', include: '*.jar')
     runtime 'org.slf4j:slf4j-simple:1.7.25'
 
     testCompile 'junit:junit:4.12'
@@ -56,5 +56,4 @@ run {
 	}
 }
 
-mainClassName = 'it.unimi.di.se.sut.Driver'
-
+mainClassName = 'mbt.Driver'

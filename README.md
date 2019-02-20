@@ -1,4 +1,4 @@
-# MDP Module
+# Uncertainty-aware MBT Module
 
 This is the anonymized **replication package** of the experiments described in the research paper:
 "Evaluating Uncertainty-aware Testing Methods by Delivered Confidence",
@@ -8,7 +8,9 @@ submitted to the 27th ACM Joint European Software Engineering Conference and Sym
 
 The package contains a Java software project having the following external dependencies:
 * the [R environment](https://www.r-project.org/)
-* additional R packages: [rJava](https://cran.r-project.org/web/packages/rJava/index.html), [MCMCpack](https://cran.r-project.org/web/packages/MCMCpack/index.html), [HDInterval](https://cran.r-project.org/web/packages/HDInterval/index.html).
+* additional R packages: [rJava](https://cran.r-project.org/web/packages/rJava/index.html),
+[MCMCpack](https://cran.r-project.org/web/packages/MCMCpack/index.html),
+[HDInterval](https://cran.r-project.org/web/packages/HDInterval/index.html).
 
 Once the dependencies have been installed, set up the following system-dependent variables:
 * set your `JRI path` in the [build.gradle](build.gradle) file (line 51) as JVM option `java.library.path`;
@@ -55,7 +57,8 @@ After `build`, you can run the application by executing the following line:
 gradle run -PappArgs="['-i', 'src/main/resources/tas_nonuniform.jmdp']"
 ```
 
-By default, this runs the MBT module using **distance** test selection strategy within the **non-uniform/unbalanced** Tele Assistant System (TAS) running example.
+By default, this runs the Uncertainty-aware MBT module using **distance** test selection strategy
+within the **non-uniform/unbalanced** scenario of the Tele Assistant System (TAS) running example.
 
 To change the test selection strategy and the adopted scenario,
 change:
@@ -69,6 +72,8 @@ For example, to use the **flat** test selection strategy within the **uniform/ba
 * replace the `src/main/java/it/unimi/di/se/monitor/EventHandler.aj` with `src/main/resources/instrumentation/EventHandler_tas_uniform-balanced.aj`.
 
 Then build the project (`gradle clean build`) and run it (`gradle run`).
+
+The testing activity produces as output a *log* file (in the main folder) named `mylogs.log`.
 
 ## License
 
