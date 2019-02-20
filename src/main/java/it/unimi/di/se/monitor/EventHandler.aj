@@ -72,14 +72,14 @@ public class EventHandler {
 		return String.valueOf(action.actionLabel());
 	}
 	
-	@Before(value="execution(public void it.unimi.di.se.simulator.MDPSimulator.resetSimulation())")
+	@Before(value="execution(public void it.unimi.di.se.sut.MDPSimulator.resetSimulation())")
 	public void resetSimulationResetEvent() {
 		log.info("Reset initial state...");
 		monitor.addEvent(Event.resetEvent());
 	}
 	
 	
-	@AfterReturning(value="execution(public jmarkov.jmdp.IntegerState it.unimi.di.se.simulator.MDPSimulator.doAction(jmarkov.jmdp.IntegerState, char)) && args(state, action)", returning="result")
+	@AfterReturning(value="execution(public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPSimulator.doAction(jmarkov.jmdp.IntegerState, char)) && args(state, action)", returning="result")
 	public void doActionAfterAdvice(jmarkov.jmdp.IntegerState state, char action, jmarkov.jmdp.IntegerState result) {
 		
 		long timeStamp = System.currentTimeMillis();
@@ -134,7 +134,7 @@ public class EventHandler {
 			log.error("*** PRE-/POST- CONDITION VIOLATION ***");
 	}
 	
-	@Around(value="execution(private char it.unimi.di.se.simulator.MDPDriver.waitForAction(jmarkov.basic.Actions<jmarkov.jmdp.CharAction>, java.io.InputStream)) && args(actionList, input)")
+	@Around(value="execution(private char it.unimi.di.se.sut.MDPDriver.waitForAction(jmarkov.basic.Actions<jmarkov.jmdp.CharAction>, java.io.InputStream)) && args(actionList, input)")
 	public Object waitForActionControl(ProceedingJoinPoint thisJoinPoint, jmarkov.basic.Actions<jmarkov.jmdp.CharAction> actionList, java.io.InputStream input) throws Throwable {
 		Object[] args = thisJoinPoint.getArgs();
 		for(int i=0; i<args.length; i++)

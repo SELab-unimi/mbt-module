@@ -1,4 +1,4 @@
-package it.unimi.di.se.simulator;
+package it.unimi.di.se.sut;
 
 import jmarkov.jmdp.CharAction;
 import jmarkov.jmdp.IntegerState;

@@ -7,8 +7,6 @@ buildscript {
   }
   dependencies {
     classpath "gradle.plugin.aspectj:gradle-aspectj:0.1.6"
-    //classpath "gradle.plugin.aspectj:plugin:0.1.1"
-    //classpath "gradle.plugin.aspectj:gradle-aspectj:0.1.1"
   }
 }
 
@@ -50,7 +48,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-applicationDefaultJvmArgs = ['-Dorg.slf4j.simpleLogger.defaultLogLevel=warn', '-Djava.library.path=/usr/local/lib/R/3.4/site-library/rJava/jri']
+applicationDefaultJvmArgs = ['-Dorg.slf4j.simpleLogger.defaultLogLevel=warn', '-Djava.library.path=/usr/local/lib/R/3.5/site-library/rJava/jri']
 
 run {
     if ( project.hasProperty("appArgs") ) {
@@ -58,6 +56,5 @@ run {
 	}
 }
 
-// Define the main class for the application
-mainClassName = 'it.unimi.di.se.simulator.MDPDriver'
+mainClassName = 'it.unimi.di.se.sut.MDPDriver'
 
