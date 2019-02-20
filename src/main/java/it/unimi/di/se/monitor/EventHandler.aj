@@ -27,16 +27,16 @@ import org.aspectj.lang.annotation.Pointcut;
 public class EventHandler {
     
     private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
-    static final String MODEL_PATH = "src/main/resources/tasv4_notrap.mdp";
-    static private final String JMDP_MODEL_PATH = "src/main/resources/tasv4_notrap.jmdp";
+    static final String MODEL_PATH = "src/main/resources/tas_nonuniform-unbalanced.mdp";
+    static private final String JMDP_MODEL_PATH = "src/main/resources/tas_nonuniform.jmdp";
     
     static final int SAMPLE_SIZE = 1000;
     static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
-    static final double COVERAGE = 1.0;
+    static final double COVERAGE = 0.0;
     static final double LIMIT = 2000;
-    public static final double DIST_WEIGHT = 0.5;
-    public static final double PROF_WEIGHT = 0.5;
-    static final String PROFILE_NAME = "prof2";
+    public static final double DIST_WEIGHT = 0.0;
+    public static final double PROF_WEIGHT = 0.0;
+    static final String PROFILE_NAME = "prof1";
     
     private Monitor monitor = null;
     private SimpleMDP mdp = null;
@@ -53,7 +53,7 @@ public class EventHandler {
    			e.printStackTrace();
    		}
        	log.info("Monitor initialization...");
-       	monitor = new Monitor(new DecisionMakerFactory().createPolicy(mdp, Policy.COMBINED));
+       	monitor = new Monitor(new DecisionMakerFactory().createPolicy(mdp, Policy.DISTANCE));
        	monitor.launch();
 	}
         
@@ -98,8 +98,8 @@ public class EventHandler {
 			monitor.addEvent(new Event("a9", timeStamp));
 		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='e' && result.label().equals("S10"))
 			monitor.addEvent(new Event("a18", timeStamp));
-		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='r' && result.label().equals("S0"))
-			monitor.addEvent(new Event("a19", timeStamp));
+		else if(currentMonitorState.equals("S11") && state.label().equals("S11") && action=='w' && result.label().equals("S11"))
+			monitor.addEvent(new Event("a21", timeStamp));
 		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action=='w' && result.label().equals("S7"))
 			monitor.addEvent(new Event("a10", timeStamp));
 		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action=='w' && result.label().equals("S8"))
@@ -128,6 +128,8 @@ public class EventHandler {
 			monitor.addEvent(new Event("a3", timeStamp));
 		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='a' && result.label().equals("S4"))
 			monitor.addEvent(new Event("a4", timeStamp));
+		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='a' && result.label().equals("S11"))
+			monitor.addEvent(new Event("a20", timeStamp));
 		else
 			log.error("*** PRE-/POST- CONDITION VIOLATION ***");
 	}

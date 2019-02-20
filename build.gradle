@@ -29,7 +29,8 @@ repositories {
 
 dependencies {
     compile 'info.picocli:picocli:1.0.1'
-    compile 'org.slf4j:slf4j-api:1.7.+'
+    compile group: 'org.slf4j', name:'slf4j-api', version: '1.7.2'
+    compile group: 'org.slf4j', name:'slf4j-log4j12', version: '1.7.2'
     compile group: 'com.edwardraff', name: 'JSAT', version: '0.0.9'
     compile group: 'gov.nist.math', name: 'jama', version: '1.0.3'
     compile group: 'jfree', name: 'jcommon', version: '1.0.16'

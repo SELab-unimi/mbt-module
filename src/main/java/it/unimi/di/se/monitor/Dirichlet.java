@@ -97,7 +97,8 @@ public class Dirichlet {
 				", Bayes Factor = " + (currentPdf/prevVal) + 
 				", E[x_i] = " + printMean() +
 				", x_i = " + printMode() +
-				", HPD region = " + Arrays.deepToString(hpdRegion(0.95));
+				", HPD region = " + Arrays.deepToString(hpdRegion(0.95)) +
+				", region size = " + distance;
 	}
 	
 	public boolean convergence() {
