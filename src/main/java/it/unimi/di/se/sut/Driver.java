@@ -14,18 +14,18 @@ import java.util.concurrent.TimeUnit;
 import static picocli.CommandLine.usage;
 
 
-public class MDPDriver {
+public class Driver {
 
-    private static Logger logger = LoggerFactory.getLogger(MDPDriver.class);
+    private static Logger logger = LoggerFactory.getLogger(Driver.class);
     private static final char WAIT_ACTION = 'w';
     public static final double VERSION = 1.0;
 
     private int limit = 1;
-    private MDPSimulator mdp = null;
+    private MDPExecutor mdp = null;
 
-    public MDPDriver(Reader input, int limit) {
+    public Driver(Reader input, int limit) {
         this.limit = limit;
-        mdp = new MDPSimulator(input);
+        mdp = new MDPExecutor(input);
     }
 
     public void start() {
@@ -128,7 +128,7 @@ public class MDPDriver {
             Long start = System.nanoTime();
 
             logger.trace("MDP initialization...");
-            MDPDriver simulator = new MDPDriver(
+            Driver simulator = new Driver(
                     new InputStreamReader(new FileInputStream(command.inputMDP)),
                     command.limit);
             logger.trace("Done.");

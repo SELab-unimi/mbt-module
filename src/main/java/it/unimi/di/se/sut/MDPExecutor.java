@@ -11,15 +11,15 @@ import org.slf4j.LoggerFactory;
 import java.io.Reader;
 import java.util.*;
 
-public class MDPSimulator {
+public class MDPExecutor {
 
-    private static Logger logger = LoggerFactory.getLogger(MDPSimulator.class);
+    private static Logger logger = LoggerFactory.getLogger(MDPExecutor.class);
 
     private SimpleMDP mdp = null;
     private IntegerState currentState = null;
     private Comparator<IntegerState> stateComparator = new IntegerStateComparator();
 
-    public MDPSimulator(Reader input) {
+    public MDPExecutor(Reader input) {
         mdp = new SimpleMDP(input);
         resetSimulation();
     }

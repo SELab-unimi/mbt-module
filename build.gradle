@@ -56,5 +56,5 @@ run {
 	}
 }
 
-mainClassName = 'it.unimi.di.se.sut.MDPDriver'
+mainClassName = 'it.unimi.di.se.sut.Driver'
 
