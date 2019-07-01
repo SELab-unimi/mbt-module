@@ -130,7 +130,7 @@ public class MBTDriver {
             @CommandLine.Option(names = {"-i", "--input"}, required=true, description = "MDP auto-generated description")
             String inputMDP;
             @CommandLine.Option(names = {"-l", "--limit"}, description = "Number of simulations")
-            Integer limit = 1;
+            Integer limit = 1000000;
             @CommandLine.Option(names = {"-h", "--help"}, usageHelp = true, description = "Display this help message")
             boolean usageHelpRequested;
             @CommandLine.Option(names = {"-v", "--version"}, versionHelp = true, description = "Display the version")
