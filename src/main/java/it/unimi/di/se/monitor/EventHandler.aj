@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import it.unimi.di.se.decision.DecisionMakerFactory;
 import it.unimi.di.se.decision.Policy;
 import it.unimi.di.se.monitor.Monitor.CheckPoint;
-import jmarkov.jmdp.CharAction;
+import jmarkov.jmdp.StringAction;
 import jmarkov.jmdp.SimpleMDP;
 
 import java.io.BufferedReader;
@@ -67,7 +67,7 @@ public class EventHandler {
 		monitor.addEvent(Event.readStateEvent());
 		String stateName = CheckPoint.getInstance().join(Thread.currentThread());
 
-		CharAction action = monitor.getDecisionMaker().getAction(Integer.parseInt(stateName.substring(1)));
+		StringAction action = monitor.getDecisionMaker().getAction(Integer.parseInt(stateName.substring(1)));
 		log.info("Selected action = " + action.actionLabel());
 		return String.valueOf(action.actionLabel());
 	}
@@ -79,8 +79,8 @@ public class EventHandler {
 	}
 
 
-	@AfterReturning(value="execution(public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(jmarkov.jmdp.IntegerState, char)) && args(state, action)", returning="result")
-	public void doActionAfterAdvice(jmarkov.jmdp.IntegerState state, char action, jmarkov.jmdp.IntegerState result) {
+	@AfterReturning(value="execution(public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(jmarkov.jmdp.IntegerState, String)) && args(state, action)", returning="result")
+	public void doActionAfterAdvice(jmarkov.jmdp.IntegerState state, String action, jmarkov.jmdp.IntegerState result) {
 
 		long timeStamp = System.currentTimeMillis();
 		monitor.addEvent(Event.readStateEvent());
@@ -88,54 +88,54 @@ public class EventHandler {
 		log.info("Transition : " + currentMonitorState + "-->" + result.label());
 
 
-		if(currentMonitorState.equals("S3") && state.label().equals("S3") && action=='w' && result.label().equals("S10"))
+		if(currentMonitorState.equals("S3") && state.label().equals("S3") && action.equals("w") && result.label().equals("S10"))
 			monitor.addEvent(new Event("a6", timeStamp));
-		else if(currentMonitorState.equals("S4") && state.label().equals("S4") && action=='w' && result.label().equals("S2"))
+		else if(currentMonitorState.equals("S4") && state.label().equals("S4") && action.equals("w") && result.label().equals("S2"))
 			monitor.addEvent(new Event("a5", timeStamp));
-		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='b' && result.label().equals("S2"))
+		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action.equals("b") && result.label().equals("S2"))
 			monitor.addEvent(new Event("a8", timeStamp));
-		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='c' && result.label().equals("S6"))
+		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action.equals("c") && result.label().equals("S6"))
 			monitor.addEvent(new Event("a9", timeStamp));
-		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action=='e' && result.label().equals("S10"))
+		else if(currentMonitorState.equals("S5") && state.label().equals("S5") && action.equals("e") && result.label().equals("S10"))
 			monitor.addEvent(new Event("a18", timeStamp));
-		else if(currentMonitorState.equals("S11") && state.label().equals("S11") && action=='w' && result.label().equals("S11"))
+		else if(currentMonitorState.equals("S11") && state.label().equals("S11") && action.equals("w") && result.label().equals("S11"))
 			monitor.addEvent(new Event("a21", timeStamp));
-		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action=='w' && result.label().equals("S7"))
+		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action.equals("w") && result.label().equals("S7"))
 			monitor.addEvent(new Event("a10", timeStamp));
-		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action=='w' && result.label().equals("S8"))
+		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action.equals("w") && result.label().equals("S8"))
 			monitor.addEvent(new Event("a11", timeStamp));
-		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action=='w' && result.label().equals("S9"))
+		else if(currentMonitorState.equals("S6") && state.label().equals("S6") && action.equals("w") && result.label().equals("S9"))
 			monitor.addEvent(new Event("a12", timeStamp));
-		else if(currentMonitorState.equals("S10") && state.label().equals("S10") && action=='w' && result.label().equals("S10"))
+		else if(currentMonitorState.equals("S10") && state.label().equals("S10") && action.equals("w") && result.label().equals("S10"))
 			monitor.addEvent(new Event("a16", timeStamp));
-		else if(currentMonitorState.equals("S7") && state.label().equals("S7") && action=='w' && result.label().equals("S10"))
+		else if(currentMonitorState.equals("S7") && state.label().equals("S7") && action.equals("w") && result.label().equals("S10"))
 			monitor.addEvent(new Event("a13", timeStamp));
-		else if(currentMonitorState.equals("S8") && state.label().equals("S8") && action=='w' && result.label().equals("S10"))
+		else if(currentMonitorState.equals("S8") && state.label().equals("S8") && action.equals("w") && result.label().equals("S10"))
 			monitor.addEvent(new Event("a14", timeStamp));
-		else if(currentMonitorState.equals("S9") && state.label().equals("S9") && action=='w' && result.label().equals("S5"))
+		else if(currentMonitorState.equals("S9") && state.label().equals("S9") && action.equals("w") && result.label().equals("S5"))
 			monitor.addEvent(new Event("a15", timeStamp));
-		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='s' && result.label().equals("S1"))
+		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action.equals("s") && result.label().equals("S1"))
 			monitor.addEvent(new Event("a0", timeStamp));
-		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='b' && result.label().equals("S2"))
+		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action.equals("b") && result.label().equals("S2"))
 			monitor.addEvent(new Event("a2", timeStamp));
-		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='v' && result.label().equals("S5"))
+		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action.equals("v") && result.label().equals("S5"))
 			monitor.addEvent(new Event("a7", timeStamp));
-		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action=='e' && result.label().equals("S10"))
+		else if(currentMonitorState.equals("S0") && state.label().equals("S0") && action.equals("e") && result.label().equals("S10"))
 			monitor.addEvent(new Event("a17", timeStamp));
-		else if(currentMonitorState.equals("S1") && state.label().equals("S1") && action=='w' && result.label().equals("S1"))
+		else if(currentMonitorState.equals("S1") && state.label().equals("S1") && action.equals("w") && result.label().equals("S1"))
 			monitor.addEvent(new Event("a1", timeStamp));
-		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='a' && result.label().equals("S3"))
+		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action.equals("a") && result.label().equals("S3"))
 			monitor.addEvent(new Event("a3", timeStamp));
-		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='a' && result.label().equals("S4"))
+		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action.equals("a") && result.label().equals("S4"))
 			monitor.addEvent(new Event("a4", timeStamp));
-		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action=='a' && result.label().equals("S11"))
+		else if(currentMonitorState.equals("S2") && state.label().equals("S2") && action.equals("a") && result.label().equals("S11"))
 			monitor.addEvent(new Event("a20", timeStamp));
 		else
 			log.error("*** PRE-/POST- CONDITION VIOLATION ***");
 	}
 
-	@Around(value="execution(private char it.unimi.di.se.sut.Driver.waitForAction(jmarkov.basic.Actions<jmarkov.jmdp.CharAction>, java.io.InputStream)) && args(actionList, input)")
-	public Object waitForActionControl(ProceedingJoinPoint thisJoinPoint, jmarkov.basic.Actions<jmarkov.jmdp.CharAction> actionList, java.io.InputStream input) throws Throwable {
+	@Around(value="execution(private String it.unimi.di.se.sut.Driver.waitForAction(jmarkov.basic.Actions<jmarkov.jmdp.StringAction>, java.io.InputStream)) && args(actionList, input)")
+	public Object waitForActionControl(ProceedingJoinPoint thisJoinPoint, jmarkov.basic.Actions<jmarkov.jmdp.StringAction> actionList, java.io.InputStream input) throws Throwable {
 		Object[] args = thisJoinPoint.getArgs();
 		for(int i=0; i<args.length; i++)
 			if(args[i] instanceof java.io.InputStream) {

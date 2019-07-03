@@ -2,7 +2,7 @@ package it.unimi.di.se.sut;
 
 import jmarkov.basic.Actions;
 import jmarkov.basic.States;
-import jmarkov.jmdp.CharAction;
+import jmarkov.jmdp.StringAction;
 import jmarkov.jmdp.IntegerState;
 import jmarkov.jmdp.SimpleMDP;
 import org.slf4j.Logger;
@@ -32,12 +32,12 @@ public class MDPExecutor {
     		currentState = state;
     }
 
-    public List<IntegerState> reachableStates(char action) {
-        return orderedReachableStates(mdp.reachable(currentState, new CharAction(action)));
+    public List<IntegerState> reachableStates(String action) {
+        return orderedReachableStates(mdp.reachable(currentState, new StringAction(action)));
     }
 
-    public IntegerState doAction(IntegerState sourceState, char action) {
-        CharAction a = new CharAction(action);
+    public IntegerState doAction(IntegerState sourceState, String action) {
+        StringAction a = new StringAction(action);
         List<IntegerState> orderedStates = orderedReachableStates(mdp.reachable(currentState, a));
         double uRand = new Random().nextDouble();
         logger.info("U[0,1] = " + uRand);
@@ -65,7 +65,7 @@ public class MDPExecutor {
         return mdp.isAbsorbing(currentState);
     }
 
-    public Actions<CharAction> getFeasibleActions() {
+    public Actions<StringAction> getFeasibleActions() {
         return mdp.feasibleActions(currentState);
     }
 

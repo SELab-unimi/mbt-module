@@ -8,7 +8,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.*;
 
-public class SimpleMDP extends DTMDP<IntegerState, CharAction> {
+public class SimpleMDP extends DTMDP<IntegerState, StringAction> {
 
 	private static final int LOW_COST = 0;
 	private static final int HIGH_COST = 5;
@@ -68,7 +68,7 @@ public class SimpleMDP extends DTMDP<IntegerState, CharAction> {
 				Scanner transitionScanner = new Scanner(lineScanner.nextLine());
 				while(transitionScanner.hasNext()) {
 					int i = stateMap.get(transitionScanner.next());
-					char a = transitionScanner.next().charAt(0);
+					String a = transitionScanner.next();
 					int j = stateMap.get(transitionScanner.next());
 					double p = Double.parseDouble(transitionScanner.next());
 					mdp[i][j] = new ActionProbPair(a, p);
@@ -97,40 +97,40 @@ public class SimpleMDP extends DTMDP<IntegerState, CharAction> {
 	}
 
 	@Override
-	public double immediateCost(IntegerState s, CharAction a) {
+	public double immediateCost(IntegerState s, StringAction a) {
 		for(int j: rewardStates)
-			if(mdp[s.getId()][j] != null && mdp[s.getId()][j].action == a.actionLabel() && s.getId() != j)
+			if(mdp[s.getId()][j] != null && mdp[s.getId()][j].action.equals(a.actionLabel()) && s.getId() != j)
 				return LOW_COST;
 		return HIGH_COST;
 	}
 
 	@Override
-	public double prob(IntegerState i, IntegerState j, CharAction a) {
+	public double prob(IntegerState i, IntegerState j, StringAction a) {
 		if(mdp[i.getId()][j.getId()] != null)
 			return mdp[i.getId()][j.getId()].probability;
 		return 0;
 	}
 
 	@Override
-	public States<IntegerState> reachable(IntegerState s, CharAction a) {
+	public States<IntegerState> reachable(IntegerState s, StringAction a) {
 		StatesSet<IntegerState> states = new StatesSet<>();
 		for(int j=0; j<mdp.length; j++)
-			if(mdp[s.getId()][j] != null && mdp[s.getId()][j].action == a.actionLabel())
+			if(mdp[s.getId()][j] != null && mdp[s.getId()][j].action.equals(a.actionLabel()))
 				states.add(new IntegerState(j));
 		return states;
 	}
 
 	@Override
-	public Actions<CharAction> feasibleActions(IntegerState s) {
-		ActionsSet<CharAction> actions = new ActionsSet<>();
+	public Actions<StringAction> feasibleActions(IntegerState s) {
+		ActionsSet<StringAction> actions = new ActionsSet<>();
 		for(int j=0; j<mdp.length; j++)
 			if(mdp[s.getId()][j] != null)
-				actions.add(new CharAction(mdp[s.getId()][j].action));
+				actions.add(new StringAction(mdp[s.getId()][j].action));
 		return actions;
 	}
 
 	public boolean isAbsorbing(IntegerState s) {
-		Actions<CharAction> actions = feasibleActions(s);
+		Actions<StringAction> actions = feasibleActions(s);
 		if(actions.size() > 1)
 			return false;
 		States<IntegerState> reachableStates = reachable(s, actions.iterator().next());
@@ -143,11 +143,11 @@ public class SimpleMDP extends DTMDP<IntegerState, CharAction> {
 	public static void main(String[] args) {
 		SimpleMDP problem = new SimpleMDP(new StringReader(inputExample));
 		problem.printSolution();
-		DecisionRule<IntegerState, CharAction> decisionRule;
+		DecisionRule<IntegerState, StringAction> decisionRule;
 		try {
 			decisionRule = problem.getOptimalPolicy().getDecisionRule();
 
-			ProbabilitySolver<IntegerState, CharAction> solver = new ProbabilitySolver<>(problem, decisionRule);
+			ProbabilitySolver<IntegerState, StringAction> solver = new ProbabilitySolver<>(problem, decisionRule);
 			solver.solve();
 			//solver.setGaussSeidel(true);
 			//System.out.println("Gauss");
@@ -159,10 +159,10 @@ public class SimpleMDP extends DTMDP<IntegerState, CharAction> {
 }
 
 class ActionProbPair {
-	char action;
+	String action;
 	double probability;
 
-	public ActionProbPair(char a, double p) {
+	public ActionProbPair(String a, double p) {
 		action = a;
 		probability = p;
 	}

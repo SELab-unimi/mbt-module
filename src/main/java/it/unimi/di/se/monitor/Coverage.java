@@ -8,7 +8,7 @@ import java.util.Map;
 import it.unimi.di.se.mdp.mdpDsl.Arc;
 import it.unimi.di.se.mdp.mdpDsl.MDPModel;
 import it.unimi.di.se.mdp.mdpDsl.State;
-import jmarkov.jmdp.CharAction;
+import jmarkov.jmdp.StringAction;
 
 public class Coverage {
 	
@@ -20,7 +20,7 @@ public class Coverage {
 			if(!isFinal(s, model)) {
 				for(Arc a: model.getArcs())
 					if(a.getSrc().equals(s))
-						execution.put(new StateAction(i, new CharAction(a.getAct().getName().charAt(0))), 0);
+						execution.put(new StateAction(i, new StringAction(a.getAct().getName())), 0);
 			}
 			i++;
 		}
@@ -36,7 +36,7 @@ public class Coverage {
 		return false;
 	}
 	
-	public void addExecution(int state, CharAction action) {
+	public void addExecution(int state, StringAction action) {
 		StateAction key = new StateAction(state, action);
 		Integer i = execution.get(key);
 		if(i != null)

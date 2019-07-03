@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.unimi.di.se.decision.DecisionMaker.ActionWeight;
-import jmarkov.jmdp.CharAction;
+import jmarkov.jmdp.StringAction;
 import jmarkov.jmdp.IntegerState;
 import jmarkov.jmdp.SimpleMDP;
 
@@ -15,12 +15,12 @@ public class OperationalProfileDecisionMaker extends DecisionMaker {
 	}
 
 	@Override
-	public CharAction getAction(int stateIndex) {
-		List<CharAction> actions = mixedPolicy.get(new IntegerState(stateIndex));
+	public StringAction getAction(int stateIndex) {
+		List<StringAction> actions = mixedPolicy.get(new IntegerState(stateIndex));
 
 		List<ActionWeight> weightedActions = new ArrayList<>();
 		double distanceSum = 0.0d;
-		for(CharAction a: actions) {
+		for(StringAction a: actions) {
 			double distance = operationalProfile.get(new IntegerState(getPolicyObjective(stateIndex, a)));
 			distanceSum += distance;
 			weightedActions.add(new ActionWeight(a, distance));

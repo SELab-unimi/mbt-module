@@ -33,10 +33,10 @@ public class SimpleMDPTest {
     @Test
     public void valueIterationPolicy() throws Exception {
         mdp.printSolution();
-        DecisionRule<IntegerState, CharAction> decisionRule;
+        DecisionRule<IntegerState, StringAction> decisionRule;
         try {
             decisionRule = mdp.getOptimalPolicy().getDecisionRule();
-            ProbabilitySolver<IntegerState, CharAction> solver = new ProbabilitySolver<>(mdp, decisionRule);
+            ProbabilitySolver<IntegerState, StringAction> solver = new ProbabilitySolver<>(mdp, decisionRule);
             solver.solve();
         } catch (SolverException e) {
             e.printStackTrace();
@@ -47,10 +47,10 @@ public class SimpleMDPTest {
     @Test
     public void valueIterationGaussSeidel() throws Exception {
         mdp.printSolution();
-        DecisionRule<IntegerState, CharAction> decisionRule;
+        DecisionRule<IntegerState, StringAction> decisionRule;
         try {
             decisionRule = mdp.getOptimalPolicy().getDecisionRule();
-            ProbabilitySolver<IntegerState, CharAction> solver = new ProbabilitySolver<>(mdp, decisionRule);
+            ProbabilitySolver<IntegerState, StringAction> solver = new ProbabilitySolver<>(mdp, decisionRule);
             solver.setGaussSeidel(true);
             solver.solve();
         } catch (SolverException e) {

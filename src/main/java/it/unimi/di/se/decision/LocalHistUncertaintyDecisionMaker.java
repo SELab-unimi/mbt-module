@@ -3,7 +3,7 @@ package it.unimi.di.se.decision;
 import java.util.List;
 
 import it.unimi.di.se.monitor.StateAction;
-import jmarkov.jmdp.CharAction;
+import jmarkov.jmdp.StringAction;
 import jmarkov.jmdp.IntegerState;
 import jmarkov.jmdp.SimpleMDP;
 
@@ -14,10 +14,10 @@ public class LocalHistUncertaintyDecisionMaker extends DecisionMaker {
 	}
 
 	@Override
-	public CharAction getAction(int stateIndex) {
+	public StringAction getAction(int stateIndex) {
 		// stochastic choice depending on the history (local choices)
-		List<CharAction> actions = mixedPolicy.get(new IntegerState(stateIndex));
-		CharAction a = weightedRandomChoice(stateIndex, actions);
+		List<StringAction> actions = mixedPolicy.get(new IntegerState(stateIndex));
+		StringAction a = weightedRandomChoice(stateIndex, actions);
 		StateAction k = new StateAction(stateIndex, a);
 		count.put(k, count.get(k) + 1);
 		return a;

@@ -28,7 +28,7 @@ import it.unimi.di.se.mdp.mdpDsl.ObservableMap;
 import it.unimi.di.se.mdp.mdpDsl.State;
 import it.unimi.di.se.mdp.mdpDsl.Profile;
 import it.unimi.di.se.mdp.mdpDsl.ProfileMap;
-import jmarkov.jmdp.CharAction;
+import jmarkov.jmdp.StringAction;
 
 
 public class Monitor {
@@ -240,7 +240,7 @@ public class Monitor {
 				}
 				
 				// coverage info and termination
-				coverageInfo.addExecution(stateIndex.get(currentState), new CharAction(a.getAct().getName().charAt(0)));
+				coverageInfo.addExecution(stateIndex.get(currentState), new StringAction(a.getAct().getName()));
 				int tests = 0;
 				for(State s: posterior.keySet()) {
 					tests += posterior.get(s).getSampleSize();

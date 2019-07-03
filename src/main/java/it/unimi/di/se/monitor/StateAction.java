@@ -1,20 +1,20 @@
 package it.unimi.di.se.monitor;
 
 import java.util.Objects;
-import jmarkov.jmdp.CharAction;
+import jmarkov.jmdp.StringAction;
 
 public class StateAction {
 	Integer state = 0;
-	CharAction action = null;
+	StringAction action = null;
 	
-	public StateAction(int state, CharAction action) {
+	public StateAction(int state, StringAction action) {
 		this.state = state;
 		this.action = action;
 	}
 	
 	public boolean equals(Object o) {
 		StateAction target = (StateAction)o;
-		return this.state == target.state && this.action.actionLabel() == target.action.actionLabel();
+		return this.state == target.state && this.action.equals(target.action);
 	}
 	
 	@Override

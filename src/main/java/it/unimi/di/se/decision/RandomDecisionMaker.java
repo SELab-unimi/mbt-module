@@ -1,7 +1,7 @@
 package it.unimi.di.se.decision;
 
 import jmarkov.basic.Actions;
-import jmarkov.jmdp.CharAction;
+import jmarkov.jmdp.StringAction;
 import jmarkov.jmdp.IntegerState;
 import jmarkov.jmdp.SimpleMDP;
 
@@ -12,11 +12,11 @@ public class RandomDecisionMaker extends DecisionMaker {
 	}
 
 	@Override
-	public CharAction getAction(int stateIndex) {
-		Actions<CharAction> actions = mdp.feasibleActions(new IntegerState(stateIndex));
+	public StringAction getAction(int stateIndex) {
+		Actions<StringAction> actions = mdp.feasibleActions(new IntegerState(stateIndex));
 		int randomIndex = (int)(Math.random() * actions.size());
 		int i=0;
-		for(CharAction a: actions)
+		for(StringAction a: actions)
 			if(i++==randomIndex)
 				return a;
 		return null;

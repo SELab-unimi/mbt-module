@@ -1,7 +1,7 @@
 package it.unimi.di.se.decision;
 
 import it.unimi.di.se.monitor.EventHandler;
-import jmarkov.jmdp.CharAction;
+import jmarkov.jmdp.StringAction;
 import jmarkov.jmdp.SimpleMDP;
 
 public class CombinedDecisionMaker extends DecisionMaker {
@@ -16,7 +16,7 @@ public class CombinedDecisionMaker extends DecisionMaker {
 	}
 
 	@Override
-	public CharAction getAction(int stateIndex) {
+	public StringAction getAction(int stateIndex) {
 		ActionWeight[] actions = new ActionWeight[2];
 		actions[0] = new ActionWeight(distanceDecisionMaker.getAction(stateIndex), EventHandler.DIST_WEIGHT);
 		actions[1] = new ActionWeight(operationalDecisionMaker.getAction(stateIndex), EventHandler.PROF_WEIGHT);

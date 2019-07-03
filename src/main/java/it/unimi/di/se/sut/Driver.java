@@ -1,7 +1,7 @@
 package it.unimi.di.se.sut;
 
 import jmarkov.basic.Actions;
-import jmarkov.jmdp.CharAction;
+import jmarkov.jmdp.StringAction;
 import jmarkov.jmdp.IntegerState;
 import picocli.CommandLine;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ import static picocli.CommandLine.usage;
 public class Driver {
 
     private static Logger logger = LoggerFactory.getLogger(Driver.class);
-    private static final char WAIT_ACTION = 'w';
+    private static final String WAIT_ACTION = "w";
     public static final double VERSION = 1.0;
 
     private int limit = 1;
@@ -38,7 +38,7 @@ public class Driver {
                 if(isObservable(mdp.getCurrentState()))
                     mdp.setCurrentState(mdp.doAction(mdp.getCurrentState(), WAIT_ACTION));
                 else {
-                    char action = waitForAction(mdp.getFeasibleActions(), System.in);
+                    String action = waitForAction(mdp.getFeasibleActions(), System.in);
                     mdp.setCurrentState(mdp.doAction(mdp.getCurrentState(), action));
                 }
             }
@@ -48,13 +48,13 @@ public class Driver {
     }
 
     private boolean isObservable(IntegerState state) {
-        Actions<CharAction> actions = mdp.getFeasibleActions();
+        Actions<StringAction> actions = mdp.getFeasibleActions();
         return actions.size() == 1 && actions.iterator().next().actionLabel() == WAIT_ACTION;
     }
 
-    private char waitForAction(Actions<CharAction> actions, InputStream stream) {
+    private String waitForAction(Actions<StringAction> actions, InputStream stream) {
     		StringBuilder availableActions = new StringBuilder("Available actions: { ");
-        Iterator<CharAction> iterator = actions.iterator();
+        Iterator<StringAction> iterator = actions.iterator();
         boolean firstIteration = true;
         while(iterator.hasNext()) {
             if(firstIteration)
@@ -71,8 +71,8 @@ public class Driver {
 
             iterator = actions.iterator();
             while(iterator.hasNext())
-                if(iterator.next().actionLabel() == inputAction.charAt(0))
-                    return inputAction.charAt(0);
+                if(iterator.next().actionLabel().equals(inputAction))
+                    return inputAction;
         }
     }
 

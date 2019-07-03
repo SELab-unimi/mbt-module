@@ -3,7 +3,7 @@ package it.unimi.di.se.decision;
 import java.util.ArrayList;
 import java.util.List;
 
-import jmarkov.jmdp.CharAction;
+import jmarkov.jmdp.StringAction;
 import jmarkov.jmdp.IntegerState;
 import jmarkov.jmdp.SimpleMDP;
 
@@ -14,13 +14,13 @@ public class DistanceDecisionMaker extends DecisionMaker {
 	}
 
 	@Override
-	public CharAction getAction(int stateIndex) {
+	public StringAction getAction(int stateIndex) {
 		// stochastic choice depending on the hpd region size
-		List<CharAction> actions = mixedPolicy.get(new IntegerState(stateIndex));
+		List<StringAction> actions = mixedPolicy.get(new IntegerState(stateIndex));
 		
 		List<ActionWeight> weightedActions = new ArrayList<>();
 		double distanceSum = 0.0d;
-		for(CharAction a: actions) {
+		for(StringAction a: actions) {
 			double distance = hpdDistance.get(new IntegerState(getPolicyObjective(stateIndex, a)));
 			distanceSum += distance;
 			weightedActions.add(new ActionWeight(a, distance));
