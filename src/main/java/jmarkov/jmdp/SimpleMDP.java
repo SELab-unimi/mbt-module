@@ -18,7 +18,7 @@ public class SimpleMDP extends DTMDP<IntegerState, StringAction> {
 	public static final String UNCERTAIN_STATE = "u";
 
 	private Map<String, Integer> stateMap = new HashMap<>();
-	private ActionProbPair[][] mdp = null;
+	private List<List<Map<String, Double>>> mdp = null;
 	private List<Integer> uncertainStates = new ArrayList<>();
 	private List<Integer> rewardStates = new ArrayList<>();
 
@@ -60,10 +60,14 @@ public class SimpleMDP extends DTMDP<IntegerState, StringAction> {
 			}
 			else {
 				if(line++ == 2) {
-					mdp = new ActionProbPair[stateMap.size()][stateMap.size()];
-					for(int i =0; i<mdp.length; i++)
-						for(int j =0; j<mdp.length; j++)
-							mdp[i][j] = null;
+					//mdp = (HashMap<String, Double>[][]) new HashMap[stateMap.size()][stateMap.size()];
+					mdp = new ArrayList<>(stateMap.size());
+					for(int i = 0; i < stateMap.size(); i++) {
+						List<Map<String, Double>> row = new ArrayList<>(stateMap.size());
+						mdp.add(i, row);
+						for(int j = 0; j < stateMap.size(); j++)
+							row.add(j, new HashMap<>());
+					}
 				}
 				Scanner transitionScanner = new Scanner(lineScanner.nextLine());
 				while(transitionScanner.hasNext()) {
@@ -71,7 +75,7 @@ public class SimpleMDP extends DTMDP<IntegerState, StringAction> {
 					String a = transitionScanner.next();
 					int j = stateMap.get(transitionScanner.next());
 					double p = Double.parseDouble(transitionScanner.next());
-					mdp[i][j] = new ActionProbPair(a, p);
+					mdp.get(i).get(j).put(a, p);
 				}
 				transitionScanner.close();
 			}
@@ -99,23 +103,21 @@ public class SimpleMDP extends DTMDP<IntegerState, StringAction> {
 	@Override
 	public double immediateCost(IntegerState s, StringAction a) {
 		for(int j: rewardStates)
-			if(mdp[s.getId()][j] != null && mdp[s.getId()][j].action.equals(a.actionLabel()) && s.getId() != j)
+			if(mdp.get(s.getId()).get(j) != null && mdp.get(s.getId()).get(j).getOrDefault(a.actionLabel(), 0.0) > 0.0 && s.getId() != j)
 				return LOW_COST;
 		return HIGH_COST;
 	}
 
 	@Override
 	public double prob(IntegerState i, IntegerState j, StringAction a) {
-		if(mdp[i.getId()][j.getId()] != null)
-			return mdp[i.getId()][j.getId()].probability;
-		return 0;
+		return mdp.get(i.getId()).get(j.getId()).getOrDefault(a.actionLabel(), 0.0);
 	}
 
 	@Override
 	public States<IntegerState> reachable(IntegerState s, StringAction a) {
 		StatesSet<IntegerState> states = new StatesSet<>();
-		for(int j=0; j<mdp.length; j++)
-			if(mdp[s.getId()][j] != null && mdp[s.getId()][j].action.equals(a.actionLabel()))
+		for(int j=0; j<mdp.size(); j++)
+			if(mdp.get(s.getId()).get(j).getOrDefault(a.actionLabel(), 0.0) > 0.0)
 				states.add(new IntegerState(j));
 		return states;
 	}
@@ -123,9 +125,12 @@ public class SimpleMDP extends DTMDP<IntegerState, StringAction> {
 	@Override
 	public Actions<StringAction> feasibleActions(IntegerState s) {
 		ActionsSet<StringAction> actions = new ActionsSet<>();
-		for(int j=0; j<mdp.length; j++)
-			if(mdp[s.getId()][j] != null)
-				actions.add(new StringAction(mdp[s.getId()][j].action));
+		List<Map<String, Double>> row = mdp.get(s.getId());
+		for (int j = 0; j < stateMap.size(); j++) {
+			for (String a: row.get(j).keySet()) {
+				actions.add(new StringAction(a));
+			}
+		}
 		return actions;
 	}
 

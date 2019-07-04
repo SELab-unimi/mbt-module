@@ -209,7 +209,10 @@ public class Dirichlet {
 		for(Double a: params)
 			if(a > 0) 
 				builder.append(a).append(", ");
-		builder.replace(builder.length()-2, builder.length(), "]");
+		if (builder.length() > 2)
+			builder.replace(builder.length()-2, builder.length(), "]");
+		else
+			builder.append(']');
 		return builder.toString();
 	}
 	

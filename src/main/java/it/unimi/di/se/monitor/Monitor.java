@@ -207,11 +207,13 @@ public class Monitor {
 		for(Arc a: outgoingArcs.get(currentState))
 			if(a.getName().equals(event.getName())){
 				
-				// update count if currentState is uncertain
-				decisionMaker.updateCount(stateIndex.get(currentState));
-				
-				// Bayesian analysis and termination
-				if(posterior.containsKey(currentState)) {
+				// Bayesian analysis and termination if <currentState, action> region is uncertain
+				if(posterior.containsKey(currentState) && 
+						posterior.get(currentState).action().equals(a.getAct().getName())) {
+					
+					// update count of <currentState, action> region
+					decisionMaker.updateCount(stateIndex.get(currentState));
+					
 					posterior.get(currentState).update(stateIndex.get(a.getDst()));
 					boolean convergence = true;
 					boolean testConvergence = true;
