@@ -19,8 +19,8 @@ public class SimpleMDP extends DTMDP<IntegerState, StringAction> {
 
 	private Map<String, Integer> stateMap = new HashMap<>();
 	private List<List<Map<String, Double>>> mdp = null;
-	private List<Integer> uncertainStates = new ArrayList<>();
-	private List<Integer> rewardStates = new ArrayList<>();
+	private Map<Integer, String> uncertainRegions = new HashMap<>();
+	private Map<Integer, String> rewardMap = new HashMap<>();
 
 	private static final String inputExample =
 			" S0 i, S1, S2, S3 u, S4, S5,\n" +
@@ -32,7 +32,7 @@ public class SimpleMDP extends DTMDP<IntegerState, StringAction> {
 					"S5 b S3 1.0\n" +
 					"S2 w S2 1.0\n" +
 					"S4 w S4 1.0\n" +
-					"S3 w S3 1.0";
+					"S3 w S3 1.0 u";
 
 	public SimpleMDP(Reader in) {
 		super();
@@ -51,8 +51,8 @@ public class SimpleMDP extends DTMDP<IntegerState, StringAction> {
 					if(state.length > 1) {
 						if(state[1].equals(INITIAL_STATE))
 							initial = new StatesSet<>(new IntegerState(stateId));
-						else if(state[1].equals(UNCERTAIN_STATE))
-							uncertainStates.add(stateId);
+//						else if(state[1].equals(UNCERTAIN_STATE))
+//							uncertainStates.add(stateId);
 					}
 					stateId++;
 				}
@@ -76,6 +76,9 @@ public class SimpleMDP extends DTMDP<IntegerState, StringAction> {
 					int j = stateMap.get(transitionScanner.next());
 					double p = Double.parseDouble(transitionScanner.next());
 					mdp.get(i).get(j).put(a, p);
+					if (transitionScanner.hasNext() && transitionScanner.next().equals("u")) {
+						uncertainRegions.put(i, a);
+					}
 				}
 				transitionScanner.close();
 			}
@@ -88,23 +91,22 @@ public class SimpleMDP extends DTMDP<IntegerState, StringAction> {
 		return initial.iterator().next();
 	}
 
-	public List<Integer> getUncertainStates() {
-		return uncertainStates;
+	public Map<Integer, String> getUncertainRegions() {
+		return uncertainRegions;
 	}
 	
-	public void setHighReward(Integer s) {
-		rewardStates.add(s);
+	public void setHighReward(Integer s, String a) {
+		rewardMap.put(s, a);
 	}
 	
 	public void clearRewards() {
-		rewardStates.clear();
+		rewardMap.clear();
 	}
 
 	@Override
 	public double immediateCost(IntegerState s, StringAction a) {
-		for(int j: rewardStates)
-			if(mdp.get(s.getId()).get(j) != null && mdp.get(s.getId()).get(j).getOrDefault(a.actionLabel(), 0.0) > 0.0 && s.getId() != j)
-				return LOW_COST;
+		if (rewardMap.containsKey(s.getId()) && rewardMap.get(s.getId()).equals(a.actionLabel()))
+			return LOW_COST;
 		return HIGH_COST;
 	}
 

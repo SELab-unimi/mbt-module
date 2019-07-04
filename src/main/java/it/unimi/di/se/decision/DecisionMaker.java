@@ -28,9 +28,10 @@ public abstract class DecisionMaker {
 	public DecisionMaker(SimpleMDP mdp) {
 		this.mdp = mdp;
 		// mixed policy --> for each uncertain state compute best policy and then combine
-		for(Integer s: this.mdp.getUncertainStates()) {
+		Map<Integer, String> uncertainRegions = this.mdp.getUncertainRegions();
+		for(Integer s: uncertainRegions.keySet()) {
 			this.mdp.clearRewards();
-			this.mdp.setHighReward(s);
+			this.mdp.setHighReward(s, uncertainRegions.get(s));
 			this.mdp.resetSolver();
 			this.mdp.printSolution();
 			DecisionRule<IntegerState, StringAction> decisionRule = null;
