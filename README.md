@@ -16,27 +16,27 @@ gradle build
 ## How do I run it?
 
 After `build`, you can run the application by executing `gradle run`.
-In particular, the project comes along with a simple example that you can try out by running:
+In particular, the project comes along with a running example that you can try out by running:
 ```
 gradle run -PappArgs="['-i', 'src/main/resources/webapp.jmdp']"
 ```
+To perform hypotesis testing using this example you must have the `U-Store` web application up and runnig on your machine. Further instruction on how to get started with this web app can be found at [U-Store exemplar](https://github.com/SELab-unimi/ustore-exemplar).
 
 ### Usage intructions
 
 The help message can be shown by using the `-h` option:
 
 ```
-** MDP Simulator HELP **
-Usage: MDPDriver [-hv] -i=<inputMDP> [-l=<limit>]
+** MBT Driver HELP **
+Usage: MBTDriver [-hv] -i=<inputMDP> [-l=<limit>]
   -h, --help                  Display this help message
   -i, --input=<inputMDP>      MDP auto-generated description
-  -l, --limit=<limit>         Max number of simulations
   -v, --version               Display the version
 ```
 
-### The U-Store exmaple
+### The U-Store exemplar
 
-The `webapp.jmdp` file contains the Markov Decision Process specification of the [U-Store exemplar](https://github.com/SELab-unimi/ustore-exemplar), creating by using the `Modeler`.
+The `webapp.jmdp` file contains the Markov Decision Process specification of the [U-Store exemplar](https://github.com/SELab-unimi/ustore-exemplar). The specification has been created by using the `Modeler Eclipse IDE plug-in` available at [Modeler component](https://github.com/SELab-unimi/mdp-generator/tree/web-app).
 
 At the end of the execution the `HYPpOTesT` Toolkit shows a report. For instance:
 
