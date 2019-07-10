@@ -76,14 +76,15 @@ public abstract class DecisionMaker {
 		}
 		if(weightedActions.size() == 1)
 			return weightedActions.get(0).action;
-		for(ActionWeight aw: weightedActions)
-			aw.weight = 1 - (aw.weight/countSum);
-		Collections.sort(weightedActions, new ActionWeightComparator());
-		double cumulativeProb = 0.0;
-		double rand = Math.random();
+		double totalWeight = 0.0d;
 		for(ActionWeight aw: weightedActions) {
-			cumulativeProb += aw.weight;
-			if(rand <= cumulativeProb)
+			aw.weight = countSum / aw.weight;
+			totalWeight += aw.weight;
+		}
+		double rand = Math.random() * totalWeight;
+		for(ActionWeight aw: weightedActions) {
+			rand -= aw.weight;
+			if(rand <= 0.0d)
 				return aw.action;
 		}
 		return null;
@@ -112,16 +113,4 @@ public abstract class DecisionMaker {
 			this.weight = weight;
 		}
 	}
-	
-	class ActionWeightComparator implements Comparator<ActionWeight> {
-		@Override
-		public int compare(ActionWeight s, ActionWeight t) {
-			if(s.weight > t.weight)
-				return 1;
-			else if(s.weight < t.weight)
-				return -1;
-			return 0;
-		}
-	}
-	
 }

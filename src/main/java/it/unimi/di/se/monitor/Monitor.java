@@ -254,10 +254,14 @@ public class Monitor {
 						log.info("[Monitor] convergence reached.");
 						addEvent(Event.stopEvent());
 					}
-					else if(EventHandler.TERMINATION_CONDITION == Termination.LIMIT && tests >= EventHandler.LIMIT-1) {
-						log.info("[Monitor] #test limit reached.");
-						addEvent(Event.stopEvent());
-					}
+//					else if(EventHandler.TERMINATION_CONDITION == Termination.LIMIT && tests >= EventHandler.LIMIT-1) {
+//						log.info("[Monitor] #test limit reached.");
+//						addEvent(Event.stopEvent());
+//					}
+				}
+				if(EventHandler.TERMINATION_CONDITION == Termination.LIMIT && eventCount >= EventHandler.LIMIT-1) {
+					log.info("[Monitor] #test limit reached.");
+					addEvent(Event.stopEvent());
 				}
 				
 				// update state
