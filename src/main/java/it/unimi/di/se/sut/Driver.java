@@ -31,10 +31,10 @@ public class Driver {
     public void start() {
         int times = 0;
         while(!goal(times)) {
-            logger.info("new run");
+            logger.trace("new run");
             mdp.resetExecution();
             while(!mdp.isCurrentStateAbsorbing()) {
-                logger.info("current state: " + mdp.getCurrentState().label());
+                logger.trace("current state: " + mdp.getCurrentState().label());
                 if(isObservable(mdp.getCurrentState()))
                     mdp.setCurrentState(mdp.doAction(mdp.getCurrentState(), WAIT_ACTION));
                 else {
@@ -42,7 +42,7 @@ public class Driver {
                     mdp.setCurrentState(mdp.doAction(mdp.getCurrentState(), action));
                 }
             }
-            logger.info("absorbing state reached: " + mdp.getCurrentState().label());
+            logger.trace("absorbing state reached: " + mdp.getCurrentState().label());
             times++;
         }
     }
@@ -98,7 +98,7 @@ public class Driver {
         CommandLine parser = new CommandLine(command);
 
 
-        logger.info("** MDP Simulator **");
+        logger.trace("** MDP Driver **");
 
         try {
             parser.parse(args);
@@ -139,7 +139,7 @@ public class Driver {
 
             Long diffNanoseconds = System.nanoTime() - start;
 
-            logger.info("Simulation terminated in: {}s {}ms.",
+            logger.trace("Driver terminated in: {}s {}ms.",
                     TimeUnit.NANOSECONDS.toSeconds(diffNanoseconds),
                     TimeUnit.NANOSECONDS.toMillis(diffNanoseconds) - TimeUnit.NANOSECONDS.toSeconds(diffNanoseconds) * 1000);
         }

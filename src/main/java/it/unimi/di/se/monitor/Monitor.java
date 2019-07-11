@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -166,12 +168,12 @@ public class Monitor {
 	
 	private void startMonitor() {
 		setInitialState();
-		log.info("MONITOR STARTED...");
+		log.debug("MONITOR STARTED...");
 		while (true) {
 			try {
 				Event event = queue.take();
 				if (event.isStop()) {
-					log.info("MONITOR STOPPED...");
+					log.debug("MONITOR STOPPED...");
 					report();
 					System.exit(0);
 				} else if (event.isReset()) {
@@ -183,11 +185,11 @@ public class Monitor {
 						throw new Exception("Invalid event: " + event.getName());
 					} catch (Exception e) {
 						e.printStackTrace();
-						log.info("Current state: ");
-						log.info(currentState.getName());
+						log.debug("Current state: ");
+						log.debug(currentState.getName());
 
-						log.info("**** TEST FAILED ****");
-						log.info("TRACE:\n");
+						log.debug("**** TEST FAILED ****");
+						log.debug("TRACE:\n");
 						System.exit(1);
 					}
 				}
@@ -220,22 +222,22 @@ public class Monitor {
 					
 					if(showInferenceInfo++ > 10) {
 						for(State s: posterior.keySet())
-							log.warn(s.getName() + " - " + posterior.get(s).report() + " events = " + eventCount);
+							log.info(s.getName() + " - " + posterior.get(s).report() + " events = " + eventCount);
 						showInferenceInfo = 0;
 					}
 					
 					for(State s: posterior.keySet()) {
-						log.info("[Monitor] count = " + posterior.get(s).getCount() + ", sample = " + posterior.get(s).getSampleSize());
+						log.debug("[Monitor] count = " + posterior.get(s).getCount() + ", sample = " + posterior.get(s).getSampleSize());
 						testConvergence &= posterior.get(s).getCount() > EventHandler.SAMPLE_SIZE;
 					}				
 					if(testConvergence) {
 						for(State s: posterior.keySet()) {
-							log.info("[Monitor] PDF = " + posterior.get(s).pdf());
+							log.debug("[Monitor] PDF = " + posterior.get(s).pdf());
 							posterior.get(s).resetCount();
 							convergence &= posterior.get(s).convergence();
 						}
 						if(EventHandler.TERMINATION_CONDITION == Termination.CONVERGENCE && convergence) {
-							log.info("[Monitor] convergence reached.");
+							log.debug("[Monitor] convergence reached.");
 							addEvent(Event.stopEvent());
 						}
 					}
@@ -249,7 +251,7 @@ public class Monitor {
 					decisionMaker.updateDistance(stateIndex.get(s), posterior.get(s).getDistance());
 				}
 				if(tests % EventHandler.SAMPLE_SIZE >= EventHandler.SAMPLE_SIZE-1) {
-					log.warn(coverageInfo.toString());
+					log.info(coverageInfo.toString());
 					if(EventHandler.TERMINATION_CONDITION == Termination.COVERAGE && coverageInfo.getCoverage() >= EventHandler.COVERAGE) {
 						log.info("[Monitor] convergence reached.");
 						addEvent(Event.stopEvent());
@@ -266,7 +268,7 @@ public class Monitor {
 				
 				// update state
 				currentState = a.getDst();
-				log.info("Set current state: " + currentState.getName());
+				log.debug("Set current state: " + currentState.getName());
 				currentTime = event.getTime();
 				return true;
 			}
@@ -287,18 +289,20 @@ public class Monitor {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println("\n********* Monitor report *********\n");
-		System.out.println("Uncertain MDP parameters:");
-		for(State s: prior.keySet()) {
-			System.out.println(s.getName() + ":=");
-			System.out.println("    Action: " + prior.get(s).action());
-			System.out.println("    Prior: " + prior.get(s).printParams() + " --> Posterior: " + posterior.get(s).printParams());
-			System.out.println("    #test: " + posterior.get(s).getSampleSize());
+		log.warn("********* Monitor report *********");
+		log.warn("Uncertain MDP parameters:");
+		List<State> uStates = new ArrayList<>(prior.keySet());
+		Collections.sort(uStates, (State s1, State s2) -> new Integer(s1.getName().substring(1)).compareTo(new Integer(s2.getName().substring(1))) );
+		for(State s: uStates) {
+			log.warn(s.getName() + ":=");
+			log.warn("    Action: " + prior.get(s).action());
+			log.warn("    Prior: " + prior.get(s).printParams() + " --> Posterior: " + posterior.get(s).printParams());
+			log.warn("    #test: " + posterior.get(s).getSampleSize());
 			//System.out.println("    Pr(D|M): " + posterior.get(s).pdf());
-			System.out.println("    Mode x_i: " + posterior.get(s).printMode());
-			System.out.println("    Mean E[x_i]: " + posterior.get(s).printMean());
-			System.out.println("    95% HPD region: " + Arrays.deepToString(posterior.get(s).hpdRegion(0.95)));
-			System.out.println("    HPD region size: " + posterior.get(s).getDistance());
+			log.warn("    Mode x_i: " + posterior.get(s).printMode());
+			log.warn("    Mean E[x_i]: " + posterior.get(s).printMean());
+			log.warn("    95% HPD region: " + Arrays.deepToString(posterior.get(s).hpdRegion(0.95)));
+			log.warn("    HPD region size: " + posterior.get(s).getDistance());
 		}
 	}
 	

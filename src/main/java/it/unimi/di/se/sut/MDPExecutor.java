@@ -40,12 +40,12 @@ public class MDPExecutor {
         StringAction a = new StringAction(action);
         List<IntegerState> orderedStates = orderedReachableStates(mdp.reachable(currentState, a));
         double uRand = new Random().nextDouble();
-        logger.info("U[0,1] = " + uRand);
+        logger.trace("U[0,1] = " + uRand);
         double cumulativeProb = 0;
         IntegerState lastState = null;
         for(IntegerState c: orderedStates) {
             cumulativeProb += mdp.prob(currentState, c, a);
-            logger.info("state = " + c.label() + ", cumulative prob = " + cumulativeProb);
+            logger.trace("state = " + c.label() + ", cumulative prob = " + cumulativeProb);
             if(uRand <= cumulativeProb && lastState == null)
             		lastState = c;
         }
