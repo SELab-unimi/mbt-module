@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,8 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import com.google.inject.Injector;
 
 import it.unimi.di.se.decision.DecisionMaker;
+import it.unimi.di.se.decision.DecisionMakerFactory;
+import it.unimi.di.se.decision.Policy;
 import it.unimi.di.se.mdp.MdpDslStandaloneSetup;
 import it.unimi.di.se.mdp.mdpDsl.Arc;
 import it.unimi.di.se.mdp.mdpDsl.ConcentrationParam;
@@ -30,6 +33,9 @@ import it.unimi.di.se.mdp.mdpDsl.ObservableMap;
 import it.unimi.di.se.mdp.mdpDsl.State;
 import it.unimi.di.se.mdp.mdpDsl.Profile;
 import it.unimi.di.se.mdp.mdpDsl.ProfileMap;
+import jmarkov.basic.DecisionRule;
+import jmarkov.jmdp.IntegerState;
+import jmarkov.jmdp.SimpleMDP;
 import jmarkov.jmdp.StringAction;
 
 
@@ -60,7 +66,7 @@ public class Monitor {
 	
 	private Coverage coverageInfo = null;
 	
-	public Monitor(DecisionMaker decisionMaker){
+	public Monitor(SimpleMDP mdp, Policy policy){
 		Injector injector = new MdpDslStandaloneSetup().createInjectorAndDoEMFRegistration();
 		XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
 		resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
@@ -75,13 +81,28 @@ public class Monitor {
 			e.printStackTrace();
 		}
 		
-		this.decisionMaker = decisionMaker;
-		
 		// init MDP model
 		model = (MDPModel) resource.getContents().get(0);
 		retrieveOutgoingArcs();
 		retrieveMapping();
 		queue = new LinkedBlockingQueue<Event>();
+		
+		// init decision maker
+		if (model.getRules() == null ||  model.getRules().size() == 0) {
+			decisionMaker = new DecisionMakerFactory().createPolicy(mdp, policy);
+		}
+		else {
+			Map<Integer, DecisionRule<IntegerState, StringAction>> decisionRules = new HashMap<>();
+			for (it.unimi.di.se.mdp.mdpDsl.DecisionRule r: model.getRules()) {
+				Integer s = Integer.parseInt(r.getObjective().getName().substring(1));
+				DecisionRule<IntegerState, StringAction> rule = new DecisionRule<>();
+				for (it.unimi.di.se.mdp.mdpDsl.StateActionRule m: r.getRuleMap()) {
+					rule.set(new IntegerState(Integer.parseInt(m.getState().getName().substring(1))), new StringAction(m.getAction().getName()));
+				}
+				decisionRules.put(s, rule);
+			}
+			decisionMaker = new DecisionMakerFactory().createPolicy(mdp, policy, decisionRules);
+		}		
 		
 		// coverage info
 		coverageInfo = new Coverage(model);

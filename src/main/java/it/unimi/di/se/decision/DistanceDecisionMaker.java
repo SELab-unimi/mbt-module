@@ -2,8 +2,10 @@ package it.unimi.di.se.decision;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import jmarkov.jmdp.StringAction;
+import jmarkov.basic.DecisionRule;
 import jmarkov.jmdp.IntegerState;
 import jmarkov.jmdp.SimpleMDP;
 
@@ -11,6 +13,10 @@ public class DistanceDecisionMaker extends DecisionMaker {
 
 	public DistanceDecisionMaker(SimpleMDP mdp) {
 		super(mdp);
+	}
+
+	public DistanceDecisionMaker(SimpleMDP mdp, Map<Integer, DecisionRule<IntegerState, StringAction>> decisionRules) {
+		super(mdp, decisionRules);
 	}
 
 	@Override

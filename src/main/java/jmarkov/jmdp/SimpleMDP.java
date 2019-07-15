@@ -9,18 +9,7 @@ import java.io.StringReader;
 import java.util.*;
 
 public class SimpleMDP extends DTMDP<IntegerState, StringAction> {
-
-	private static final int LOW_COST = 0;
-	private static final int HIGH_COST = 5;
-	public static final String STATE_DELIMITER = ",";
-	public static final String SPACE_SEPARATOR = " ";
-	public static final String INITIAL_STATE = "i";
-	public static final String UNCERTAIN_STATE = "u";
-
-	private Map<String, Integer> stateMap = new HashMap<>();
-	private List<List<Map<String, Double>>> mdp = null;
-	private Map<Integer, String> uncertainRegions = new HashMap<>();
-	private Map<Integer, String> rewardMap = new HashMap<>();
+	
 
 	private static final String inputExample =
 			" S0 i, S1, S2, S3 u, S4, S5,\n" +
@@ -33,6 +22,18 @@ public class SimpleMDP extends DTMDP<IntegerState, StringAction> {
 					"S2 w S2 1.0\n" +
 					"S4 w S4 1.0\n" +
 					"S3 w S3 1.0 u";
+
+	private static final int LOW_COST = 0;
+	private static final int HIGH_COST = 5;
+	public static final String STATE_DELIMITER = ",";
+	public static final String SPACE_SEPARATOR = " ";
+	public static final String INITIAL_STATE = "i";
+	public static final String UNCERTAIN_STATE = "u";
+
+	private Map<String, Integer> stateMap = new HashMap<>();
+	private List<List<Map<String, Double>>> mdp = null;
+	private Map<Integer, String> uncertainRegions = new HashMap<>();
+	private Map<Integer, String> rewardMap = new HashMap<>();
 
 	public SimpleMDP(Reader in) {
 		super();

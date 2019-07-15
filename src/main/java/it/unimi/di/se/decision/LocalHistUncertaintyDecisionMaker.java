@@ -1,9 +1,11 @@
 package it.unimi.di.se.decision;
 
 import java.util.List;
+import java.util.Map;
 
 import it.unimi.di.se.monitor.StateAction;
 import jmarkov.jmdp.StringAction;
+import jmarkov.basic.DecisionRule;
 import jmarkov.jmdp.IntegerState;
 import jmarkov.jmdp.SimpleMDP;
 
@@ -11,6 +13,10 @@ public class LocalHistUncertaintyDecisionMaker extends DecisionMaker {
 
 	public LocalHistUncertaintyDecisionMaker(SimpleMDP mdp) {
 		super(mdp);
+	}
+
+	public LocalHistUncertaintyDecisionMaker(SimpleMDP mdp, Map<Integer, DecisionRule<IntegerState, StringAction>> decisionRules) {
+		super(mdp, decisionRules);
 	}
 
 	@Override

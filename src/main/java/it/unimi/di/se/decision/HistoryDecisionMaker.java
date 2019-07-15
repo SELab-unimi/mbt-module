@@ -1,7 +1,10 @@
 package it.unimi.di.se.decision;
 
+import java.util.Map;
+
 import it.unimi.di.se.monitor.StateAction;
 import jmarkov.basic.Actions;
+import jmarkov.basic.DecisionRule;
 import jmarkov.jmdp.StringAction;
 import jmarkov.jmdp.IntegerState;
 import jmarkov.jmdp.SimpleMDP;
@@ -10,6 +13,10 @@ public class HistoryDecisionMaker extends DecisionMaker {
 
 	public HistoryDecisionMaker(SimpleMDP mdp) {
 		super(mdp);
+	}
+
+	public HistoryDecisionMaker(SimpleMDP mdp, Map<Integer, DecisionRule<IntegerState, StringAction>> decisionRules) {
+		super(mdp, decisionRules);
 	}
 
 	@Override

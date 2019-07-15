@@ -1,8 +1,6 @@
 package it.unimi.di.se.decision;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,35 +24,59 @@ public abstract class DecisionMaker {
 	protected Map<IntegerState, Double> operationalProfile = new HashMap<>();
 	
 	public DecisionMaker(SimpleMDP mdp) {
+		this(mdp, null);
+	}
+	
+	public DecisionMaker(SimpleMDP mdp, Map<Integer, DecisionRule<IntegerState, StringAction>> decisions) {
 		this.mdp = mdp;
-		// mixed policy --> for each uncertain state compute best policy and then combine
-		Map<Integer, String> uncertainRegions = this.mdp.getUncertainRegions();
-		for(Integer s: uncertainRegions.keySet()) {
-			this.mdp.clearRewards();
-			this.mdp.setHighReward(s, uncertainRegions.get(s));
-			this.mdp.resetSolver();
-			this.mdp.printSolution();
-			DecisionRule<IntegerState, StringAction> decisionRule = null;
-			try {
-				decisionRule = this.mdp.getOptimalPolicy().getDecisionRule();
-			} catch (SolverException e) {
-				e.printStackTrace();
-			}
-			ProbabilitySolver<IntegerState, StringAction> solver = new ProbabilitySolver<>(this.mdp, decisionRule);
-			solver.solve();
-			decisionRules.put(s, decisionRule);
-			for(Entry<IntegerState, StringAction> e: decisionRule) {
-				ArrayList<StringAction> actions = mixedPolicy.get(e.getKey());
-				if(actions != null) {
-					if(!actions.contains(e.getValue()))
+		if (decisions != null) {
+			// user provided policy
+			decisionRules = decisions;
+			for (Integer s: decisionRules.keySet()) {
+				for(Entry<IntegerState, StringAction> e: decisionRules.get(s)) {
+					ArrayList<StringAction> actions = mixedPolicy.get(e.getKey());
+					if(actions != null) {
+						if(!actions.contains(e.getValue()))
+							actions.add(e.getValue());
+					}
+					else {
+						actions = new ArrayList<StringAction>();
 						actions.add(e.getValue());
+						mixedPolicy.put(e.getKey(), actions);
+					}					
 				}
-				else {
-					actions = new ArrayList<StringAction>();
-					actions.add(e.getValue());
-					mixedPolicy.put(e.getKey(), actions);
-				}					
 			}
+		}
+		else {
+			// compute mixed policy --> for each uncertain state compute best policy and then combine
+			Map<Integer, String> uncertainRegions = this.mdp.getUncertainRegions();
+			for(Integer s: uncertainRegions.keySet()) {
+				this.mdp.clearRewards();
+				this.mdp.setHighReward(s, uncertainRegions.get(s));
+				this.mdp.resetSolver();
+				this.mdp.printSolution();
+				DecisionRule<IntegerState, StringAction> decisionRule = null;
+				try {
+					decisionRule = this.mdp.getOptimalPolicy().getDecisionRule();
+				} catch (SolverException e) {
+					e.printStackTrace();
+				}
+				ProbabilitySolver<IntegerState, StringAction> solver = new ProbabilitySolver<>(this.mdp, decisionRule);
+				solver.solve();
+				decisionRules.put(s, decisionRule);
+				for(Entry<IntegerState, StringAction> e: decisionRule) {
+					ArrayList<StringAction> actions = mixedPolicy.get(e.getKey());
+					if(actions != null) {
+						if(!actions.contains(e.getValue()))
+							actions.add(e.getValue());
+					}
+					else {
+						actions = new ArrayList<StringAction>();
+						actions.add(e.getValue());
+						mixedPolicy.put(e.getKey(), actions);
+					}					
+				}
+			}	
 		}		
 		count = new HashMap<>();
 		for(IntegerState s: this.mdp.getAllStates())

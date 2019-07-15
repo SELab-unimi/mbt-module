@@ -1,7 +1,11 @@
 package it.unimi.di.se.decision;
 
+import java.util.Map;
+
 import it.unimi.di.se.monitor.EventHandler;
 import jmarkov.jmdp.StringAction;
+import jmarkov.basic.DecisionRule;
+import jmarkov.jmdp.IntegerState;
 import jmarkov.jmdp.SimpleMDP;
 
 public class CombinedDecisionMaker extends DecisionMaker {
@@ -13,6 +17,12 @@ public class CombinedDecisionMaker extends DecisionMaker {
 		super(mdp);
 		distanceDecisionMaker = new DistanceDecisionMaker(mdp);
 		operationalDecisionMaker = new OperationalProfileDecisionMaker(mdp);
+	}
+
+	public CombinedDecisionMaker(SimpleMDP mdp, Map<Integer, DecisionRule<IntegerState, StringAction>> decisionRules) {
+		super(mdp, decisionRules);
+		distanceDecisionMaker = new DistanceDecisionMaker(mdp, decisionRules);
+		operationalDecisionMaker = new OperationalProfileDecisionMaker(mdp, decisionRules);
 	}
 
 	@Override

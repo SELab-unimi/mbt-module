@@ -1,10 +1,12 @@
 package it.unimi.di.se.decision;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import it.unimi.di.se.monitor.StateAction;
 import jmarkov.jmdp.StringAction;
+import jmarkov.basic.DecisionRule;
 import jmarkov.jmdp.IntegerState;
 import jmarkov.jmdp.SimpleMDP;
 
@@ -12,6 +14,10 @@ public class GlobalHistUncertaintyDecisionMaker extends DecisionMaker {
 
 	public GlobalHistUncertaintyDecisionMaker(SimpleMDP mdp) {
 		super(mdp);
+	}
+
+	public GlobalHistUncertaintyDecisionMaker(SimpleMDP mdp, Map<Integer, DecisionRule<IntegerState, StringAction>> decisionRules) {
+		super(mdp, decisionRules);
 	}
 
 	@Override

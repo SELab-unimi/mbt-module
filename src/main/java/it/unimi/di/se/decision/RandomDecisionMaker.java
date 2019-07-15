@@ -1,6 +1,9 @@
 package it.unimi.di.se.decision;
 
+import java.util.Map;
+
 import jmarkov.basic.Actions;
+import jmarkov.basic.DecisionRule;
 import jmarkov.jmdp.StringAction;
 import jmarkov.jmdp.IntegerState;
 import jmarkov.jmdp.SimpleMDP;
@@ -9,6 +12,10 @@ public class RandomDecisionMaker extends DecisionMaker {
 
 	public RandomDecisionMaker(SimpleMDP mdp) {
 		super(mdp);
+	}
+
+	public RandomDecisionMaker(SimpleMDP mdp, Map<Integer, DecisionRule<IntegerState, StringAction>> decisionRules) {
+		super(mdp, decisionRules);
 	}
 
 	@Override
