@@ -53,7 +53,7 @@ public class Driver {
     }
 
     private String waitForAction(Actions<StringAction> actions, InputStream stream) {
-    		StringBuilder availableActions = new StringBuilder("Available actions: { ");
+        StringBuilder availableActions = new StringBuilder("Available actions: { ");
         Iterator<StringAction> iterator = actions.iterator();
         boolean firstIteration = true;
         while(iterator.hasNext()) {

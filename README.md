@@ -1,8 +1,7 @@
 # MDP Module
 
-This is the anonymized **replication package** of the experiments described in the research paper:
-"Evaluating Uncertainty-aware Testing Methods by Delivered Confidence",
-submitted to the 27th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2019) for possible publication.
+This is the open source software project `MBT-module` for testing under uncertainty.
+The repo contains sources and working examples.
 
 ## How do I get set up?
 
