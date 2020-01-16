@@ -1,15 +1,7 @@
 package it.unimi.di.se.monitor;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +36,7 @@ public class Monitor {
 	enum Termination {
 		COVERAGE,
 		CONVERGENCE,
+		BOUNDS,
 		LIMIT
 	}
 	
@@ -60,6 +53,7 @@ public class Monitor {
 	// Bayesian analysis fields
 	private HashMap<State, Dirichlet> prior = new HashMap<>();
 	private HashMap<State, Dirichlet> posterior = new HashMap<>();
+	private List<HyperRectangle> hyperRectangles = new ArrayList<>();
 	private HashMap<State, Integer> stateIndex = new HashMap<>();
 	
 	private DecisionMaker decisionMaker = null;
@@ -77,6 +71,7 @@ public class Monitor {
 		try {
 			in = new FileInputStream(new File(EventHandler.MODEL_PATH));
 			resource.load(in, resourceSet.getLoadOptions());
+			in.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -102,7 +97,7 @@ public class Monitor {
 				decisionRules.put(s, rule);
 			}
 			decisionMaker = new DecisionMakerFactory().createPolicy(mdp, policy, decisionRules);
-		}		
+		}
 		
 		// coverage info
 		coverageInfo = new Coverage(model);
@@ -135,6 +130,48 @@ public class Monitor {
 				}
 			}
 		}
+
+		// init hyper-rectangles
+		if (EventHandler.TERMINATION_CONDITION == Termination.BOUNDS) {
+			Scanner lines = null;
+			try {
+				lines = new Scanner(new FileReader(EventHandler.RECTANGLES_PATH));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			boolean firstLine = true;
+			List<Map.Entry<State, Integer>> stateVarsMap = new ArrayList<>();
+			while (lines.hasNextLine()) {
+				// Assumption: first line contains a mapping between states and parametric #variables (e.g., "S3-2 S10-1")
+				// Assumption: next lines contain the hyper-rectangles following the above mapping (e.g., "[(0.89375, 0.9), (0.01953125, 0.03125), (0.9125, 0.925)]")
+				if (firstLine) {
+					String[] stateVariables = lines.nextLine().split(" ");
+					for (String pair: stateVariables) {
+						String[] args = pair.trim().split("-");
+						stateVarsMap.add(new AbstractMap.SimpleEntry<State, Integer>(stateByName(args[0]), Integer.parseInt(args[1])));
+					}
+					firstLine = false;
+				}
+				else {
+					HyperRectangle rect = new HyperRectangle();
+					String[] rawBounds = lines.nextLine().split("\\),");
+					int k = 0;
+					for (Map.Entry<State, Integer> entry: stateVarsMap) {
+						Bound[] bounds = new Bound[entry.getValue()];
+						for (int j = k; j< k + bounds.length; j++) {
+							String[] rawBound = rawBounds[j].split(",");
+							Double lbound = Double.parseDouble(cleanBound(rawBound[0]));
+							Double ubound = Double.parseDouble(cleanBound(rawBound[1]));
+							bounds[j-k] = new Bound(lbound, ubound);
+						}
+						rect.add(entry.getKey(), bounds);
+						k += bounds.length;
+					}
+					hyperRectangles.add(rect);
+				}
+			}
+			lines.close();
+		}
 	}
 	
 //	private Arc retrieveArc(State source, State target){
@@ -143,6 +180,21 @@ public class Monitor {
 //				return a;
 //		return null;
 //	}
+
+	private String cleanBound(String rawBound) {
+		return rawBound.trim()
+				.replace("[", "")
+				.replace("(", "")
+				.replace(")]", "");
+	}
+
+	private State stateByName(String name) {
+		for (State s: model.getStates()) {
+			if (s.getName().equals(name))
+				return s;
+		}
+		return null;
+	}
 	
 	private void retrieveOutgoingArcs(){
 		for(Arc a: model.getArcs())
@@ -272,7 +324,7 @@ public class Monitor {
 					decisionMaker.updateDistance(stateIndex.get(s), posterior.get(s).getDistance());
 				}
 				if(tests % EventHandler.SAMPLE_SIZE >= EventHandler.SAMPLE_SIZE-1) {
-					log.info(coverageInfo.toString());
+					//log.info(coverageInfo.toString());
 					if(EventHandler.TERMINATION_CONDITION == Termination.COVERAGE && coverageInfo.getCoverage() >= EventHandler.COVERAGE) {
 						log.info("[Monitor] convergence reached.");
 						addEvent(Event.stopEvent());
@@ -281,6 +333,33 @@ public class Monitor {
 //						log.info("[Monitor] #test limit reached.");
 //						addEvent(Event.stopEvent());
 //					}
+					if(EventHandler.TERMINATION_CONDITION == Termination.BOUNDS) {
+						log.info("[Monitor] BOUNDS termination checking.");
+						List<HyperRectangle> toRemove = new ArrayList<>();
+						for (HyperRectangle rect: hyperRectangles) {
+							boolean contains = true;
+							boolean disjoint = false;
+							for(State s: posterior.keySet()) {
+								double[][] region = posterior.get(s).hpdRegion(0.95);
+								contains &= rect.contains(s, region);
+								disjoint |= rect.disjoint(s, region);
+							}
+							if (contains) {
+								log.info("[Monitor] inclusion found: requirements OK.");
+								addEvent(Event.stopEvent());
+							}
+							else if (disjoint){
+								toRemove.add(rect);
+							}
+						}
+						for (HyperRectangle rect: toRemove)
+							hyperRectangles.remove(rect);
+						log.info("[Monitor] Remaining hyper-rectangles: " + hyperRectangles.size());
+						if (hyperRectangles.isEmpty()) {
+							log.info("[Monitor] inclusion not found: requirements NOT OK.");
+							addEvent(Event.stopEvent());
+						}
+					}
 				}
 				if(EventHandler.TERMINATION_CONDITION == Termination.LIMIT && eventCount >= EventHandler.LIMIT-1) {
 					log.info("[Monitor] #test limit reached.");
