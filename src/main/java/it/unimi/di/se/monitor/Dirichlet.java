@@ -14,7 +14,7 @@ import it.unimi.di.se.mdp.mdpDsl.Action;
 
 public class Dirichlet {
 	
-	private static final double K = 2;
+	private static final double K = 1.0d;
 	
 	private static final Logger log = LoggerFactory.getLogger(Dirichlet.class.getName());
 	

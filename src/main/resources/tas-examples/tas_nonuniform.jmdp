@@ -1,0 +1,22 @@
+ S0 i, S1, S2 u, S3, S4, S5, S6 u, S7, S8, S9, S10, S11,
+S0 s S1 1.0
+S1 w S1 1.0
+S0 b S2 1.0
+S2 a S3 0.8 u
+S2 a S4 0.15 u
+S2 a S11 0.05 u
+S4 w S2 1.0
+S3 w S10 1.0
+S0 v S5 1.0
+S5 b S2 1.0
+S5 c S6 1.0
+S6 w S7 0.7 u
+S6 w S8 0.2 u
+S6 w S9 0.1 u
+S7 w S10 1.0
+S8 w S10 1.0
+S9 w S5 1.0
+S10 w S10 1.0
+S0 e S10 1.0
+S5 e S10 1.0
+S11 w S11 1.0

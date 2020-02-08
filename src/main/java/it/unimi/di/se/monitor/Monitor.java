@@ -361,7 +361,8 @@ public class Monitor {
 						}
 					}
 				}
-				if(EventHandler.TERMINATION_CONDITION == Termination.LIMIT && eventCount >= EventHandler.LIMIT-1) {
+				if((EventHandler.TERMINATION_CONDITION == Termination.LIMIT || EventHandler.TERMINATION_CONDITION == Termination.BOUNDS)
+						&& eventCount >= EventHandler.LIMIT-1) {
 					log.info("[Monitor] #test limit reached.");
 					addEvent(Event.stopEvent());
 				}
