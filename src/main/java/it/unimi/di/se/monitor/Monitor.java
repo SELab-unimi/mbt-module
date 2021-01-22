@@ -335,7 +335,7 @@ public class Monitor {
 //					}
 					if(EventHandler.TERMINATION_CONDITION == Termination.BOUNDS) {
 						log.info("[Monitor] BOUNDS termination checking.");
-						List<HyperRectangle> toRemove = new ArrayList<>();
+						//List<HyperRectangle> toRemove = new ArrayList<>();
 						for (HyperRectangle rect: hyperRectangles) {
 							boolean contains = true;
 							boolean disjoint = false;
@@ -345,20 +345,22 @@ public class Monitor {
 								disjoint |= rect.disjoint(s, region);
 							}
 							if (contains) {
-								log.info("[Monitor] inclusion found: requirements OK.");
+								log.info("[Monitor] All HDR inside bounds: requirements OK.");
 								addEvent(Event.stopEvent());
 							}
 							else if (disjoint){
-								toRemove.add(rect);
+								//toRemove.add(rect);
+								log.info("[Monitor] Disjoint HDR found: requirements VIOLATED.");
+								addEvent(Event.stopEvent());
 							}
 						}
-						for (HyperRectangle rect: toRemove)
-							hyperRectangles.remove(rect);
-						log.info("[Monitor] Remaining hyper-rectangles: " + hyperRectangles.size());
-						if (hyperRectangles.isEmpty()) {
-							log.info("[Monitor] inclusion not found: requirements NOT OK.");
-							addEvent(Event.stopEvent());
-						}
+						//for (HyperRectangle rect: toRemove)
+						//	hyperRectangles.remove(rect);
+						//log.info("[Monitor] Remaining hyper-rectangles: " + hyperRectangles.size());
+						//if (hyperRectangles.isEmpty()) {
+						//	log.info("[Monitor] inclusion not found: requirements NOT OK.");
+						//	addEvent(Event.stopEvent());
+						//}
 					}
 				}
 				if((EventHandler.TERMINATION_CONDITION == Termination.LIMIT || EventHandler.TERMINATION_CONDITION == Termination.BOUNDS)
@@ -391,6 +393,7 @@ public class Monitor {
 			e.printStackTrace();
 		}
 		log.warn("********* Monitor report *********");
+		log.warn("Total #tests:" + eventCount);
 		log.warn("Uncertain MDP parameters:");
 		List<State> uStates = new ArrayList<>(prior.keySet());
 		Collections.sort(uStates, (State s1, State s2) -> new Integer(s1.getName().substring(1)).compareTo(new Integer(s2.getName().substring(1))) );

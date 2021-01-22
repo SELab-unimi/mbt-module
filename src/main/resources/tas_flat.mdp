@@ -14,7 +14,7 @@ states
 	S9  {}
 	S10 {success}
 	S11 {error}
-	
+
 arcs
 	a0  : (S0, s) -> S1, 1.0
 	a1  : (S1, w) -> S1, 1.0
@@ -34,13 +34,13 @@ arcs
 	a14 : (S8, w) -> S10, 1.0
 	a15 : (S9, w) -> S5, 1.0
 	a16 : (S10, w) -> S10, 1.0
-	
+
 	a17 : (S0, e) -> S10, 1.0
 	a18 : (S5, e) -> S10, 1.0
-	
+
 	a21 : (S11, w) -> S11, 1.0
-	
-observe 
+
+observe
 	a0  -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"String"}, precondition "state.label().equals(\"S0\") && action.equals(\"s\")", postcondition "result.label().equals(\"S1\")" returnType "jmarkov.jmdp.IntegerState"
 	a1  -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"String"}, precondition "state.label().equals(\"S1\") && action.equals(\"w\")", postcondition "result.label().equals(\"S1\")" returnType "jmarkov.jmdp.IntegerState"
 	a2  -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"String"}, precondition "state.label().equals(\"S0\") && action.equals(\"b\")", postcondition "result.label().equals(\"S2\")" returnType "jmarkov.jmdp.IntegerState"
@@ -63,7 +63,7 @@ observe
 	a17 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"String"}, precondition "state.label().equals(\"S0\") && action.equals(\"e\")", postcondition "result.label().equals(\"S10\")" returnType "jmarkov.jmdp.IntegerState"
 	a18 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"String"}, precondition "state.label().equals(\"S5\") && action.equals(\"e\")", postcondition "result.label().equals(\"S10\")" returnType "jmarkov.jmdp.IntegerState"
 	a21 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)", args {state:"jmarkov.jmdp.IntegerState" action:"String"}, precondition "state.label().equals(\"S11\") && action.equals(\"w\")", postcondition "result.label().equals(\"S11\")" returnType "jmarkov.jmdp.IntegerState"
-	
+
 control
 	S0 -> "private String it.unimi.di.se.sut.Driver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.StringAction>" input:"java.io.InputStream"}
 	S2 -> "private String it.unimi.di.se.sut.Driver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.StringAction>" input:"java.io.InputStream"}
@@ -71,10 +71,10 @@ control
 
 reset
 	"public void it.unimi.di.se.sut.MDPExecutor.resetExecution(..)"
-	
+
 profile
-	prof1: 
-		S2 -> 0.1
+	prof1:
+		S2 -> 0.3
 		S6 -> 0.3
 	prof2:
 		S6 -> 0.1

@@ -29,17 +29,17 @@ import org.aspectj.lang.annotation.Pointcut;
 public class EventHandler {
 
 	private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
-	static final String MODEL_PATH = "src/main/resources/tas_flat.mdp";
-	static private final String JMDP_MODEL_PATH = "src/main/resources/tas.jmdp";
+	static final String MODEL_PATH = "src/main/resources/safehome_u50.mdp";
+	static private final String JMDP_MODEL_PATH = "src/main/resources/safehome_u50.jmdp";
 	static final String RECTANGLES_PATH = "src/main/resources/rectangles";
 
-	static final int SAMPLE_SIZE = 1000;
-	static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
+	static final int SAMPLE_SIZE = 200;
+	static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.BOUNDS;
 	static final double COVERAGE = 0.0;
-	static final double LIMIT = 2000;
-	public static final double DIST_WEIGHT = 0.0;
-	public static final double PROF_WEIGHT = 0.0;
-	static final String PROFILE_NAME = null;
+	static final double LIMIT = 100000;
+	public static final double DIST_WEIGHT = 0.8;
+	public static final double PROF_WEIGHT = 0.2;
+	static final String PROFILE_NAME = "prof1";
 
 	private Monitor monitor = null;
 	private SimpleMDP mdp = null;
@@ -56,7 +56,7 @@ public class EventHandler {
 			e.printStackTrace();
 		}
 		log.debug("Monitor initialization...");
-		monitor = new Monitor(mdp, Policy.UNCERTAINTY_FLAT);
+		monitor = new Monitor(mdp, Policy.DISTANCE);
 		monitor.launch();
 	}
 
@@ -84,49 +84,50 @@ public class EventHandler {
 
 	private static final Map<String, String> EDGE_MAP = new HashMap<>();
 	private static void edgeMapInit0() {
-		EDGE_MAP.put("S3S3wS10", "a6");
+		EDGE_MAP.put("S3S3iS5", "a4");
+		EDGE_MAP.put("S3S3iS6", "a5");
+		EDGE_MAP.put("S3S3iS7", "a6");
 	}
 	private static void edgeMapInit1() {
-		EDGE_MAP.put("S4S4wS2", "a5");
+		EDGE_MAP.put("S4S4cS8", "a9");
+		EDGE_MAP.put("S4S4cS9", "a10");
 	}
 	private static void edgeMapInit2() {
-		EDGE_MAP.put("S5S5bS2", "a8");
-		EDGE_MAP.put("S5S5cS6", "a9");
-		EDGE_MAP.put("S5S5eS10", "a18");
+		EDGE_MAP.put("S5S5wS4", "a8");
 	}
 	private static void edgeMapInit3() {
-		EDGE_MAP.put("S11S11wS11", "a21");
+		EDGE_MAP.put("S6S6wS3", "a7");
 	}
 	private static void edgeMapInit4() {
-		EDGE_MAP.put("S6S6wS7", "a10");
-		EDGE_MAP.put("S6S6wS8", "a11");
-		EDGE_MAP.put("S6S6wS9", "a12");
+		EDGE_MAP.put("S7S7wS7", "a18");
 	}
 	private static void edgeMapInit5() {
-		EDGE_MAP.put("S10S10wS10", "a16");
+		EDGE_MAP.put("S8S8wS3", "a11");
 	}
 	private static void edgeMapInit6() {
-		EDGE_MAP.put("S7S7wS10", "a13");
+		EDGE_MAP.put("S9S9xS10", "a12");
+		EDGE_MAP.put("S9S9xS11", "a13");
 	}
 	private static void edgeMapInit7() {
-		EDGE_MAP.put("S8S8wS10", "a14");
+		EDGE_MAP.put("S11S11wS9", "a14");
+		EDGE_MAP.put("S11S11wS8", "a15");
 	}
 	private static void edgeMapInit8() {
-		EDGE_MAP.put("S9S9wS5", "a15");
+		EDGE_MAP.put("S10S10wS12", "a16");
+		EDGE_MAP.put("S10S10wS7", "a17");
 	}
 	private static void edgeMapInit9() {
-		EDGE_MAP.put("S0S0sS1", "a0");
-		EDGE_MAP.put("S0S0bS2", "a2");
-		EDGE_MAP.put("S0S0vS5", "a7");
-		EDGE_MAP.put("S0S0eS10", "a17");
+		EDGE_MAP.put("S12S12wS12", "a19");
 	}
 	private static void edgeMapInit10() {
-		EDGE_MAP.put("S1S1wS1", "a1");
+		EDGE_MAP.put("S0S0wS1", "a0");
 	}
 	private static void edgeMapInit11() {
-		EDGE_MAP.put("S2S2aS3", "a3");
-		EDGE_MAP.put("S2S2aS4", "a4");
-		EDGE_MAP.put("S2S2aS11", "a20");
+		EDGE_MAP.put("S1S1wS2", "a1");
+	}
+	private static void edgeMapInit12() {
+		EDGE_MAP.put("S2S2iS3", "a2");
+		EDGE_MAP.put("S2S2sS4", "a3");
 	}
 
 	static {
@@ -142,6 +143,7 @@ public class EventHandler {
 		edgeMapInit9();
 		edgeMapInit10();
 		edgeMapInit11();
+		edgeMapInit12();
 	}
 
 	@AfterReturning(value="execution(public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(jmarkov.jmdp.IntegerState, String)) && args(state, action)", returning="result")

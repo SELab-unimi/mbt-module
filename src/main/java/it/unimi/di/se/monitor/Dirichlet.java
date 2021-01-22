@@ -14,7 +14,7 @@ import it.unimi.di.se.mdp.mdpDsl.Action;
 
 public class Dirichlet {
 	
-	private static final double K = 1.0d;
+	private static final double K = 2.0d;
 	
 	private static final Logger log = LoggerFactory.getLogger(Dirichlet.class.getName());
 	
@@ -179,11 +179,9 @@ public class Dirichlet {
 	private void updateDistance(double[][] region) {
 		double result = 0.0;
 		for (int i = 0; i < region.length; i++) {
-			double tmpDist = Math.abs(region[i][1] - region[i][0]);
-			if(tmpDist > result)
-				result = tmpDist;
+			result += Math.abs(region[i][1] - region[i][0]);
 		}
-		distance = result;
+		distance = result / region.length;
 	}
 	
 	public double getDistance() {
