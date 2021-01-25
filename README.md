@@ -51,23 +51,18 @@ If you don't have it you can use the [Gradle wrapper](https://docs.gradle.org/cu
 
 After `build`, you can run the application by executing the following line:
 ```
-gradle run -PappArgs="['-i', 'src/main/resources/tas_nonuniform.jmdp']"
+gradle run -PappArgs="['-i', 'src/main/resources/safehome_u50.jmdp']"
 ```
 
-By default, this runs the MBT module using **distance** test selection strategy within the **non-uniform/unbalanced** Tele Assistant System (TAS) running example.
+By default, this runs the MBT module using the **distance** strategy (and **bounds** termination condition) to test the SafeHome running example.
 
 To change the test selection strategy and the adopted scenario,
 change:
-* the *model* file (i.e., `tas_nonuniform.jmdp`); and
+* the *model* file (i.e., `safehome_u50.jmdp`); and
 * the *test harness* file (i.e., `EventHandler.aj`).
 
-All the models and test harness files used to produce the experimental data presented in the paper are supplied inside the `src/main/resources` directory.
+Other models and test harness files are available inside the folder `src/main/resources`.
 
-For example, to use the **flat** test selection strategy within the **uniform/balanced** TAS:
-* use `src/main/resources/tas_uniform.jmdp` as model file; and
-* replace the `src/main/java/it/unimi/di/se/monitor/EventHandler.aj` with `src/main/resources/instrumentation/EventHandler_tas_uniform-balanced.aj`.
-
-Then build the project (`gradle clean build`) and run it (`gradle run`).
 
 ## License
 
@@ -75,4 +70,4 @@ See the [LICENSE](LICENSE.txt) file for license rights and limitations (GNU GPLv
 
 ## Who do I talk to?
 
-Anonymous Author(s) for double-blind review process.
+[Matteo Camilli](matteo.camilli@unibz.it)
