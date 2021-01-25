@@ -34,9 +34,9 @@ public class EventHandler {
 	static final String RECTANGLES_PATH = "src/main/resources/rectangles";
 
 	static final int SAMPLE_SIZE = 200;
-	static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.BOUNDS;
+	static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
 	static final double COVERAGE = 0.0;
-	static final double LIMIT = 100000;
+	static final double LIMIT = 2000;
 	public static final double DIST_WEIGHT = 0.8;
 	public static final double PROF_WEIGHT = 0.2;
 	static final String PROFILE_NAME = "prof1";

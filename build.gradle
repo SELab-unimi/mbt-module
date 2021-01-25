@@ -37,7 +37,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'org.aspectj:aspectjrt:1.8.5'
     compile 'org.aspectj:aspectjweaver:1.8.5'
-    compile group: 'com.github.lucarosellini.rJava', name: 'JRIEngine', version: '0.9-7'
+    //compile group: 'com.github.lucarosellini.rJava', name: 'JRIEngine', version: '0.9-7'
 
     runtime files('libs/colt.jar', 'libs/concurrent.jar', 'libs/qsopt.jar', 'libs/ssj-2.5.jar', 'libs/mdp-lib.jar')
     runtime fileTree(dir: 'libs', include: '*.jar')
@@ -45,7 +45,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-applicationDefaultJvmArgs = ['-Dorg.slf4j.simpleLogger.defaultLogLevel=info', '-Djava.library.path=/usr/local/Cellar/r/3.6.2/lib/R/library/rJava/jri']
+applicationDefaultJvmArgs = ['-Dorg.slf4j.simpleLogger.defaultLogLevel=info'] //, '-Djava.library.path=/usr/local/Cellar/r/3.6.2/lib/R/library/rJava/jri']
 
 run {
     if ( project.hasProperty("appArgs") ) {

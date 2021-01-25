@@ -97,7 +97,7 @@ public class Dirichlet {
 				", Bayes Factor = " + (currentPdf/prevVal) + 
 				", E[x_i] = " + printMean() +
 				", x_i = " + printMode() +
-				", HPD region = " + Arrays.deepToString(hpdRegion(0.95)) +
+				", HPD region = " + hpdRegion(0.95) +
 				", region size = " + distance;
 	}
 	
@@ -109,7 +109,7 @@ public class Dirichlet {
 				", Bayes Factor = " + (currentPdf/prevVal) + 
 				", E[x_i] = " + printMean() +
 				", x_i = " + printMode() +
-				", HPD region = " + Arrays.deepToString(hpdRegion(0.95)));
+				", HPD region = " + hpdRegion(0.95));
 		if(prevVal > 0 && currentPdf > 0)
 			return (currentPdf/prevVal) < K;
 		return false;
@@ -166,14 +166,22 @@ public class Dirichlet {
 		return alpha;
 	}
 	
-	public double[][] hpdRegion(double credMass) {
+//	public double[][] hpdRegion(double credMass) {
+//		String rCommand = new StringBuilder("hdi(rdirichlet(100000, ")
+//				.append(printParams().replace("[", "c(").replace("]", ")"))
+//				.append("), credMass=").append(credMass)
+//				.append(")").toString();
+//		double[][] region = transpose(REngineAccessPoint.getEngine().eval(rCommand).asDoubleMatrix());
+//		updateDistance(region);
+//		return region;
+//	}
+
+	public String hpdRegion(double credMass) {
 		String rCommand = new StringBuilder("hdi(rdirichlet(100000, ")
 				.append(printParams().replace("[", "c(").replace("]", ")"))
 				.append("), credMass=").append(credMass)
 				.append(")").toString();
-		double[][] region = transpose(REngineAccessPoint.getEngine().eval(rCommand).asDoubleMatrix());
-		updateDistance(region);
-		return region;
+		return rCommand.toString();
 	}
 	
 	private void updateDistance(double[][] region) {
