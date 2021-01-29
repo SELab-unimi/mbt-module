@@ -29,17 +29,17 @@ import org.aspectj.lang.annotation.Pointcut;
 public class EventHandler {
 
 	private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
-	static final String MODEL_PATH = "src/main/resources/safehome_u50.mdp";
-	static private final String JMDP_MODEL_PATH = "src/main/resources/safehome_u50.jmdp";
+	static final String MODEL_PATH = "src/main/resources/roboticarm.mdp";
+	static private final String JMDP_MODEL_PATH = "src/main/resources/roboticarm.jmdp";
 	static final String RECTANGLES_PATH = "src/main/resources/rectangles";
 
-	static final int SAMPLE_SIZE = 200;
-	static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.BOUNDS;
+	static final int SAMPLE_SIZE = 1000;
+	static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
 	static final double COVERAGE = 0.0;
-	static final double LIMIT = 100000;
-	public static final double DIST_WEIGHT = 0.8;
-	public static final double PROF_WEIGHT = 0.2;
-	static final String PROFILE_NAME = "prof1";
+	static final double LIMIT = 5000;
+	public static final double DIST_WEIGHT = 0.0;
+	public static final double PROF_WEIGHT = 0.0;
+	static final String PROFILE_NAME = null;
 
 	private Monitor monitor = null;
 	private SimpleMDP mdp = null;
@@ -56,7 +56,7 @@ public class EventHandler {
 			e.printStackTrace();
 		}
 		log.debug("Monitor initialization...");
-		monitor = new Monitor(mdp, Policy.DISTANCE);
+		monitor = new Monitor(mdp, Policy.RANDOM);
 		monitor.launch();
 	}
 
@@ -84,50 +84,51 @@ public class EventHandler {
 
 	private static final Map<String, String> EDGE_MAP = new HashMap<>();
 	private static void edgeMapInit0() {
-		EDGE_MAP.put("S3S3iS5", "a4");
-		EDGE_MAP.put("S3S3iS6", "a5");
-		EDGE_MAP.put("S3S3iS7", "a6");
+		EDGE_MAP.put("S3S3wS9", "a8");
+		EDGE_MAP.put("S3S3wS10", "a9");
 	}
 	private static void edgeMapInit1() {
-		EDGE_MAP.put("S4S4cS8", "a9");
-		EDGE_MAP.put("S4S4cS9", "a10");
+		EDGE_MAP.put("S4S4e1S7", "a10");
+		EDGE_MAP.put("S4S4e2S1", "a11");
+		EDGE_MAP.put("S4S4e2S2", "a12");
+		EDGE_MAP.put("S4S4e2S6", "a13");
 	}
 	private static void edgeMapInit2() {
-		EDGE_MAP.put("S5S5wS4", "a8");
+		EDGE_MAP.put("S5S5wS5", "a14");
 	}
 	private static void edgeMapInit3() {
-		EDGE_MAP.put("S6S6wS3", "a7");
+		EDGE_MAP.put("S6S6wS6", "a15");
 	}
 	private static void edgeMapInit4() {
-		EDGE_MAP.put("S7S7wS7", "a18");
+		EDGE_MAP.put("S10S10e1S8", "a20");
+		EDGE_MAP.put("S10S10e1S9", "a21");
+		EDGE_MAP.put("S10S10e2S6", "a22");
+		EDGE_MAP.put("S10S10e2S9", "a23");
 	}
 	private static void edgeMapInit5() {
-		EDGE_MAP.put("S8S8wS3", "a11");
+		EDGE_MAP.put("S7S7wS3", "a16");
+		EDGE_MAP.put("S7S7wS8", "a17");
 	}
 	private static void edgeMapInit6() {
-		EDGE_MAP.put("S9S9xS10", "a12");
-		EDGE_MAP.put("S9S9xS11", "a13");
+		EDGE_MAP.put("S8S8wS8", "a18");
 	}
 	private static void edgeMapInit7() {
-		EDGE_MAP.put("S11S11wS9", "a14");
-		EDGE_MAP.put("S11S11wS8", "a15");
+		EDGE_MAP.put("S9S9wS9", "a19");
 	}
 	private static void edgeMapInit8() {
-		EDGE_MAP.put("S10S10wS12", "a16");
-		EDGE_MAP.put("S10S10wS7", "a17");
+		EDGE_MAP.put("S0S0e1S1", "a0");
+		EDGE_MAP.put("S0S0e1S2", "a1");
+		EDGE_MAP.put("S0S0e2S4", "a24");
 	}
 	private static void edgeMapInit9() {
-		EDGE_MAP.put("S12S12wS12", "a19");
+		EDGE_MAP.put("S1S1e1S1", "a2");
+		EDGE_MAP.put("S1S1e1S3", "a3");
+		EDGE_MAP.put("S1S1e1S4", "a4");
+		EDGE_MAP.put("S1S1e2S10", "a5");
 	}
 	private static void edgeMapInit10() {
-		EDGE_MAP.put("S0S0wS1", "a0");
-	}
-	private static void edgeMapInit11() {
-		EDGE_MAP.put("S1S1wS2", "a1");
-	}
-	private static void edgeMapInit12() {
-		EDGE_MAP.put("S2S2iS3", "a2");
-		EDGE_MAP.put("S2S2sS4", "a3");
+		EDGE_MAP.put("S2S2wS4", "a6");
+		EDGE_MAP.put("S2S2wS5", "a7");
 	}
 
 	static {
@@ -142,8 +143,6 @@ public class EventHandler {
 		edgeMapInit8();
 		edgeMapInit9();
 		edgeMapInit10();
-		edgeMapInit11();
-		edgeMapInit12();
 	}
 
 	@AfterReturning(value="execution(public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(jmarkov.jmdp.IntegerState, String)) && args(state, action)", returning="result")
