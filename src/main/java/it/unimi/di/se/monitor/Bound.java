@@ -11,7 +11,7 @@ public class Bound {
     }
 
     public boolean contains(Bound target) {
-        return this.ubound <= target.lbound && this.ubound >= target.ubound;
+        return this.lbound <= target.lbound && this.ubound >= target.ubound;
     }
 
     public boolean disjoint(Bound target) {

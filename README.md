@@ -51,14 +51,14 @@ If you don't have it you can use the [Gradle wrapper](https://docs.gradle.org/cu
 
 After `build`, you can run the application by executing the following line:
 ```
-gradle run -PappArgs="['-i', 'src/main/resources/safehome_u50.jmdp']"
+gradle run -PappArgs="['-i', 'src/main/resources/rescuerobot.jmdp']"
 ```
 
-By default, this runs the MBT module using the **distance** strategy (and **bounds** termination condition) to test the SafeHome running example.
+By default, this runs the MBT module using the **distance** strategy (and **bounds** termination condition) to test the RescueRobot running example.
 
 To change the test selection strategy and the adopted scenario,
 change:
-* the *model* file (i.e., `safehome_u50.jmdp`); and
+* the *model* file (i.e., `rescuerobot.jmdp`); and
 * the *test harness* file (i.e., `EventHandler.aj`).
 
 Other models and test harness files are available inside the folder `src/main/resources`.

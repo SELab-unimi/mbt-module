@@ -32,41 +32,41 @@ import jmarkov.jmdp.StringAction;
 
 
 public class Monitor {
-	
+
 	enum Termination {
 		COVERAGE,
 		CONVERGENCE,
 		BOUNDS,
 		LIMIT
 	}
-	
+
 	private static final Logger log = LoggerFactory.getLogger(Monitor.class.getName());
-	
+
 	private MDPModel model = null;
 	State currentState = null;
 	private long currentTime;
 	private LinkedBlockingQueue<Event> queue = null;
-	
+
 	private HashMap<State, ArrayList<Arc>> outgoingArcs = new HashMap<>();
 	private HashMap<Arc, ObservableMap> arcsMapping = new HashMap<>();
-	
+
 	// Bayesian analysis fields
 	private HashMap<State, Dirichlet> prior = new HashMap<>();
 	private HashMap<State, Dirichlet> posterior = new HashMap<>();
 	private List<HyperRectangle> hyperRectangles = new ArrayList<>();
 	private HashMap<State, Integer> stateIndex = new HashMap<>();
-	
+
 	private DecisionMaker decisionMaker = null;
-	
+
 	private Coverage coverageInfo = null;
-	
+
 	public Monitor(SimpleMDP mdp, Policy policy){
 		Injector injector = new MdpDslStandaloneSetup().createInjectorAndDoEMFRegistration();
 		XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
 		resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
 		URI uri = URI.createURI("dummy:/model.mdp");
 		Resource resource = resourceSet.createResource(uri);
-		
+
 		InputStream in = null;
 		try {
 			in = new FileInputStream(new File(EventHandler.MODEL_PATH));
@@ -75,13 +75,13 @@ public class Monitor {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		// init MDP model
 		model = (MDPModel) resource.getContents().get(0);
 		retrieveOutgoingArcs();
 		retrieveMapping();
 		queue = new LinkedBlockingQueue<Event>();
-		
+
 		// init decision maker
 		if (model.getRules() == null ||  model.getRules().size() == 0) {
 			decisionMaker = new DecisionMakerFactory().createPolicy(mdp, policy);
@@ -98,14 +98,14 @@ public class Monitor {
 			}
 			decisionMaker = new DecisionMakerFactory().createPolicy(mdp, policy, decisionRules);
 		}
-		
+
 		// coverage info
 		coverageInfo = new Coverage(model);
-		
+
 		int i = 0;
 		for(State s: model.getStates())
 			stateIndex.put(s, i++);
-		
+
 		// profile info
 		for(Profile p: model.getProfiles()) {
 			if(p.getName().equals(EventHandler.PROFILE_NAME)) {
@@ -113,7 +113,7 @@ public class Monitor {
 					decisionMaker.setOperationalProfile(stateIndex.get(map.getState()).intValue(), Double.parseDouble(map.getWeight()));
 			}
 		}
-		
+
 		// init Baesyan analysis
 		for(State s: model.getStates()){
 			if(s.getPrior() != null && s.getPrior().size() > 0){
@@ -136,6 +136,7 @@ public class Monitor {
 			Scanner lines = null;
 			try {
 				lines = new Scanner(new FileReader(EventHandler.RECTANGLES_PATH));
+				//lines = new Scanner(new FileReader("src/main/resources/rectangles"));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -173,7 +174,7 @@ public class Monitor {
 			lines.close();
 		}
 	}
-	
+
 //	private Arc retrieveArc(State source, State target){
 //		for(Arc a: outgoingArcs.get(source))
 //			if(a.getDst().equals(target))
@@ -195,17 +196,17 @@ public class Monitor {
 		}
 		return null;
 	}
-	
+
 	private void retrieveOutgoingArcs(){
 		for(Arc a: model.getArcs())
 			addArc(a.getSrc(), a);
 	}
-	
+
 	private void retrieveMapping(){
 		for(ObservableMap m: model.getObservableActions())
 			arcsMapping.put(m.getArc(), m);
 	}
-	
+
 	private void addArc(State s, Arc a){
 		if(outgoingArcs.containsKey(s))
 			outgoingArcs.get(s).add(a);
@@ -215,11 +216,11 @@ public class Monitor {
 			outgoingArcs.put(s, list);
 		}
 	}
-	
+
 	public DecisionMaker getDecisionMaker() {
 		return decisionMaker;
 	}
-	
+
 	public void setInitialState(){
 		for(State s: model.getStates())
 			if(s.isInitial()){
@@ -228,7 +229,7 @@ public class Monitor {
 			}
 		currentTime = System.currentTimeMillis();
 	}
-	
+
 	public void launch(){
 		Thread t = new Thread(new Runnable() {
 	        @Override
@@ -238,7 +239,7 @@ public class Monitor {
 	    });
 	    t.start();
 	}
-	
+
 	private void startMonitor() {
 		setInitialState();
 		log.debug("MONITOR STARTED...");
@@ -271,38 +272,38 @@ public class Monitor {
 			}
 		}
 	}
-	
+
 	private int showInferenceInfo = 0;
 	private int eventCount = 0;
-	
+
 	private boolean checkEvent(Event event) {
 		//long time = event.getTime() - currentTime;
 		//log.info("[Monitor] checking event: " + event.getName() + ", time: " + time);
 		eventCount++;
 		for(Arc a: outgoingArcs.get(currentState))
 			if(a.getName().equals(event.getName())){
-				
+
 				// Bayesian analysis and termination if <currentState, action> region is uncertain
-				if(posterior.containsKey(currentState) && 
+				if(posterior.containsKey(currentState) &&
 						posterior.get(currentState).action().equals(a.getAct().getName())) {
-					
+
 					// update count of <currentState, action> region
 					decisionMaker.updateCount(stateIndex.get(currentState));
-					
+
 					posterior.get(currentState).update(stateIndex.get(a.getDst()));
 					boolean convergence = true;
 					boolean testConvergence = true;
-					
+
 					if(showInferenceInfo++ > 10) {
 						for(State s: posterior.keySet())
 							log.info(s.getName() + " - " + posterior.get(s).report() + " events = " + eventCount);
 						showInferenceInfo = 0;
 					}
-					
+
 					for(State s: posterior.keySet()) {
 						log.debug("[Monitor] count = " + posterior.get(s).getCount() + ", sample = " + posterior.get(s).getSampleSize());
 						testConvergence &= posterior.get(s).getCount() > EventHandler.SAMPLE_SIZE;
-					}				
+					}
 					if(testConvergence) {
 						for(State s: posterior.keySet()) {
 							log.debug("[Monitor] PDF = " + posterior.get(s).pdf());
@@ -315,7 +316,7 @@ public class Monitor {
 						}
 					}
 				}
-				
+
 				// coverage info and termination
 				coverageInfo.addExecution(stateIndex.get(currentState), new StringAction(a.getAct().getName()));
 				int tests = 0;
@@ -335,7 +336,7 @@ public class Monitor {
 //					}
 					if(EventHandler.TERMINATION_CONDITION == Termination.BOUNDS) {
 						log.info("[Monitor] BOUNDS termination checking.");
-						//List<HyperRectangle> toRemove = new ArrayList<>();
+						List<HyperRectangle> toRemove = new ArrayList<>();
 						for (HyperRectangle rect: hyperRectangles) {
 							boolean contains = true;
 							boolean disjoint = false;
@@ -349,18 +350,18 @@ public class Monitor {
 								addEvent(Event.stopEvent());
 							}
 							else if (disjoint){
-								//toRemove.add(rect);
-								log.info("[Monitor] Disjoint HDR found: requirements VIOLATED.");
-								addEvent(Event.stopEvent());
+								toRemove.add(rect);
+								//log.info("[Monitor] Disjoint HDR found: requirements VIOLATED.");
+								//addEvent(Event.stopEvent());
 							}
 						}
-						//for (HyperRectangle rect: toRemove)
-						//	hyperRectangles.remove(rect);
-						//log.info("[Monitor] Remaining hyper-rectangles: " + hyperRectangles.size());
-						//if (hyperRectangles.isEmpty()) {
-						//	log.info("[Monitor] inclusion not found: requirements NOT OK.");
-						//	addEvent(Event.stopEvent());
-						//}
+						for (HyperRectangle rect: toRemove)
+							hyperRectangles.remove(rect);
+						log.info("[Monitor] Remaining hyper-rectangles: " + hyperRectangles.size());
+						if (hyperRectangles.isEmpty()) {
+							log.info("[Monitor] Disjoint HDR found: requirements VIOLATED.");
+							addEvent(Event.stopEvent());
+						}
 					}
 				}
 				if((EventHandler.TERMINATION_CONDITION == Termination.LIMIT || EventHandler.TERMINATION_CONDITION == Termination.BOUNDS)
@@ -368,7 +369,7 @@ public class Monitor {
 					log.info("[Monitor] #test limit reached.");
 					addEvent(Event.stopEvent());
 				}
-				
+
 				// update state
 				currentState = a.getDst();
 				log.debug("Set current state: " + currentState.getName());
@@ -377,7 +378,7 @@ public class Monitor {
 			}
 		return false;
 	}
-    
+
 	public void addEvent(Event event){
 		try {
 			queue.put(event);
@@ -385,7 +386,7 @@ public class Monitor {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void report() {
 		try {
 			Thread.sleep(500);
@@ -409,15 +410,15 @@ public class Monitor {
 			log.warn("    HPD region size: " + posterior.get(s).getDistance());
 		}
 	}
-	
+
 	public static class CheckPoint {
-		
+
 		private Thread waitingThread = null;
 		private static CheckPoint instance = null;
 		private String state = null;
-		
+
 		private CheckPoint() { }
-		
+
 		public static CheckPoint getInstance() {
 			if(instance == null) {
 				synchronized (CheckPoint.class) {
@@ -427,7 +428,7 @@ public class Monitor {
 			}
 			return instance;
 		}
-		
+
 		public synchronized void join(Thread executingThread, String state) {
 			this.state = state;
 			if(waitingThread != null) {
@@ -443,7 +444,7 @@ public class Monitor {
 				}
 			}
 		}
-		
+
 		public synchronized String join(Thread executingThread) {
 			if(waitingThread != null) {
 				waitingThread = null;

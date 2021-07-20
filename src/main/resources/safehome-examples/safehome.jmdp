@@ -1,0 +1,19 @@
+ S0 i, S1, S2 u, S3 u, S4, S5, S6 u, S7, S8,
+S0 i0 S1 1.0
+S1 i0 S2 1.0
+S2 i1 S3 1.0
+S2 i0 S2 0.95 u
+S2 i0 S1 0.05 u
+S3 i0 S3 0.97 u
+S3 i0 S5 0.02 u
+S3 i0 S8 0.01 u
+S3 i1 S3 0.03
+S3 i1 S4 0.97
+S5 i0 S2 1.0
+S8 i0 S8 1.0
+S4 i0 S3 1.0
+S4 i1 S6 1.0
+S6 i0 S4 1.0
+S6 i1 S6 0.02 u
+S6 i1 S7 0.98 u
+S7 i0 S7 1.0
