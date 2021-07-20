@@ -10,7 +10,7 @@ The package contains a Java software project having the following external depen
 * additional R packages: [rJava](https://cran.r-project.org/web/packages/rJava/index.html), [MCMCpack](https://cran.r-project.org/web/packages/MCMCpack/index.html), [HDInterval](https://cran.r-project.org/web/packages/HDInterval/index.html).
 
 Once the dependencies have been installed, set up the following system-dependent variables:
-* set your `JRI path` in the [build.gradle](build.gradle) file (line 51) as JVM option `java.library.path`;
+* set your `JRI path` in the [build.gradle](build.gradle) file (line 48) as JVM option `java.library.path`;
 * set your `R_HOME` environment variable (e.g., `export R_HOME=/my/r_home/path`).
 
 To get your `JRI path` open a `R` console and execute `.libPaths()`.
