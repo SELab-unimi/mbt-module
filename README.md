@@ -6,8 +6,15 @@ The repo contains sources and working examples.
 ## How do I get set up?
 
 The package contains a Java software project having the following external dependencies:
-* the [R environment](https://www.r-project.org/)
+* Java Development Kit JDK [version 1.8](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)
+* R environment [version >= 4.0](https://www.r-project.org/)
 * additional R packages: [rJava](https://cran.r-project.org/web/packages/rJava/index.html), [MCMCpack](https://cran.r-project.org/web/packages/MCMCpack/index.html), [HDInterval](https://cran.r-project.org/web/packages/HDInterval/index.html).
+
+**Note**: in case the installation of `rJava` fails, run the following command and then install the package again:
+
+```
+sudo R CMD javareconf
+```
 
 Once the dependencies have been installed, set up the following system-dependent variables:
 * set your `JRI path` in the [build.gradle](build.gradle) file (line 48) as JVM option `java.library.path`;
