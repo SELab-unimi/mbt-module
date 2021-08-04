@@ -45,7 +45,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-applicationDefaultJvmArgs = ['-Dorg.slf4j.simpleLogger.defaultLogLevel=info', '-Djava.library.path=/usr/local/lib/R/4.0/site-library/rJava/jri']
+applicationDefaultJvmArgs = ['-Dorg.slf4j.simpleLogger.defaultLogLevel=info', '-Djava.library.path=/usr/local/lib/R/4.1/site-library/rJava/jri']
 
 run {
     if ( project.hasProperty("appArgs") ) {

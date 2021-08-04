@@ -9,15 +9,16 @@ import org.rosuda.JRI.RMainLoopCallbacks;
 import org.rosuda.JRI.Rengine;
 
 public class REngineAccessPoint implements RMainLoopCallbacks {
-	
+
 	private static Rengine ENGINE = null;
-	
+
 	private REngineAccessPoint() {
 		ENGINE = new Rengine(new String[]{"--no-save"}, false, this);
 		ENGINE.eval("library(HDInterval)");
-		ENGINE.eval("library(MCMCpack)");
+		ENGINE.eval("library(rBeta2009)");
+		//ENGINE.eval("library(MCMCpack)");
 	}
-	
+
 	public static Rengine getEngine() {
 		if(ENGINE == null)
 			new REngineAccessPoint();
@@ -68,7 +69,7 @@ public class REngineAccessPoint implements RMainLoopCallbacks {
 
 	@Override
 	public void   rLoadHistory  (Rengine re, String filename) {
-	}			
+	}
 
 	@Override
 	public void   rSaveHistory  (Rengine re, String filename) {

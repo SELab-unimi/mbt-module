@@ -8,12 +8,23 @@ The repo contains sources and working examples.
 The package contains a Java software project having the following external dependencies:
 * Java Development Kit JDK [version 1.8](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)
 * R environment [version >= 4.0](https://www.r-project.org/)
-* additional R packages: [rJava](https://cran.r-project.org/web/packages/rJava/index.html), [MCMCpack](https://cran.r-project.org/web/packages/MCMCpack/index.html), [HDInterval](https://cran.r-project.org/web/packages/HDInterval/index.html).
+* additional R packages: [rJava](https://cran.r-project.org/web/packages/rJava/index.html), [rBeta2009](https://cran.r-project.org/web/packages/rBeta2009/index.html), [HDInterval](https://cran.r-project.org/web/packages/HDInterval/index.html).
 
 **Note**: in case the installation of `rJava` fails, run the following command and then install the package again:
 
 ```
 sudo R CMD javareconf
+```
+
+**For mac users**: the usage of `jenv` is recommended:
+
+```
+brew install jenv
+echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.bash_profile
+echo 'eval "$(jenv init -)"' >> ~/.bash_profile
+source ~/.bash_profile
+jenv add /Library/Java/JavaVirtualMachines/jdk1.8.0_162.jdk/Contents/Home
+jenv global oracle64-1.8.0_162
 ```
 
 Once the dependencies have been installed, set up the following system-dependent variables:
