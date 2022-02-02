@@ -27,43 +27,43 @@ import org.aspectj.lang.annotation.Pointcut;
 
 @Aspect
 public class EventHandler {
+    
+    private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
+    static final String MODEL_PATH = "src/main/resources/uavs.mdp";
+    static private final String JMDP_MODEL_PATH = "src/main/resources/uavs.jmdp";
+    static final String RECTANGLES_PATH = "src/main/resources/rectangles";
+    
+    static final int SAMPLE_SIZE = 100;
+    static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
+    static final double COVERAGE = 0.0;
+    static final double LIMIT = 5000;
+    public static final double DIST_WEIGHT = 0.0;
+    public static final double PROF_WEIGHT = 0.0;
+    static final String PROFILE_NAME = null;
 
-	private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
-	static final String MODEL_PATH = "src/main/resources/roboticarm.mdp";
-	static private final String JMDP_MODEL_PATH = "src/main/resources/roboticarm.jmdp";
-	static final String RECTANGLES_PATH = "src/main/resources/rectangles";
+    private Monitor monitor = null;
+    private SimpleMDP mdp = null;
 
-	static final int SAMPLE_SIZE = 1000;
-	static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
-	static final double COVERAGE = 0.0;
-	static final double LIMIT = 5000;
-	public static final double DIST_WEIGHT = 0.0;
-	public static final double PROF_WEIGHT = 0.0;
-	static final String PROFILE_NAME = null;
+    @Pointcut("execution(public static void main(..))")
+    void mainMethod() {}
 
-	private Monitor monitor = null;
-	private SimpleMDP mdp = null;
-
-	@Pointcut("execution(public static void main(..))")
-	void mainMethod() {}
-
-	@Before(value="mainMethod()")
-	public void initMonitor() {
-		log.debug("MDP Policy computation...");
-		try {
-			mdp = new SimpleMDP(new BufferedReader(new FileReader(JMDP_MODEL_PATH)));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		log.debug("Monitor initialization...");
-		monitor = new Monitor(mdp, Policy.RANDOM);
-		monitor.launch();
+    @Before(value="mainMethod()")
+    public void initMonitor() {
+    		log.debug("MDP Policy computation...");
+   		try {
+   			mdp = new SimpleMDP(new BufferedReader(new FileReader(JMDP_MODEL_PATH)));
+   		} catch (FileNotFoundException e) {
+   			e.printStackTrace();
+   		}
+       	log.debug("Monitor initialization...");
+       	monitor = new Monitor(mdp, Policy.RANDOM);
+       	monitor.launch();
 	}
 
-	@After(value="mainMethod()")
-	public void shutdownMonitor(){
-		log.debug("Shutting down Monitor...");
-		monitor.addEvent(Event.stopEvent());
+    @After(value="mainMethod()")
+    public void shutdownMonitor(){
+    		log.debug("Shutting down Monitor...");
+    		monitor.addEvent(Event.stopEvent());
 	}
 
 	private String getActionFromPolicy() {
@@ -83,83 +83,55 @@ public class EventHandler {
 
 
 	private static final Map<String, String> EDGE_MAP = new HashMap<>();
-	private static void edgeMapInit0() {
-		EDGE_MAP.put("S3S3wS9", "a8");
-		EDGE_MAP.put("S3S3wS10", "a9");
-	}
-	private static void edgeMapInit1() {
-		EDGE_MAP.put("S4S4e1S7", "a10");
-		EDGE_MAP.put("S4S4e2S1", "a11");
-		EDGE_MAP.put("S4S4e2S2", "a12");
-		EDGE_MAP.put("S4S4e2S6", "a13");
-	}
-	private static void edgeMapInit2() {
-		EDGE_MAP.put("S5S5wS5", "a14");
-	}
-	private static void edgeMapInit3() {
-		EDGE_MAP.put("S6S6wS6", "a15");
-	}
-	private static void edgeMapInit4() {
-		EDGE_MAP.put("S10S10e1S8", "a20");
-		EDGE_MAP.put("S10S10e1S9", "a21");
-		EDGE_MAP.put("S10S10e2S6", "a22");
-		EDGE_MAP.put("S10S10e2S9", "a23");
-	}
-	private static void edgeMapInit5() {
-		EDGE_MAP.put("S7S7wS3", "a16");
-		EDGE_MAP.put("S7S7wS8", "a17");
-	}
-	private static void edgeMapInit6() {
-		EDGE_MAP.put("S8S8wS8", "a18");
-	}
-	private static void edgeMapInit7() {
-		EDGE_MAP.put("S9S9wS9", "a19");
-	}
-	private static void edgeMapInit8() {
-		EDGE_MAP.put("S0S0e1S1", "a0");
-		EDGE_MAP.put("S0S0e1S2", "a1");
-		EDGE_MAP.put("S0S0e2S4", "a24");
-	}
-	private static void edgeMapInit9() {
-		EDGE_MAP.put("S1S1e1S1", "a2");
-		EDGE_MAP.put("S1S1e1S3", "a3");
-		EDGE_MAP.put("S1S1e1S4", "a4");
-		EDGE_MAP.put("S1S1e2S10", "a5");
-	}
-	private static void edgeMapInit10() {
-		EDGE_MAP.put("S2S2wS4", "a6");
-		EDGE_MAP.put("S2S2wS5", "a7");
-	}
-
+	    	private static void edgeMapInit0() {
+	    		EDGE_MAP.put("S3S3wS3", "a4");
+	    	}
+	    	private static void edgeMapInit1() {
+	    		EDGE_MAP.put("S4S4wS4", "a5");
+	    	}
+	    	private static void edgeMapInit2() {
+	    		EDGE_MAP.put("S0S0upS1", "a0");
+	    		EDGE_MAP.put("S0S0sTrtS0", "a6");
+	    		EDGE_MAP.put("S0S0sTrtS3", "a7");
+	    		EDGE_MAP.put("S0S0sTrtS4", "a8");
+	    	}
+	    	private static void edgeMapInit3() {
+	    		EDGE_MAP.put("S1S1downS0", "a1");
+	    		EDGE_MAP.put("S1S1upS2", "a2");
+	    		EDGE_MAP.put("S1S1sTrtS1", "a9");
+	    		EDGE_MAP.put("S1S1sTrtS3", "a10");
+	    		EDGE_MAP.put("S1S1sTrtS4", "a11");
+	    	}
+	    	private static void edgeMapInit4() {
+	    		EDGE_MAP.put("S2S2downS1", "a3");
+	    		EDGE_MAP.put("S2S2sTrtS2", "a12");
+	    		EDGE_MAP.put("S2S2sTrtS3", "a13");
+	    		EDGE_MAP.put("S2S2sTrtS4", "a14");
+	    	}
+	
 	static {
 		edgeMapInit0();
 		edgeMapInit1();
 		edgeMapInit2();
 		edgeMapInit3();
 		edgeMapInit4();
-		edgeMapInit5();
-		edgeMapInit6();
-		edgeMapInit7();
-		edgeMapInit8();
-		edgeMapInit9();
-		edgeMapInit10();
 	}
-
+	
 	@AfterReturning(value="execution(public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(jmarkov.jmdp.IntegerState, String)) && args(state, action)", returning="result")
 	public void doActionAfterAdvice(jmarkov.jmdp.IntegerState state, String action, jmarkov.jmdp.IntegerState result) {
-
+		
 		long timeStamp = System.currentTimeMillis();
 		monitor.addEvent(Event.readStateEvent());
 		String currentMonitorState = CheckPoint.getInstance().join(Thread.currentThread());
 		log.debug("Transition : " + currentMonitorState + "-->" + result.label());
-
+		
 		String eventLabel = EDGE_MAP.get(currentMonitorState + state.label() + action + result.label());
 		if (eventLabel != null)
 			monitor.addEvent(new Event(eventLabel, timeStamp));
 		else
 			log.error("*** PRE-/POST- CONDITION VIOLATION ***");
 	}
-
+	
 	@Around(value="execution(private String it.unimi.di.se.sut.Driver.waitForAction(jmarkov.basic.Actions<jmarkov.jmdp.StringAction>, java.io.InputStream)) && args(actionList, input)")
 	public Object waitForActionControl(ProceedingJoinPoint thisJoinPoint, jmarkov.basic.Actions<jmarkov.jmdp.StringAction> actionList, java.io.InputStream input) throws Throwable {
 		Object[] args = thisJoinPoint.getArgs();
@@ -168,7 +140,7 @@ public class EventHandler {
 				args[i] = new ByteArrayInputStream(getActionFromPolicy().getBytes());
 				break;
 			}
-
+		
 		return thisJoinPoint.proceed(args);
 	}
 }

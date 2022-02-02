@@ -127,6 +127,6 @@ reset
 	
 profile
 
-sampleSize 1000
+sampleSize 500
 explorationPolicy distance
-termination limit 5000
+termination limit 2000

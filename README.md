@@ -8,7 +8,7 @@ The repo contains sources and working examples.
 The package contains a Java software project having the following external dependencies:
 * Java Development Kit JDK [version 1.8](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)
 * R environment [version >= 4.0](https://www.r-project.org/)
-* additional R packages: [rJava](https://cran.r-project.org/web/packages/rJava/index.html), [rBeta2009](https://cran.r-project.org/web/packages/rBeta2009/index.html), [HDInterval](https://cran.r-project.org/web/packages/HDInterval/index.html).
+* additional R packages: [rJava](https://cran.r-project.org/web/packages/rJava/index.html), [gtools](https://cran.r-project.org/web/packages/gtools/index.html), [HDInterval](https://cran.r-project.org/web/packages/HDInterval/index.html).
 
 **Note**: in case the installation of `rJava` fails, run the following command and then install the package again:
 
@@ -59,7 +59,7 @@ For instance,
 
 To build the application execute:
 ```
-gradle clean build
+./gradlew clean build
 ```
 
 The above line requires the [Gradle build tool](https://gradle.org/).
@@ -69,7 +69,7 @@ If you don't have it you can use the [Gradle wrapper](https://docs.gradle.org/cu
 
 After `build`, you can run the application by executing the following line:
 ```
-gradle run -PappArgs="['-i', 'src/main/resources/rescuerobot.jmdp']"
+./gradlew run -PappArgs="['-i', 'src/main/resources/rescuerobot.jmdp']"
 ```
 
 By default, this runs the MBT module using the **distance** strategy (and **bounds** termination condition) to test the RescueRobot running example.

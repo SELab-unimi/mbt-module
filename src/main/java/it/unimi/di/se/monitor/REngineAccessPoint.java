@@ -15,7 +15,7 @@ public class REngineAccessPoint implements RMainLoopCallbacks {
 	private REngineAccessPoint() {
 		ENGINE = new Rengine(new String[]{"--no-save"}, false, this);
 		ENGINE.eval("library(HDInterval)");
-		ENGINE.eval("library(rBeta2009)");
+		ENGINE.eval("library(gtools)");
 		//ENGINE.eval("library(MCMCpack)");
 	}
 
