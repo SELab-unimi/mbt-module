@@ -33,10 +33,10 @@ public class EventHandler {
 	static private final String JMDP_MODEL_PATH = "src/main/resources/rescuerobot.jmdp";
 	static final String RECTANGLES_PATH = "src/main/resources/rectangles";
 
-	static final int SAMPLE_SIZE = 500;
-	static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.BOUNDS;
+	static final int SAMPLE_SIZE = 100;
+	static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
 	static final double COVERAGE = 0.0;
-	static final double LIMIT = 50000;
+	static final double LIMIT = 5000;
 	public static final double DIST_WEIGHT = 0.0;
 	public static final double PROF_WEIGHT = 0.0;
 	static final String PROFILE_NAME = null;
@@ -56,7 +56,7 @@ public class EventHandler {
 			e.printStackTrace();
 		}
 		log.debug("Monitor initialization...");
-		monitor = new Monitor(mdp, Policy.DISTANCE);
+		monitor = new Monitor(mdp, Policy.RANDOM);
 		monitor.launch();
 	}
 
@@ -99,15 +99,44 @@ public class EventHandler {
 		EDGE_MAP.put("S6S6wS6", "a4");
 	}
 	private static void edgeMapInit4() {
+		EDGE_MAP.put("S7S7wS8", "a17");
+	}
+	private static void edgeMapInit5() {
+		EDGE_MAP.put("S8S8e1S9", "a18");
+		EDGE_MAP.put("S8S8e1S10", "a19");
+		EDGE_MAP.put("S8S8e2S9", "a27");
+		EDGE_MAP.put("S8S8e2S0", "a28");
+	}
+	private static void edgeMapInit6() {
+		EDGE_MAP.put("S9S9e1S10", "a21");
+		EDGE_MAP.put("S9S9e1S11", "a22");
+		EDGE_MAP.put("S9S9e2S11", "a23");
+		EDGE_MAP.put("S9S9e2S12", "a24");
+	}
+	private static void edgeMapInit7() {
+		EDGE_MAP.put("S11S11wS11", "a25");
+	}
+	private static void edgeMapInit8() {
+		EDGE_MAP.put("S10S10wS10", "a20");
+	}
+	private static void edgeMapInit9() {
+		EDGE_MAP.put("S12S12wS12", "a26");
+	}
+	private static void edgeMapInit10() {
 		EDGE_MAP.put("S0S0e1S1", "a0");
 		EDGE_MAP.put("S0S0e1S2", "a1");
 		EDGE_MAP.put("S0S0e1S6", "a2");
+		EDGE_MAP.put("S0S0e2S2", "a14");
+		EDGE_MAP.put("S0S0e2S6", "a15");
+		EDGE_MAP.put("S0S0e2S7", "a16");
 	}
-	private static void edgeMapInit5() {
+	private static void edgeMapInit11() {
 		EDGE_MAP.put("S1S1wS1", "a3");
 	}
-	private static void edgeMapInit6() {
+	private static void edgeMapInit12() {
 		EDGE_MAP.put("S2S2wS3", "a5");
+		EDGE_MAP.put("S2S2r1S0", "a12");
+		EDGE_MAP.put("S2S2r1S3", "a13");
 	}
 
 	static {
@@ -118,6 +147,12 @@ public class EventHandler {
 		edgeMapInit4();
 		edgeMapInit5();
 		edgeMapInit6();
+		edgeMapInit7();
+		edgeMapInit8();
+		edgeMapInit9();
+		edgeMapInit10();
+		edgeMapInit11();
+		edgeMapInit12();
 	}
 
 	@AfterReturning(value="execution(public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(jmarkov.jmdp.IntegerState, String)) && args(state, action)", returning="result")

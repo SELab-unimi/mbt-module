@@ -1,0 +1,16 @@
+ S0 u, S1 i u, S2 u, S3, S4,
+S0 up S1 1.0
+S1 down S0 1.0
+S1 up S2 1.0
+S2 down S1 1.0
+S3 w S3 1.0
+S4 w S4 1.0
+S0 sTrt S0 0.74 u
+S0 sTrt S3 0.12 u
+S0 sTrt S4 0.14 u
+S1 sTrt S1 0.88 u
+S1 sTrt S3 0.02 u
+S1 sTrt S4 0.1 u
+S2 sTrt S2 0.94 u
+S2 sTrt S3 0.01 u
+S2 sTrt S4 0.05 u

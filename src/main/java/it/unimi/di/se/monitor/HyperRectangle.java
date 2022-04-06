@@ -25,9 +25,9 @@ public class HyperRectangle {
     public boolean disjoint(State s, double[][] region) {
         Bound[] bounds = stateVarMap.get(s);
         for (int i=0; i<bounds.length; i++) {
-            if (!bounds[i].disjoint(new Bound(region[i][0], region[i][1])))
-                return false;
+            if (bounds[i].disjoint(new Bound(region[i][0], region[i][1])))
+                return true;
         }
-        return true;
+        return false;
     }
 }

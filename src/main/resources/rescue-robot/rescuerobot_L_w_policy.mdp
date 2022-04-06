@@ -1,0 +1,168 @@
+model "rescuerobot"
+actions
+	e1 e2 r1 w
+states
+	S0 {navigating} initial Dir~(e1, <S1, 1.5> <S2, 298.5> <S6, 3.5>)
+	S1 {contact}
+	S2 {humanDetected}
+	S3 {breakingRange} Dir~(e1, <S1, 2.5> <S4, 8.5> <S5, 294.5>)
+	S4 {protectiveDistViolation}
+	S5 {AlarmMsg}
+	S6 {misclassification}
+	S7 {obstacleDetected}
+	S8 {manouvering} Dir~(e1, <S9, 0.5> <S10, 0.5>)
+	S9 {criticalDistance} Dir~(e1, <S10, 0.5> <S11, 0.5>)
+	S10 {obstacleAvoided}
+	S11 {crash}
+	S12 {emergencyStop}
+arcs
+	a0  : (S0, e1) -> S1, 0.01
+	a1  : (S0, e1) -> S2, 0.96
+	a2  : (S0, e1) -> S6, 0.03
+	a3  : (S1, w) -> S1, 1.0
+	a4  : (S6, w) -> S6, 1.0
+	a5  : (S2, w) -> S3, 1.0
+	a6  : (S3, e1) -> S1, 0.02
+	a7  : (S3, e1) -> S4, 0.03
+	a8  : (S3, e1) -> S5, 0.95
+	a9  : (S4, e1) -> S1, 0.01
+	a10 : (S4, e1) -> S5, 0.99
+	a11 : (S5, w) -> S5, 1.0
+	a12 : (S2, r1) -> S0, 0.95
+	a13 : (S2, r1) -> S3, 0.05
+	a14 : (S0, e2) -> S2, 0.1
+	a15 : (S0, e2) -> S6, 0.03
+	a16 : (S0, e2) -> S7, 0.87
+	a17 : (S7, w) -> S8, 1.0
+	a18 : (S8, e1) -> S9, 0.05
+	a19 : (S8, e1) -> S10, 0.95
+	a20 : (S10, w) -> S10, 1.0
+	a21 : (S9, e1) -> S10, 0.98
+	a22 : (S9, e1) -> S11, 0.02
+	a23 : (S9, e2) -> S11, 0.01
+	a24 : (S9, e2) -> S12, 0.99
+	a25 : (S11, w) -> S11, 1.0
+	a26 : (S12, w) -> S12, 1.0
+	a27 : (S8, e2) -> S9, 0.01
+	a28 : (S8, e2) -> S0, 0.99
+
+observe
+	a0  -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+		precondition "state.label().equals(\"S0\") && action.equals(\"e1\")", postcondition "result.label().equals(\"S1\")" returnType "jmarkov.jmdp.IntegerState"
+	a1  -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+		precondition "state.label().equals(\"S0\") && action.equals(\"e1\")", postcondition "result.label().equals(\"S2\")" returnType "jmarkov.jmdp.IntegerState"
+	a2  -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+		precondition "state.label().equals(\"S0\") && action.equals(\"e1\")", postcondition "result.label().equals(\"S6\")" returnType "jmarkov.jmdp.IntegerState"
+	a3  -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+		precondition "state.label().equals(\"S1\") && action.equals(\"w\")", postcondition "result.label().equals(\"S1\")" returnType "jmarkov.jmdp.IntegerState"
+	a4  -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+		precondition "state.label().equals(\"S6\") && action.equals(\"w\")", postcondition "result.label().equals(\"S6\")" returnType "jmarkov.jmdp.IntegerState"
+	a5  -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+		precondition "state.label().equals(\"S2\") && action.equals(\"w\")", postcondition "result.label().equals(\"S3\")" returnType "jmarkov.jmdp.IntegerState"
+	a6  -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+		precondition "state.label().equals(\"S3\") && action.equals(\"e1\")", postcondition "result.label().equals(\"S1\")" returnType "jmarkov.jmdp.IntegerState"
+	a7  -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+		precondition "state.label().equals(\"S3\") && action.equals(\"e1\")", postcondition "result.label().equals(\"S4\")" returnType "jmarkov.jmdp.IntegerState"
+	a8  -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+		precondition "state.label().equals(\"S3\") && action.equals(\"e1\")", postcondition "result.label().equals(\"S5\")" returnType "jmarkov.jmdp.IntegerState"
+	a9  -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+		precondition "state.label().equals(\"S4\") && action.equals(\"e1\")", postcondition "result.label().equals(\"S1\")" returnType "jmarkov.jmdp.IntegerState"
+	a10 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+		precondition "state.label().equals(\"S4\") && action.equals(\"e1\")", postcondition "result.label().equals(\"S5\")" returnType "jmarkov.jmdp.IntegerState"
+	a11 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+		precondition "state.label().equals(\"S5\") && action.equals(\"w\")", postcondition "result.label().equals(\"S5\")" returnType "jmarkov.jmdp.IntegerState"
+	a12 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S2\") && action.equals(\"r1\")", postcondition "result.label().equals(\"S0\")" returnType "jmarkov.jmdp.IntegerState"
+    a13 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S2\") && action.equals(\"r1\")", postcondition "result.label().equals(\"S3\")" returnType "jmarkov.jmdp.IntegerState"
+    a14 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S0\") && action.equals(\"e2\")", postcondition "result.label().equals(\"S2\")" returnType "jmarkov.jmdp.IntegerState"
+    a15 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S0\") && action.equals(\"e2\")", postcondition "result.label().equals(\"S6\")" returnType "jmarkov.jmdp.IntegerState"
+    a16 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S0\") && action.equals(\"e2\")", postcondition "result.label().equals(\"S7\")" returnType "jmarkov.jmdp.IntegerState"
+    a17 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S7\") && action.equals(\"w\")", postcondition "result.label().equals(\"S8\")" returnType "jmarkov.jmdp.IntegerState"
+    a18 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S8\") && action.equals(\"e1\")", postcondition "result.label().equals(\"S9\")" returnType "jmarkov.jmdp.IntegerState"
+    a19 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S8\") && action.equals(\"e1\")", postcondition "result.label().equals(\"S10\")" returnType "jmarkov.jmdp.IntegerState"
+    a20 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S10\") && action.equals(\"w\")", postcondition "result.label().equals(\"S10\")" returnType "jmarkov.jmdp.IntegerState"
+    a21 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S9\") && action.equals(\"e1\")", postcondition "result.label().equals(\"S10\")" returnType "jmarkov.jmdp.IntegerState"
+    a22 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S9\") && action.equals(\"e1\")", postcondition "result.label().equals(\"S11\")" returnType "jmarkov.jmdp.IntegerState"
+    a23 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S9\") && action.equals(\"e2\")", postcondition "result.label().equals(\"S11\")" returnType "jmarkov.jmdp.IntegerState"
+    a24 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S9\") && action.equals(\"e2\")", postcondition "result.label().equals(\"S12\")" returnType "jmarkov.jmdp.IntegerState"
+    a25 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S11\") && action.equals(\"w\")", postcondition "result.label().equals(\"S11\")" returnType "jmarkov.jmdp.IntegerState"
+    a26 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S12\") && action.equals(\"w\")", postcondition "result.label().equals(\"S12\")" returnType "jmarkov.jmdp.IntegerState"
+	a27 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S8\") && action.equals(\"e2\")", postcondition "result.label().equals(\"S9\")" returnType "jmarkov.jmdp.IntegerState"
+	a28 -> "public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(..)",
+    		args {state:"jmarkov.jmdp.IntegerState" action:"String"},
+    		precondition "state.label().equals(\"S8\") && action.equals(\"e2\")", postcondition "result.label().equals(\"S0\")" returnType "jmarkov.jmdp.IntegerState"
+
+control
+	S0 -> "private String it.unimi.di.se.sut.Driver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.StringAction>" input:"java.io.InputStream"}
+	S2 -> "private String it.unimi.di.se.sut.Driver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.StringAction>" input:"java.io.InputStream"}
+	S3 -> "private String it.unimi.di.se.sut.Driver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.StringAction>" input:"java.io.InputStream"}
+	S4 -> "private String it.unimi.di.se.sut.Driver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.StringAction>" input:"java.io.InputStream"}
+	S8 -> "private String it.unimi.di.se.sut.Driver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.StringAction>" input:"java.io.InputStream"}
+	S9 -> "private String it.unimi.di.se.sut.Driver.waitForAction(..)", args {actionList:"jmarkov.basic.Actions<jmarkov.jmdp.StringAction>" input:"java.io.InputStream"}
+
+reset
+	"public void it.unimi.di.se.sut.MDPExecutor.resetExecution(..)"
+
+profile
+
+sampleSize 100
+explorationPolicy uncertainty-flat
+termination limit 5000
+
+decisionRules
+    S0 ->  (S0, e2) (S1, w) (S2, r1) (S3, e1) (S4, e1) (S5, w) (S6, w) (S7, w) (S8, e2) (S9, e1) (S10, w) (S11, w) (S12, w)
+    S1 ->  (S0, e2) (S1, w) (S2, r1) (S3, e1) (S4, e1) (S5, w) (S6, w) (S7, w) (S8, e2) (S9, e1) (S10, w) (S11, w) (S12, w)
+    S2 ->  (S0, e2) (S1, w) (S2, r1) (S3, e1) (S4, e1) (S5, w) (S6, w) (S7, w) (S8, e2) (S9, e1) (S10, w) (S11, w) (S12, w)
+    S3 ->  (S0, e2) (S1, w) (S2, r1) (S3, e1) (S4, e1) (S5, w) (S6, w) (S7, w) (S8, e2) (S9, e1) (S10, w) (S11, w) (S12, w)
+    S4 ->  (S0, e2) (S1, w) (S2, r1) (S3, e1) (S4, e1) (S5, w) (S6, w) (S7, w) (S8, e2) (S9, e1) (S10, w) (S11, w) (S12, w)
+    S5 ->  (S0, e2) (S1, w) (S2, r1) (S3, e1) (S4, e1) (S5, w) (S6, w) (S7, w) (S8, e2) (S9, e1) (S10, w) (S11, w) (S12, w)
+    S6 ->  (S0, e2) (S1, w) (S2, r1) (S3, e1) (S4, e1) (S5, w) (S6, w) (S7, w) (S8, e2) (S9, e1) (S10, w) (S11, w) (S12, w)
+    S7 ->  (S0, e2) (S1, w) (S2, r1) (S3, e1) (S4, e1) (S5, w) (S6, w) (S7, w) (S8, e2) (S9, e1) (S10, w) (S11, w) (S12, w)
+    S8 ->  (S0, e2) (S1, w) (S2, r1) (S3, e1) (S4, e1) (S5, w) (S6, w) (S7, w) (S8, e2) (S9, e1) (S10, w) (S11, w) (S12, w)
+    S9 ->  (S0, e2) (S1, w) (S2, r1) (S3, e1) (S4, e1) (S5, w) (S6, w) (S7, w) (S8, e2) (S9, e1) (S10, w) (S11, w) (S12, w)
+    S10 -> (S0, e2) (S1, w) (S2, r1) (S3, e1) (S4, e1) (S5, w) (S6, w) (S7, w) (S8, e2) (S9, e1) (S10, w) (S11, w) (S12, w)
+    S11 -> (S0, e2) (S1, w) (S2, r1) (S3, e1) (S4, e1) (S5, w) (S6, w) (S7, w) (S8, e2) (S9, e1) (S10, w) (S11, w) (S12, w)
+    S12 -> (S0, e2) (S1, w) (S2, r1) (S3, e1) (S4, e1) (S5, w) (S6, w) (S7, w) (S8, e2) (S9, e1) (S10, w) (S11, w) (S12, w)

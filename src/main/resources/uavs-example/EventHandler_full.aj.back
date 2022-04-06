@@ -1,0 +1,239 @@
+package it.unimi.di.se.monitor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import it.unimi.di.se.decision.DecisionMakerFactory;
+import it.unimi.di.se.decision.Policy;
+import it.unimi.di.se.monitor.Monitor.CheckPoint;
+import jmarkov.jmdp.StringAction;
+import jmarkov.jmdp.SimpleMDP;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Map;
+import java.util.HashMap;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+
+
+@Aspect
+public class EventHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(EventHandler.class.getName());
+    static final String MODEL_PATH = "src/main/resources/uavs_full.mdp";
+    static private final String JMDP_MODEL_PATH = "src/main/resources/uavs_full.jmdp";
+    static final String RECTANGLES_PATH = "src/main/resources/rectangles";
+
+    static final int SAMPLE_SIZE = 100;
+    static final Monitor.Termination TERMINATION_CONDITION = Monitor.Termination.LIMIT;
+    static final double COVERAGE = 0.0;
+    static final double LIMIT = 5000;
+    public static final double DIST_WEIGHT = 0.0;
+    public static final double PROF_WEIGHT = 0.0;
+    static final String PROFILE_NAME = null;
+
+    private Monitor monitor = null;
+    private SimpleMDP mdp = null;
+
+    @Pointcut("execution(public static void main(..))")
+    void mainMethod() {}
+
+    @Before(value="mainMethod()")
+    public void initMonitor() {
+    		log.debug("MDP Policy computation...");
+   		try {
+   			mdp = new SimpleMDP(new BufferedReader(new FileReader(JMDP_MODEL_PATH)));
+   		} catch (FileNotFoundException e) {
+   			e.printStackTrace();
+   		}
+       	log.debug("Monitor initialization...");
+       	monitor = new Monitor(mdp, Policy.RANDOM);
+       	monitor.launch();
+	}
+
+    @After(value="mainMethod()")
+    public void shutdownMonitor(){
+    		log.debug("Shutting down Monitor...");
+    		monitor.addEvent(Event.stopEvent());
+	}
+
+	private String getActionFromPolicy() {
+		monitor.addEvent(Event.readStateEvent());
+		String stateName = CheckPoint.getInstance().join(Thread.currentThread());
+
+		StringAction action = monitor.getDecisionMaker().getAction(Integer.parseInt(stateName.substring(1)));
+		log.debug("Selected action = " + action.actionLabel());
+		return String.valueOf(action.actionLabel());
+	}
+
+	@Before(value="execution(public void it.unimi.di.se.sut.MDPExecutor.resetExecution())")
+	public void resetExecutionResetEvent() {
+		log.debug("Reset initial state...");
+		monitor.addEvent(Event.resetEvent());
+	}
+
+
+	private static final Map<String, String> EDGE_MAP = new HashMap<>();
+	    	private static void edgeMapInit0() {
+	    		EDGE_MAP.put("S3S3downS2", "a16");
+	    		EDGE_MAP.put("S3S3upS4", "a17");
+	    	}
+	    	private static void edgeMapInit1() {
+	    		EDGE_MAP.put("S4S4downS3", "a18");
+	    		EDGE_MAP.put("S4S4upS5", "a19");
+	    	}
+	    	private static void edgeMapInit2() {
+	    		EDGE_MAP.put("S5S5downS4", "a20");
+	    		EDGE_MAP.put("S5S5upS6", "a21");
+	    	}
+	    	private static void edgeMapInit3() {
+	    		EDGE_MAP.put("S6S6downS5", "a22");
+	    		EDGE_MAP.put("S6S6upS7", "a23");
+	    	}
+	    	private static void edgeMapInit4() {
+	    		EDGE_MAP.put("S7S7downS6", "a24");
+	    		EDGE_MAP.put("S7S7upS8", "a25");
+	    	}
+	    	private static void edgeMapInit5() {
+	    		EDGE_MAP.put("S8S8downS7", "a26");
+	    		EDGE_MAP.put("S8S8upS9", "a27");
+	    	}
+	    	private static void edgeMapInit6() {
+	    		EDGE_MAP.put("S9S9downS8", "a28");
+	    		EDGE_MAP.put("S9S9upS10", "a29");
+	    	}
+	    	private static void edgeMapInit7() {
+	    		EDGE_MAP.put("S20S20downS19", "a50");
+	    		EDGE_MAP.put("S20S20sTrtS20", "a51");
+	    		EDGE_MAP.put("S20S20sTrtS19", "a52");
+	    		EDGE_MAP.put("S20S20sTrtS22", "a53");
+	    	}
+	    	private static void edgeMapInit8() {
+	    		EDGE_MAP.put("S22S22wS22", "a5");
+	    	}
+	    	private static void edgeMapInit9() {
+	    		EDGE_MAP.put("S11S11downS10", "a32");
+	    		EDGE_MAP.put("S11S11upS12", "a33");
+	    	}
+	    	private static void edgeMapInit10() {
+	    		EDGE_MAP.put("S21S21wS21", "a4");
+	    	}
+	    	private static void edgeMapInit11() {
+	    		EDGE_MAP.put("S10S10downS9", "a30");
+	    		EDGE_MAP.put("S10S10upS11", "a31");
+	    	}
+	    	private static void edgeMapInit12() {
+	    		EDGE_MAP.put("S13S13downS12", "a36");
+	    		EDGE_MAP.put("S13S13upS14", "a37");
+	    	}
+	    	private static void edgeMapInit13() {
+	    		EDGE_MAP.put("S12S12downS11", "a34");
+	    		EDGE_MAP.put("S12S12upS13", "a35");
+	    	}
+	    	private static void edgeMapInit14() {
+	    		EDGE_MAP.put("S15S15downS14", "a40");
+	    		EDGE_MAP.put("S15S15upS16", "a41");
+	    	}
+	    	private static void edgeMapInit15() {
+	    		EDGE_MAP.put("S14S14downS13", "a38");
+	    		EDGE_MAP.put("S14S14upS15", "a39");
+	    	}
+	    	private static void edgeMapInit16() {
+	    		EDGE_MAP.put("S17S17downS16", "a44");
+	    		EDGE_MAP.put("S17S17upS18", "a45");
+	    	}
+	    	private static void edgeMapInit17() {
+	    		EDGE_MAP.put("S16S16downS15", "a42");
+	    		EDGE_MAP.put("S16S16upS17", "a43");
+	    	}
+	    	private static void edgeMapInit18() {
+	    		EDGE_MAP.put("S19S19downS18", "a48");
+	    		EDGE_MAP.put("S19S19upS20", "a49");
+	    	}
+	    	private static void edgeMapInit19() {
+	    		EDGE_MAP.put("S18S18downS17", "a46");
+	    		EDGE_MAP.put("S18S18upS19", "a47");
+	    	}
+	    	private static void edgeMapInit20() {
+	    		EDGE_MAP.put("S0S0upS1", "a0");
+	    		EDGE_MAP.put("S0S0sTrtS0", "a6");
+	    		EDGE_MAP.put("S0S0sTrtS21", "a7");
+	    		EDGE_MAP.put("S0S0sTrtS22", "a8");
+	    	}
+	    	private static void edgeMapInit21() {
+	    		EDGE_MAP.put("S1S1downS0", "a1");
+	    		EDGE_MAP.put("S1S1upS2", "a2");
+	    		EDGE_MAP.put("S1S1sTrtS1", "a9");
+	    		EDGE_MAP.put("S1S1sTrtS21", "a10");
+	    		EDGE_MAP.put("S1S1sTrtS22", "a11");
+	    	}
+	    	private static void edgeMapInit22() {
+	    		EDGE_MAP.put("S2S2downS1", "a3");
+	    		EDGE_MAP.put("S2S2sTrtS2", "a12");
+	    		EDGE_MAP.put("S2S2sTrtS21", "a13");
+	    		EDGE_MAP.put("S2S2sTrtS22", "a14");
+	    		EDGE_MAP.put("S2S2upS3", "a15");
+	    	}
+
+	static {
+		edgeMapInit0();
+		edgeMapInit1();
+		edgeMapInit2();
+		edgeMapInit3();
+		edgeMapInit4();
+		edgeMapInit5();
+		edgeMapInit6();
+		edgeMapInit7();
+		edgeMapInit8();
+		edgeMapInit9();
+		edgeMapInit10();
+		edgeMapInit11();
+		edgeMapInit12();
+		edgeMapInit13();
+		edgeMapInit14();
+		edgeMapInit15();
+		edgeMapInit16();
+		edgeMapInit17();
+		edgeMapInit18();
+		edgeMapInit19();
+		edgeMapInit20();
+		edgeMapInit21();
+		edgeMapInit22();
+	}
+
+	@AfterReturning(value="execution(public jmarkov.jmdp.IntegerState it.unimi.di.se.sut.MDPExecutor.doAction(jmarkov.jmdp.IntegerState, String)) && args(state, action)", returning="result")
+	public void doActionAfterAdvice(jmarkov.jmdp.IntegerState state, String action, jmarkov.jmdp.IntegerState result) {
+
+		long timeStamp = System.currentTimeMillis();
+		monitor.addEvent(Event.readStateEvent());
+		String currentMonitorState = CheckPoint.getInstance().join(Thread.currentThread());
+		log.debug("Transition : " + currentMonitorState + "-->" + result.label());
+
+		String eventLabel = EDGE_MAP.get(currentMonitorState + state.label() + action + result.label());
+		if (eventLabel != null)
+			monitor.addEvent(new Event(eventLabel, timeStamp));
+		else
+			log.error("*** PRE-/POST- CONDITION VIOLATION ***");
+	}
+
+	@Around(value="execution(private String it.unimi.di.se.sut.Driver.waitForAction(jmarkov.basic.Actions<jmarkov.jmdp.StringAction>, java.io.InputStream)) && args(actionList, input)")
+	public Object waitForActionControl(ProceedingJoinPoint thisJoinPoint, jmarkov.basic.Actions<jmarkov.jmdp.StringAction> actionList, java.io.InputStream input) throws Throwable {
+		Object[] args = thisJoinPoint.getArgs();
+		for(int i=0; i<args.length; i++)
+			if(args[i] instanceof java.io.InputStream) {
+				args[i] = new ByteArrayInputStream(getActionFromPolicy().getBytes());
+				break;
+			}
+
+		return thisJoinPoint.proceed(args);
+	}
+}
